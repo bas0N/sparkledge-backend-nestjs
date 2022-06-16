@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { Document } from './document.model';
+import { CreateDocumentDto } from './dto/create-document.dto';
 
 @Controller('documents')
 export class DocumentsController {
@@ -12,28 +13,14 @@ export class DocumentsController {
     return this.documentsService.getAllDocuments();
   }
   @Post()
-  async addNewDocument(
-    @Body('title')
-    title: string,
-    @Body('description')
-    description: string,
-    @Body('createdBy')
-    createdBy: string,
-    @Body('creatorEmail')
-    creatorEmail: string,
-
-    @Body('viewsNum')
-    viewsNum: number,
-    @Body('likesNum')
-    likesNum: number,
-  ) {
-    return await this.documentsService.addNewDocument(
-      title,
-      description,
-      createdBy,
-      creatorEmail,
-      viewsNum,
-      likesNum,
-    );
+  async addNewDocument(@Body() createDocumentDto: CreateDocumentDto) {
+    return await this.documentsService.addNewDocument(createDocumentDto);
   }
+  //getDocumentById
+  @Get('/:id')
+  async getDocumentById(@Param('id') id) {
+    return await this.documentsService.getDocumentById(id);
+  }
+  //getDocuments
+  //deleteDocument(){}
 }
