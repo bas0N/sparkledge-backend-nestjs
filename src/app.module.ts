@@ -5,6 +5,8 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { DocumentsModule } from './documents/documents.module';
 import { MongooseModule } from '@nestjs/mongoose';
+import { PrismaModule } from './prisma/prisma.module';
+import { InfrastructureModule } from './infrastructure/infrastructure.module';
 
 @Module({
   imports: [
@@ -12,6 +14,8 @@ import { MongooseModule } from '@nestjs/mongoose';
     UsersModule,
     DocumentsModule,
     MongooseModule.forRoot(process.env.DATABASE_URI),
+    PrismaModule,
+    InfrastructureModule,
   ],
   controllers: [AppController],
   providers: [AppService],
