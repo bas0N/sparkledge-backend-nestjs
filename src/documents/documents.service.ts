@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Document } from './document.model';
@@ -27,23 +27,30 @@ export class DocumentsService {
     return result.id;
   }
   async getDocumentById(id: string) {
-    try {
-      const document = await this.documentModel.findOne({
-        _id: Object(id),
-      });
-
-      //no courses found
-      if (!document) {
-        //error
-        console.log('error');
-        return;
-      }
-      //add view
-      return document;
-    } catch (err) {}
+    const document = await this.documentModel.findOne({
+      _id: Object(id),
+    });
+    console.log(document);
+    //no courses found
+    if (!document) {
+      throw new NotFoundException(`Document with id ${id} not found.`);
+    }
+    //add view
+    return document;
   }
 
-  getAllDocuments() {
+  async getAllDocuments() {
+    const documents = await this.documentModel.find();
     return this.documents;
   }
+  async deleteDocument(id: string) {
+    const document = await this.documentModel.findOneAndDelete({
+      _id: Object(id),
+    });
+    if (!document) {
+      throw new NotFoundException(`Document with id ${id} not found.`);
+    }
+    return document;
+  }
+  updateDocument() {}
 }
