@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UniversityDto } from './university.dto';
+import { FacultyDto } from './dto/faculty.dto';
+import { UniversityDto } from './dto/university.dto';
 
 @Controller('infrastructure')
 export class InfrastructureController {
@@ -12,8 +13,15 @@ export class InfrastructureController {
     return this.prismaService.university.findMany();
   }
   */
-  @Post()
+  @Post('/university')
   addUniversity(@Body() { name }: UniversityDto): Promise<UniversityDto> {
     return this.prismaService.university.create({ data: { name } });
+  }
+  @Post('/faculty')
+  addFaculty(@Body() { name, universityId }: FacultyDto): Promise<FacultyDto> {
+    universityId = Number(universityId);
+    return this.prismaService.faculty.create({
+      data: { name, universityId },
+    });
   }
 }
