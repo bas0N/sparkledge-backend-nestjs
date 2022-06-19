@@ -14,9 +14,7 @@ import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('documents')
 export class DocumentsController {
-  constructor(private documentsService: DocumentsService) {
-    this.documentsService = documentsService;
-  }
+  constructor(private documentsService: DocumentsService) {}
   @Post()
   async addNewDocument(@Body() createDocumentDto: CreateDocumentDto) {
     return await this.documentsService.addNewDocument(createDocumentDto);

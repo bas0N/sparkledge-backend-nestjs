@@ -14,6 +14,7 @@ export class DocumentsService {
   async addNewDocument(createTaskDto: CreateDocumentDto) {
     const { title, description, createdBy, creatorEmail, viewsNum, likesNum } =
       createTaskDto;
+
     const newDocument = new this.documentModel({
       title,
       description,

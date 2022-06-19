@@ -4,6 +4,7 @@ export const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
   },
   firstName: {
     type: String,
@@ -38,5 +39,4 @@ export interface User {
   firstName: String;
   lastName: String;
   password: String;
-  temporaryToken: String;
 }

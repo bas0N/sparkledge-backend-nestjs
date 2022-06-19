@@ -15,6 +15,4 @@ export interface Document {
   description: string;
   createdBy: string;
   creatorEmail: string;
-  viewsNum: number;
-  likesNum: number;
 }
