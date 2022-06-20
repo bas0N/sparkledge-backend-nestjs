@@ -6,13 +6,16 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { Document } from './document.model';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { ApiResponse } from '@nestjs/swagger';
+import { AuthGuard } from '@nestjs/passport';
 
 @Controller('documents')
+@UseGuards(AuthGuard())
 export class DocumentsController {
   constructor(private documentsService: DocumentsService) {}
   @Post()

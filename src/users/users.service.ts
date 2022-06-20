@@ -8,6 +8,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './createUser.dto';
 import { User } from './user.model';
+import { UserEnt } from './user.entity';
 import * as bcrypt from 'bcrypt';
 import { SigninUserDto } from './signinUser.dto';
 import { JwtService } from '@nestjs/jwt';
@@ -18,7 +19,7 @@ export class UsersService {
     @InjectModel('User') private readonly userModel: Model<User>,
     private jwtService: JwtService,
   ) {}
-  async addNewUser(createTaskDto: CreateUserDto): Promise<Object> {
+  async addNewUser(createTaskDto: CreateUserDto): Promise<User> {
     const { email, password, firstName, lastName } = createTaskDto;
 
     //hash te password
