@@ -2,46 +2,53 @@ import {
   InternalServerErrorException,
   Res,
   UnauthorizedException,
+  UseFilters,
 } from '@nestjs/common';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/createUser.dto';
-import { User } from './user.model';
 import { UserEnt } from './user.entity';
 import * as bcrypt from 'bcrypt';
 import { SigninUserDto } from './dto/signinUser.dto';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-payload.interface';
+import { User } from '.prisma/client';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { Prisma } from '@prisma/client';
+
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel('User') private readonly userModel: Model<User>,
+    private readonly prismaService: PrismaService,
     private jwtService: JwtService,
   ) {}
-  async addNewUser(createTaskDto: CreateUserDto): Promise<User> {
-    const { email, password, firstName, lastName } = createTaskDto;
-
+  async addNewUser({
+    email,
+    password,
+    firstName,
+    lastName,
+  }: User): Promise<User> {
     //hash te password
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
-    const newUser = new this.userModel({
-      email,
-      password: hashedPassword,
-      firstName,
-      lastName,
-    });
+
     try {
-      const result = await newUser.save();
-      return result;
+      const user = await this.prismaService.user.create({
+        data: { email, password: hashedPassword, firstName, lastName },
+      });
+      return user;
     } catch (error) {
-      if (error.code === 11000) {
-        throw new ConflictException('Email already exists.');
-      } else {
-        throw new InternalServerErrorException();
+      console.log(error.code);
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2002') {
+          throw new ConflictException('Email provided already exists.');
+        }
       }
+      throw new InternalServerErrorException();
     }
   }
+  /*
   async signInUser(
     signinUserDto: SigninUserDto,
   ): Promise<{ accessToken: String }> {
@@ -55,4 +62,5 @@ export class UsersService {
       throw new UnauthorizedException('Invalid login credentials. ');
     }
   }
+  */
 }

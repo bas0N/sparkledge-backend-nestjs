@@ -12,12 +12,12 @@ datasource db {
 
 model User{
     id Int @default(autoincrement()) @id
-    email String
+    email String @unique
     firstName String
     lastName String
     password String
-    temporaryToken String
-    refreshToken String
+    temporaryToken String?
+    refreshToken String?
     documents Document[]
 }
 

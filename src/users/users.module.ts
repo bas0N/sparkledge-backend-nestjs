@@ -7,9 +7,11 @@ import { UserSchema } from './user.model';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { JwtStrategy } from './jwt.strategy';
+import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
   imports: [
+    PrismaModule,
     ConfigModule.forRoot(),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
