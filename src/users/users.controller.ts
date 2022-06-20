@@ -11,7 +11,9 @@ export class UsersController {
     return this.userService.addNewUser(createUserDto);
   }
   @Post('/signin')
-  async signinUser(@Body() signinUserDto: SigninUserDto): Promise<String> {
+  async signinUser(
+    @Body() signinUserDto: SigninUserDto,
+  ): Promise<{ accessToken: String }> {
     return this.userService.signInUser(signinUserDto);
   }
 }
