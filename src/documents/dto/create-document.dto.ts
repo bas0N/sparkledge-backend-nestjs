@@ -6,7 +6,4 @@ export class CreateDocumentDto {
   @IsNotEmpty()
   description: string;
   createdBy: string;
-  creatorEmail: string;
-  viewsNum: number;
-  likesNum: number;
 }

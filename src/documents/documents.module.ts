@@ -4,11 +4,9 @@ import { DocumentsService } from './documents.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DocumentSchema } from './document.model';
 import { UsersModule } from 'src/users/users.module';
+import { PrismaModule } from 'src/prisma/prisma.module';
 @Module({
-  imports: [
-    MongooseModule.forFeature([{ name: 'Document', schema: DocumentSchema }]),
-    UsersModule,
-  ],
+  imports: [PrismaModule, UsersModule],
   controllers: [DocumentsController],
   providers: [DocumentsService],
 })

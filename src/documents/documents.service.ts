@@ -1,32 +1,39 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Document } from './document.model';
+import { PrismaService } from 'src/prisma/prisma.service';
+//import { Document } from './document.model';
 import { CreateDocumentDto } from './dto/create-document.dto';
+import { Document, Prisma } from '@prisma/client';
+
 @Injectable()
 export class DocumentsService {
-  private documents = [];
+  constructor(private readonly prismaService: PrismaService) {}
 
-  constructor(
-    @InjectModel('Document') private readonly documentModel: Model<Document>,
-  ) {}
-
-  async addNewDocument(createTaskDto: CreateDocumentDto) {
-    const { title, description, createdBy, creatorEmail, viewsNum, likesNum } =
-      createTaskDto;
-
-    const newDocument = new this.documentModel({
+  async addNewDocument(document: Document): Promise<Document> {
+    const {
       title,
       description,
-      createdBy,
-      creatorEmail,
-      viewsNum,
-      likesNum,
+      courseId,
+      programmeId,
+      facultyId,
+      universityId,
+      userId,
+    } = document;
+    return this.prismaService.document.create({
+      data: {
+        title,
+        description,
+        course: { connect: { id: courseId } },
+        university: { connect: { id: universityId } },
+        faculty: { connect: { id: facultyId } },
+        programme: { connect: { id: programmeId } },
+        user: { connect: { id: userId } },
+      },
     });
-    const result = await newDocument.save();
-    console.log(result);
-    return result.id;
   }
+}
+/*
   async getDocumentById(id: string) {
     const document = await this.documentModel.findOne({
       _id: Object(id),
@@ -54,4 +61,4 @@ export class DocumentsService {
     return document;
   }
   updateDocument() {}
-}
+*/

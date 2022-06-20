@@ -9,19 +9,20 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
-import { Document } from './document.model';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
+import { Document } from '@prisma/client';
 
 @Controller('documents')
-@UseGuards(AuthGuard())
+//@UseGuards(AuthGuard())
 export class DocumentsController {
   constructor(private documentsService: DocumentsService) {}
   @Post()
-  async addNewDocument(@Body() createDocumentDto: CreateDocumentDto) {
-    return await this.documentsService.addNewDocument(createDocumentDto);
+  async addNewDocument(@Body() document: Document) {
+    return await this.documentsService.addNewDocument(document);
   }
+  /*
   //getDocumentById
   @Get('/:id')
   async getDocumentById(@Param('id') id) {
@@ -32,7 +33,7 @@ export class DocumentsController {
   async getDocuments() {
     return await this.documentsService.getDocuments();
   }
-  */
+  
   @Delete('/:id')
   @ApiResponse({
     status: 201,
@@ -44,4 +45,5 @@ export class DocumentsController {
 
   @Patch()
   async updateDocument() {}
+  */
 }

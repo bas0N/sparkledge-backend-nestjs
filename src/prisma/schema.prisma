@@ -10,6 +10,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User{
+    id Int @default(autoincrement()) @id
+    email String
+    firstName String
+    lastName String
+    password String
+    temporaryToken String
+    refreshToken String
+    documents Document[]
+}
+
 model University{
   id Int @default(autoincrement()) @id
   name String
@@ -56,8 +67,8 @@ model Course{
 }
 model Document{
   id Int @default(autoincrement()) @id
-  s3key String
-  name String
+  title String
+  description String
   course Course @relation(fields:[courseId],references:[id])
   courseId Int
   programme Programme @relation(fields:[programmeId],references:[id])
@@ -66,4 +77,6 @@ model Document{
   facultyId Int
   university University @relation(fields:[universityId],references:[id])
   universityId Int
+  user User @relation(fields:[userId],references:[id])
+  userId Int
 }

@@ -6,11 +6,11 @@ import {
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { CreateUserDto } from './createUser.dto';
+import { CreateUserDto } from './dto/createUser.dto';
 import { User } from './user.model';
 import { UserEnt } from './user.entity';
 import * as bcrypt from 'bcrypt';
-import { SigninUserDto } from './signinUser.dto';
+import { SigninUserDto } from './dto/signinUser.dto';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-payload.interface';
 @Injectable()
