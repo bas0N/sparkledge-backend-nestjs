@@ -33,13 +33,10 @@ export class DocumentsService {
       },
     });
   }
-}
-/*
-  async getDocumentById(id: string) {
-    const document = await this.documentModel.findOne({
-      _id: Object(id),
+  async getDocumentById(id: string): Promise<Document> {
+    const document = await this.prismaService.document.findUnique({
+      where: { id: Number(id) },
     });
-    console.log(document);
     //no courses found
     if (!document) {
       throw new NotFoundException(`Document with id ${id} not found.`);
@@ -47,19 +44,23 @@ export class DocumentsService {
     //add view
     return document;
   }
-
-  async getAllDocuments() {
-    const documents = await this.documentModel.find();
-    return this.documents;
+  async getAllDocuments(): Promise<Document[]> {
+    const documents = await this.prismaService.document.findMany();
+    return documents;
   }
   async deleteDocument(id: string) {
-    const document = await this.documentModel.findOneAndDelete({
-      _id: Object(id),
-    });
-    if (!document) {
+    try {
+      await this.prismaService.document.delete({
+        where: { id: Number(id) },
+      });
+    } catch (err) {
       throw new NotFoundException(`Document with id ${id} not found.`);
     }
-    return document;
   }
+}
+
+/*
+  
+
   updateDocument() {}
 */

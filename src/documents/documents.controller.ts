@@ -16,34 +16,30 @@ import { Document, User } from '@prisma/client';
 import { GetUser } from 'src/users/get-user.decorator';
 
 @Controller('documents')
-@UseGuards(AuthGuard())
+//@UseGuards(AuthGuard())
 export class DocumentsController {
   constructor(private documentsService: DocumentsService) {}
   @Post()
   async addNewDocument(@GetUser() user: User, @Body() document: Document) {
     return await this.documentsService.addNewDocument(document, user);
   }
-  /*
+
   //getDocumentById
   @Get('/:id')
   async getDocumentById(@Param('id') id) {
     return await this.documentsService.getDocumentById(id);
   }
-  /*
+
   @Get()
-  async getDocuments() {
-    return await this.documentsService.getDocuments();
+  async getAllDocuments() {
+    return await this.documentsService.getAllDocuments();
   }
-  
+
   @Delete('/:id')
-  @ApiResponse({
-    status: 201,
-    description: 'The record has been successfully created.',
-  })
   async deleteDocument(@Param('id') id: string) {
     return await this.documentsService.deleteDocument(id);
   }
-
+  /*
   @Patch()
   async updateDocument() {}
   */
