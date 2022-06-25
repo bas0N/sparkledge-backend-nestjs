@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { PassportStrategy } from '@nestjs/passport';
 import { Model } from 'mongoose';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtPayload } from './jwt-payload.interface';
 import { User } from './user.model';
 import { UsersService } from './users.service';
@@ -10,18 +11,20 @@ import { UsersService } from './users.service';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    @InjectModel('User') private readonly userModel: Model<User>,
     private userService: UsersService,
+    private prismaService: PrismaService,
   ) {
     super({
       secretOrKey: process.env.SECRET_KEY_JWT,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: true,
     });
   }
-  async validate(payload: JwtPayload): Promise<Object> {
+  async validate(payload: JwtPayload): Promise<User> {
     const { email } = payload;
-    const user = await this.userModel.findOne({ email });
-    console.log(user);
+    const user: User = await this.prismaService.user.findFirst({
+      where: { email },
+    });
     if (!user) {
       throw new UnauthorizedException();
     }

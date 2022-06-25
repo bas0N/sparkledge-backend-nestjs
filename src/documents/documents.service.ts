@@ -4,13 +4,14 @@ import { Model } from 'mongoose';
 import { PrismaService } from 'src/prisma/prisma.service';
 //import { Document } from './document.model';
 import { CreateDocumentDto } from './dto/create-document.dto';
-import { Document, Prisma } from '@prisma/client';
+import { Document, Prisma, User } from '@prisma/client';
+import { GetUser } from 'src/users/get-user.decorator';
 
 @Injectable()
 export class DocumentsService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async addNewDocument(document: Document): Promise<Document> {
+  async addNewDocument(document: Document, user: User): Promise<Document> {
     const {
       title,
       description,
@@ -24,11 +25,11 @@ export class DocumentsService {
       data: {
         title,
         description,
-        course: { connect: { id: courseId } },
-        university: { connect: { id: universityId } },
-        faculty: { connect: { id: facultyId } },
-        programme: { connect: { id: programmeId } },
-        user: { connect: { id: userId } },
+        course: { connect: { id: Number(courseId) } },
+        university: { connect: { id: Number(universityId) } },
+        faculty: { connect: { id: Number(facultyId) } },
+        programme: { connect: { id: Number(programmeId) } },
+        user: { connect: { id: user.id } },
       },
     });
   }

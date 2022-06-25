@@ -48,13 +48,14 @@ export class UsersService {
       throw new InternalServerErrorException();
     }
   }
-  /*
+
   async signInUser(
     signinUserDto: SigninUserDto,
   ): Promise<{ accessToken: String }> {
     const { email, password } = signinUserDto;
-    const user = await this.userModel.findOne({ email });
-    if (user && bcrypt.compare(password, user.password)) {
+
+    const user = await this.prismaService.user.findFirst({ where: { email } });
+    if (user && (await bcrypt.compare(password, user.password))) {
       const payload: JwtPayload = { email };
       const accessToken: String = await this.jwtService.sign(payload);
       return { accessToken };
@@ -62,5 +63,4 @@ export class UsersService {
       throw new UnauthorizedException('Invalid login credentials. ');
     }
   }
-  */
 }

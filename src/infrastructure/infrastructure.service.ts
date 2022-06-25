@@ -27,16 +27,13 @@ export class InfrastructureService {
     });
   }
   addCourse({ name, semester, universityId, facultyId, programmeId }: Course) {
-    universityId = Number(universityId);
-    facultyId = Number(facultyId);
-    +programmeId;
     return this.prismaService.course.create({
       data: {
         name,
-        semester,
-        university: { connect: { id: universityId } },
-        faculty: { connect: { id: facultyId } },
-        programme: { connect: { id: programmeId } },
+        semester: Number(semester),
+        university: { connect: { id: Number(universityId) } },
+        faculty: { connect: { id: Number(facultyId) } },
+        programme: { connect: { id: Number(programmeId) } },
       },
     });
   }

@@ -12,15 +12,16 @@ import { DocumentsService } from './documents.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { Document } from '@prisma/client';
+import { Document, User } from '@prisma/client';
+import { GetUser } from 'src/users/get-user.decorator';
 
 @Controller('documents')
-//@UseGuards(AuthGuard())
+@UseGuards(AuthGuard())
 export class DocumentsController {
   constructor(private documentsService: DocumentsService) {}
   @Post()
-  async addNewDocument(@Body() document: Document) {
-    return await this.documentsService.addNewDocument(document);
+  async addNewDocument(@GetUser() user: User, @Body() document: Document) {
+    return await this.documentsService.addNewDocument(document, user);
   }
   /*
   //getDocumentById
