@@ -8,6 +8,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PrismaModule } from './prisma/prisma.module';
 import { InfrastructureModule } from './infrastructure/infrastructure.module';
 import { FilesModule } from './files/files.module';
+import { env } from 'process';
 
 @Module({
   imports: [

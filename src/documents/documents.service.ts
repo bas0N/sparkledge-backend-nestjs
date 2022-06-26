@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Req, Res } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -6,12 +6,22 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { Document, Prisma, User } from '@prisma/client';
 import { GetUser } from 'src/users/get-user.decorator';
+import { FilesService } from 'src/files/files.service';
 
 @Injectable()
 export class DocumentsService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private filesService: FilesService,
+  ) {}
 
-  async addNewDocument(document: Document, user: User): Promise<Document> {
+  async addNewDocument(
+    document: Document,
+    user: User,
+    @Req() req,
+    @Res() res,
+    fileBuffer: Buffer,
+  ): Promise<Document> {
     const {
       title,
       description,
@@ -19,19 +29,27 @@ export class DocumentsService {
       programmeId,
       facultyId,
       universityId,
-      userId,
     } = document;
-    return this.prismaService.document.create({
-      data: {
-        title,
-        description,
-        course: { connect: { id: Number(courseId) } },
-        university: { connect: { id: Number(universityId) } },
-        faculty: { connect: { id: Number(facultyId) } },
-        programme: { connect: { id: Number(programmeId) } },
-        user: { connect: { id: user.id } },
-      },
-    });
+    try {
+      //upload document to s3 and retrieve key
+      const fileUploadedKey = await this.filesService.fileUpload(fileBuffer);
+      //create a document in the db, attach user and fileKey
+      const createdDocument = await this.prismaService.document.create({
+        data: {
+          title,
+          description,
+          course: { connect: { id: Number(courseId) } },
+          university: { connect: { id: Number(universityId) } },
+          faculty: { connect: { id: Number(facultyId) } },
+          programme: { connect: { id: Number(programmeId) } },
+          user: { connect: { id: user.id } },
+          fileKey: fileUploadedKey.key,
+        },
+      });
+      return res.status(200).json({ document: createdDocument });
+    } catch (error) {
+      return res.status(500).json(`Failed to upload image file: ${error}`);
+    }
   }
   async getDocumentById(id: string): Promise<Document> {
     const document = await this.prismaService.document.findUnique({

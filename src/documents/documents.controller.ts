@@ -6,7 +6,11 @@ import {
   Param,
   Patch,
   Post,
+  Req,
+  Res,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
@@ -14,14 +18,30 @@ import { ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { Document, User } from '@prisma/client';
 import { GetUser } from 'src/users/get-user.decorator';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { Express } from 'express';
 
 @Controller('documents')
-//@UseGuards(AuthGuard())
+@UseGuards(AuthGuard())
+@UseInterceptors(FileInterceptor('file'))
 export class DocumentsController {
   constructor(private documentsService: DocumentsService) {}
   @Post()
-  async addNewDocument(@GetUser() user: User, @Body() document: Document) {
-    return await this.documentsService.addNewDocument(document, user);
+  async addNewDocument(
+    @GetUser() user: User,
+    @Body() document: Document,
+    @Req() req,
+    @Res() res,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    console.log(document);
+    return await this.documentsService.addNewDocument(
+      document,
+      user,
+      req,
+      res,
+      file.buffer,
+    );
   }
 
   //getDocumentById

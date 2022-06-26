@@ -5,8 +5,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { DocumentSchema } from './document.model';
 import { UsersModule } from 'src/users/users.module';
 import { PrismaModule } from 'src/prisma/prisma.module';
+import { FilesModule } from 'src/files/files.module';
 @Module({
-  imports: [PrismaModule, UsersModule],
+  imports: [PrismaModule, UsersModule, FilesModule],
   controllers: [DocumentsController],
   providers: [DocumentsService],
 })
