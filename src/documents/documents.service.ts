@@ -48,7 +48,7 @@ export class DocumentsService {
     const documents = await this.prismaService.document.findMany();
     return documents;
   }
-  async deleteDocument(id: string) {
+  async deleteDocument(id: string, user: User) {
     try {
       await this.prismaService.document.delete({
         where: { id: Number(id) },

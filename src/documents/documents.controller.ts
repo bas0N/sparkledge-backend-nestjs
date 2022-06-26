@@ -36,8 +36,8 @@ export class DocumentsController {
   }
 
   @Delete('/:id')
-  async deleteDocument(@Param('id') id: string) {
-    return await this.documentsService.deleteDocument(id);
+  async deleteDocument(@Param('id') id: string, @GetUser() user: User) {
+    return await this.documentsService.deleteDocument(id, user);
   }
   /*
   @Patch()
