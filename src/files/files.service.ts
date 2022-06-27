@@ -33,31 +33,26 @@ export class FilesService {
   //not yet implemented
 
   async getFileById(fileKey: string, @Res() res) {
-    /*
     const s3 = new S3();
     //checks if the file exists with the given fileKey
-    console.log(fileKey);
-    
-    const documentWithFile = await this.prismaService.document.findMany({
-      select: { fileKey: fileKey },
-    });
-    
-    //if it exists, it means that the file exists too
-    //it will be expanded for the array of files in the future
-    if (documentWithFile) {
+    try {
+      const foundFile = await this.prismaService.file.findUnique({
+        where: { key: fileKey },
+      });
+
+      //if it exists, it means that the file exists too
+      //it will be expanded for the array of files in the future
+
       const stream = await s3
         .getObject({
           Bucket: process.env.AWS_PUBLIC_BUCKET_NAME,
-          Key: (await documentWithFile).fileKey,
+          Key: foundFile.key,
         })
         .createReadStream();
       //returning the stream to the controller method
       return stream;
-      
-    } else {
-      //throw error if document has not been found
-      throw new NotFoundException();
+    } catch (err) {
+      throw new NotFoundException('file not found ' + err);
     }
-  */
   }
 }

@@ -15,7 +15,6 @@ async function bootstrap() {
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  app.use;
   SwaggerModule.setup('api', app, document);
   AWS.config.update({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,

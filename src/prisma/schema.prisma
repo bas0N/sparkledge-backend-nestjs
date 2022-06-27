@@ -85,6 +85,6 @@ model Document{
 }
 model File{
     id Int @default(autoincrement()) @id
-    key String
+    key String @unique
     documents Document[]
 }

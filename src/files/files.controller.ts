@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Param,
   Post,
   Req,
   Res,
@@ -22,9 +23,9 @@ export class FilesController {
   }
   */
   //not yet implemented
-  /*
-  @Get()
-  async getFileById(@Body() fileKey: string, @Res() res) {
+
+  @Get('/:fileKey')
+  async getFileById(@Param('fileKey') fileKey, @Res() res) {
     try {
       const file = await this.filesService.getFileById(fileKey, res);
       file.pipe(res);
@@ -32,5 +33,4 @@ export class FilesController {
       console.log(error);
     }
   }
-  */
 }
