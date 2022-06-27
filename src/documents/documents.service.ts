@@ -4,7 +4,7 @@ import { Model } from 'mongoose';
 import { PrismaService } from 'src/prisma/prisma.service';
 //import { Document } from './document.model';
 import { CreateDocumentDto } from './dto/create-document.dto';
-import { Document, Prisma, User } from '@prisma/client';
+import { Document, File, Prisma, User } from '@prisma/client';
 import { GetUser } from 'src/users/get-user.decorator';
 import { FilesService } from 'src/files/files.service';
 
@@ -31,9 +31,11 @@ export class DocumentsService {
       universityId,
     } = document;
     try {
-      //upload document to s3 and retrieve key
-      const fileUploadedKey = await this.filesService.fileUpload(fileBuffer);
+      //upload document to s3 and postgres
+      //retrieve object with file id in postgres and s3 key
+      const createdFile: File = await this.filesService.fileUpload(fileBuffer);
       //create a document in the db, attach user and fileKey
+
       const createdDocument = await this.prismaService.document.create({
         data: {
           title,
@@ -43,7 +45,7 @@ export class DocumentsService {
           faculty: { connect: { id: Number(facultyId) } },
           programme: { connect: { id: Number(programmeId) } },
           user: { connect: { id: user.id } },
-          fileKey: fileUploadedKey.key,
+          file: { connect: { id: createdFile.id } },
         },
       });
       return res.status(200).json({ document: createdDocument });

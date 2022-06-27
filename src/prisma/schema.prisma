@@ -80,5 +80,11 @@ model Document{
   universityId Int
   user User @relation(fields:[userId],references:[id])
   userId Int
-fileKey String
+  file File @relation(fields:[fileId],references: [id])
+  fileId Int
+}
+model File{
+    id Int @default(autoincrement()) @id
+    key String
+    documents Document[]
 }

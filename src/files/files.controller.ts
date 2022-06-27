@@ -24,10 +24,13 @@ export class FilesController {
   //not yet implemented
   /*
   @Get()
-  async getFileById(@Body() fileKey: string) {
+  async getFileById(@Body() fileKey: string, @Res() res) {
     try {
-      await this.filesService.getFileById(fileKey);
-    } catch (error) {}
+      const file = await this.filesService.getFileById(fileKey, res);
+      file.pipe(res);
+    } catch (error) {
+      console.log(error);
+    }
   }
   */
 }
