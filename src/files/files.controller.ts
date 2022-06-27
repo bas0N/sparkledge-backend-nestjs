@@ -26,11 +26,7 @@ export class FilesController {
 
   @Get('/:fileKey')
   async getFileById(@Param('fileKey') fileKey, @Res() res) {
-    try {
-      const file = await this.filesService.getFileById(fileKey, res);
-      file.pipe(res);
-    } catch (error) {
-      console.log(error);
-    }
+    const file = await this.filesService.getFileById(fileKey, res);
+    file.pipe(res);
   }
 }
