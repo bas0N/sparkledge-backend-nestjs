@@ -25,8 +25,17 @@ export class FilesController {
   //not yet implemented
 
   @Get('/:fileKey')
-  async getFileById(@Param('fileKey') fileKey, @Res() res) {
-    const file = await this.filesService.getFileById(fileKey, res);
+  async getFileByIdAsStream(@Param('fileKey') fileKey, @Res() res) {
+    const file = await this.filesService.getFileByIdAsStream(fileKey, res);
     file.pipe(res);
+  }
+  @Get('url/:fileKey')
+  async getFileByIdAsUrl(
+    @Param('fileKey') fileKey,
+    @Res({ passthrough: true }) res,
+  ) {
+    const url = await this.filesService.getFileByIdAsUrl(fileKey, res);
+    //res.status(200).send(url);
+    return url;
   }
 }

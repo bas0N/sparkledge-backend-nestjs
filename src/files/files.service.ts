@@ -14,13 +14,13 @@ export class FilesService {
 
   async fileUpload(dataBuffer: Buffer): Promise<File> {
     const s3 = new S3();
-    console.log(await uuid());
+    //file is given a .pdf extension after the initial validation in documents controller
     const uploadResult = await s3
       .upload({
         Bucket: process.env.AWS_PUBLIC_BUCKET_NAME,
         Body: dataBuffer,
         ACL: 'public-read',
-        Key: await uuid(),
+        Key: (await uuid()) + '.pdf',
       })
       .promise();
     const createdFile: File = await this.prismaService.file.create({
@@ -32,7 +32,7 @@ export class FilesService {
   }
   //not yet implemented
 
-  async getFileById(fileKey: string, @Res() res) {
+  async getFileByIdAsStream(fileKey: string, @Res() res) {
     const s3 = new S3();
     //checks if the file exists with the given fileKey
     const foundFile = await this.prismaService.file.findUnique({
@@ -43,6 +43,7 @@ export class FilesService {
         'File with id:' + fileKey + ' has not been found.',
       );
     } else {
+      //creating a file stream to be returned
       const stream = await s3
         .getObject({
           Bucket: process.env.AWS_PUBLIC_BUCKET_NAME,
@@ -52,7 +53,28 @@ export class FilesService {
       //returning the stream to the controller method
       return stream;
     }
-    //if it exists, it means that the file exists too
+    //it will be expanded for the array of files in the future
+  }
+  async getFileByIdAsUrl(fileKey: string, @Res() res) {
+    const s3 = new S3();
+    //checks if the file exists with the given fileKey
+    const foundFile = await this.prismaService.file.findUnique({
+      where: { key: fileKey },
+    });
+    if (!foundFile) {
+      throw new NotFoundException(
+        'File with id:' + fileKey + ' has not been found.',
+      );
+    } else {
+      //creating a signed url, allowing for file download
+      //it is valid for 2 minutes (120 sec)
+      const url: string = await s3.getSignedUrlPromise('getObject', {
+        Bucket: process.env.AWS_PUBLIC_BUCKET_NAME,
+        Key: foundFile.key,
+        Expires: 120,
+      });
+      return url;
+    }
     //it will be expanded for the array of files in the future
   }
 }
