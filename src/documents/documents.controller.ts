@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -20,6 +21,7 @@ import { Document, User } from '@prisma/client';
 import { GetUser } from 'src/users/get-user.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
+var path = require('path');
 
 @Controller('documents')
 @UseGuards(AuthGuard())
@@ -34,7 +36,10 @@ export class DocumentsController {
     @Res() res,
     @UploadedFile() file: Express.Multer.File,
   ) {
-    console.log(document);
+    //file extension check
+    if (path.extname(file.originalname) !== '.pdf') {
+      throw new BadRequestException('File extension must be of type .pdf .');
+    }
     return await this.documentsService.addNewDocument(
       document,
       user,
