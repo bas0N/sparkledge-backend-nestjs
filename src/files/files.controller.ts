@@ -8,7 +8,7 @@ export class FilesController {
 
   //provide id of the document from which files are to be retrieved
   //method will increase its viewsNumber
-  //signed url will be returned to download the file
+  //signed url will be returned to the method
   @Get('url/:documentId')
   async getFileKeyAsUrl(
     @Param('documentId') documentId: string,
