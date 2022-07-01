@@ -32,7 +32,7 @@ export class FilesService {
   }
   //not yet implemented
 
-  async getFileByIdAsStream(fileKey: string, @Res() res) {
+  async getFileByKeyAsStream(fileKey: string, @Res() res) {
     const s3 = new S3();
     //checks if the file exists with the given fileKey
     const foundFile = await this.prismaService.file.findUnique({
@@ -55,15 +55,25 @@ export class FilesService {
     }
     //it will be expanded for the array of files in the future
   }
-  async getFileByIdAsUrl(fileKey: string, @Res() res) {
+  async getFileKeyAsUrl(documentId: string, @Res() res) {
     const s3 = new S3();
-    //checks if the file exists with the given fileKey
+    //increments the views count
+    const document = await this.prismaService.document.update({
+      where: { id: Number(documentId) },
+      data: {
+        viewsNumber: {
+          increment: 1,
+        },
+      },
+    });
+
+    //checks if the file exists with the given fileId (retrieved from the document)
     const foundFile = await this.prismaService.file.findUnique({
-      where: { key: fileKey },
+      where: { id: Number(document.fileId) },
     });
     if (!foundFile) {
       throw new NotFoundException(
-        'File with id:' + fileKey + ' has not been found.',
+        'File with id:' + document.fileId + ' has not been found.',
       );
     } else {
       //creating a signed url, allowing for file download
@@ -73,6 +83,7 @@ export class FilesService {
         Key: foundFile.key,
         Expires: 120,
       });
+      //returns the url
       return url;
     }
     //it will be expanded for the array of files in the future
