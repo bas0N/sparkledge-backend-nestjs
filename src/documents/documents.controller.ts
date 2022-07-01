@@ -6,6 +6,7 @@ import {
   Get,
   Param,
   Patch,
+  Query,
   Post,
   Req,
   Res,
@@ -21,6 +22,7 @@ import { Document, User } from '@prisma/client';
 import { GetUser } from 'src/users/get-user.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
+import { FilterDocumentsDto } from './dto/filter-documents.dto';
 var path = require('path');
 
 @Controller('documents')
@@ -48,13 +50,15 @@ export class DocumentsController {
       file.buffer,
     );
   }
-
-  //getDocumentById
+  @Get('filtered')
+  async getDocumentsFiltered(@Query() parameters: FilterDocumentsDto) {
+    return this.documentsService.getDocumentsFiltered(parameters);
+  }
   @Get('/:id')
   async getDocumentById(@Param('id') id) {
     return await this.documentsService.getDocumentById(id);
   }
-
+  @Get()
   @Get()
   async getAllDocuments() {
     return await this.documentsService.getAllDocuments();
@@ -64,6 +68,7 @@ export class DocumentsController {
   async deleteDocument(@Param('id') id: string, @GetUser() user: User) {
     return await this.documentsService.deleteDocument(id, user);
   }
+
   /*
   @Patch()
   async updateDocument() {}

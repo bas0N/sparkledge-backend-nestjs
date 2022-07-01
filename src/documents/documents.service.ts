@@ -7,6 +7,7 @@ import { CreateDocumentDto } from './dto/create-document.dto';
 import { Document, File, Prisma, User } from '@prisma/client';
 import { GetUser } from 'src/users/get-user.decorator';
 import { FilesService } from 'src/files/files.service';
+import { FilterDocumentsDto } from './dto/filter-documents.dto';
 
 @Injectable()
 export class DocumentsService {
@@ -14,6 +15,21 @@ export class DocumentsService {
     private readonly prismaService: PrismaService,
     private filesService: FilesService,
   ) {}
+  async getDocumentsFiltered(
+    parameters: FilterDocumentsDto,
+  ): Promise<Document[]> {
+    console.log(parameters.universityId);
+    const documents: Array<Document> =
+      await this.prismaService.document.findMany({
+        where: {
+          universityId: Number(parameters?.universityId) || undefined,
+          facultyId: Number(parameters?.facultyId) || undefined,
+          programmeId: Number(parameters?.programmeId) || undefined,
+          courseId: Number(parameters?.courseId) || undefined,
+        },
+      });
+    return documents;
+  }
 
   async addNewDocument(
     document: Document,
@@ -64,6 +80,7 @@ export class DocumentsService {
     //add view
     return document;
   }
+  async getDocumentsFile(id: string) {}
   async getAllDocuments(): Promise<Document[]> {
     const documents = await this.prismaService.document.findMany();
     return documents;

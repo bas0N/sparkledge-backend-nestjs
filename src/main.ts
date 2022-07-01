@@ -9,7 +9,7 @@ import { HttpExceptionFilter } from './http-exception.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
   const config = new DocumentBuilder()
     .setTitle('Sparkledge')
     .setDescription('Sparkledge backend endpoints')
