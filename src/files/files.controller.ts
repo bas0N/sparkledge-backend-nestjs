@@ -2,7 +2,7 @@ import { Controller, Get, Param, Res, UseGuards } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { AuthGuard } from '@nestjs/passport';
 @Controller('files')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('jwt'))
 export class FilesController {
   constructor(private readonly filesService: FilesService) {}
 

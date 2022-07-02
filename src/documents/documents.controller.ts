@@ -5,7 +5,6 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Query,
   Post,
   Req,
@@ -15,8 +14,6 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
-import { CreateDocumentDto } from './dto/create-document.dto';
-import { ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { Document, User } from '@prisma/client';
 import { GetUser } from 'src/users/get-user.decorator';
@@ -26,7 +23,7 @@ import { FilterDocumentsDto } from './dto/filter-documents.dto';
 var path = require('path');
 
 @Controller('documents')
-@UseGuards(AuthGuard())
+@UseGuards(AuthGuard('jwt'))
 @UseInterceptors(FileInterceptor('file'))
 export class DocumentsController {
   constructor(private documentsService: DocumentsService) {}
@@ -51,7 +48,11 @@ export class DocumentsController {
     );
   }
   @Get('filtered')
-  async getDocumentsFiltered(@Query() parameters: FilterDocumentsDto) {
+  async getDocumentsFiltered(
+    @Query() parameters: FilterDocumentsDto,
+    @Req() req,
+  ) {
+    console.log(req);
     return this.documentsService.getDocumentsFiltered(parameters);
   }
   @Get('/:id')

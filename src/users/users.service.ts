@@ -39,7 +39,6 @@ export class UsersService {
       });
       return user;
     } catch (error) {
-      console.log(error.code);
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
           throw new ConflictException('Email provided already exists.');
@@ -51,16 +50,99 @@ export class UsersService {
 
   async signInUser(
     signinUserDto: SigninUserDto,
-  ): Promise<{ accessToken: String }> {
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     const { email, password } = signinUserDto;
 
     const user = await this.prismaService.user.findFirst({ where: { email } });
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload: JwtPayload = { email };
-      const accessToken: String = await this.jwtService.sign(payload);
-      return { accessToken };
+      const accessToken: string = await this.getJwtAccessToken(payload);
+      //for refresh token added
+      const refreshToken: string = await this.getJwtRefreshToken(payload);
+      await this.setCurrentRefreshToken(refreshToken, email);
+      return { accessToken: accessToken, refreshToken: refreshToken };
     } else {
       throw new UnauthorizedException('Invalid login credentials. ');
     }
   }
+  async logout(userEmail: string) {
+    await this.prismaService.user.updateMany({
+      where: { email: userEmail, refreshToken: { not: null } },
+      data: { refreshToken: null },
+    });
+  }
+
+  async getJwtAccessToken(payload: JwtPayload) {
+    const token = await this.jwtService.sign(payload, {
+      secret: process.env.JWT_ACCESS_TOKEN_SECRET,
+      expiresIn: `${process.env.JWT_ACCESS_TOKEN_EXPIRATION_TIME}`,
+    });
+    return token;
+  }
+  async getJwtRefreshToken(payload: JwtPayload) {
+    const token = await this.jwtService.sign(payload, {
+      secret: process.env.JWT_REFRESH_TOKEN_SECRET,
+      expiresIn: `${process.env.JWT_REFRESH_TOKEN_EXPIRATION_TIME}`,
+    });
+    return token;
+  }
+
+  async setCurrentRefreshToken(refreshToken: string, userEmail: string) {
+    const salt = await bcrypt.genSalt();
+    const currentHashedRefreshToken = await bcrypt.hash(refreshToken, salt);
+    await this.prismaService.user.update({
+      where: { email: userEmail },
+      data: { refreshToken: currentHashedRefreshToken },
+    });
+  }
+  async getUserIfRefreshTokenMatches(refreshToken: string, email: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { email: email },
+    });
+
+    const isRefreshTokenMatching = await bcrypt.compare(
+      refreshToken,
+      user.refreshToken,
+    );
+
+    if (isRefreshTokenMatching) {
+      return user;
+    }
+  }
+  // async refresh(refreshStr: string): Promise<string | undefined> {
+  //   // need to create this helper function.
+  //   const refreshToken = await this.retrieveRefreshToken(refreshStr);
+  //   if (!refreshToken) {
+  //     return undefined;
+  //   }
+
+  //   const user = await this.userService.findOne(refreshToken.userId);
+  //   if (!user) {
+  //     return undefined;
+  //   }
+
+  //   const accessToken = {
+  //     userId: refreshToken.userId,
+  //   };
+
+  //   // sign is imported from jsonwebtoken like import { sign, verify } from 'jsonwebtoken';
+  //   return sign(accessToken, process.env.ACCESS_SECRET, { expiresIn: '1h' });
+  // }
+  // private retrieveRefreshToken(refreshStr: string) {
+  //   try {
+  //     // verify is imported from jsonwebtoken like import { sign, verify } from 'jsonwebtoken';
+  //     const decoded = bcrypt.compare(
+  //       refreshStr,
+  //       process.env.JWT_REFRESH_TOKEN_SECRET,
+  //     );
+  //     if (typeof decoded === 'string') {
+  //       return undefined;
+  //     }
+  //     return Promise.resolve(
+  //       this.refreshTokens.find((token) => token.id === decoded.id),
+  //     );
+  //   } catch (e) {
+  //     return undefined;
+  //   }
+  // }
 }
