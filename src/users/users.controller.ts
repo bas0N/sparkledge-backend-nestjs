@@ -1,8 +1,18 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/createUser.dto';
 import { SigninUserDto } from './dto/signinUser.dto';
 import { UsersService } from './users.service';
 import { User } from '.prisma/client';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from './get-user.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -21,9 +31,15 @@ export class UsersController {
   ): Promise<{ accessToken: String }> {
     return this.userService.signInUser(signinUserDto);
   }
-  @Post()
+  @UseGuards(AuthGuard('jwt'))
+  @Post('logout')
   @HttpCode(HttpStatus.OK)
-  async logout(@Body() email: string) {
-    return this.userService.logout(email);
+  async logout(@GetUser() user: User) {
+    return this.userService.logout(user.email);
+  }
+  @UseGuards(AuthGuard('jwt-refresh'))
+  @Post('refresh')
+  async refreshToken(@GetUser() user: User) {
+    return this.userService.refreshToken(user.email, user.refreshToken);
   }
 }

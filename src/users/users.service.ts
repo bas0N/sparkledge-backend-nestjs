@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   InternalServerErrorException,
   Res,
   UnauthorizedException,
@@ -109,6 +110,26 @@ export class UsersService {
       return user;
     }
   }
+  async refreshToken(userEmail: string, refreshToken: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: { email: userEmail },
+    });
+    if (!user) {
+      throw new ForbiddenException('Access denied.');
+    }
+    const refreshTokenMatches = bcrypt.compare(refreshToken, user.refreshToken);
+    if (!refreshTokenMatches) {
+      throw new ForbiddenException('Access denied.');
+    }
+    const payload: JwtPayload = { email: userEmail };
+
+    const accessToken: string = await this.getJwtAccessToken(payload);
+    //for refresh token added
+    refreshToken = await this.getJwtRefreshToken(payload);
+    await this.setCurrentRefreshToken(refreshToken, userEmail);
+    return { accessToken: accessToken, refreshToken: refreshToken };
+  }
+
   // async refresh(refreshStr: string): Promise<string | undefined> {
   //   // need to create this helper function.
   //   const refreshToken = await this.retrieveRefreshToken(refreshStr);

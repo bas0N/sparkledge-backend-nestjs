@@ -15,17 +15,12 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
   imports: [
     PrismaModule,
     ConfigModule.forRoot(),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
+    PassportModule,
     JwtModule.register({}),
     MongooseModule.forFeature([{ name: 'User', schema: UserSchema }]),
   ],
   controllers: [UsersController],
-  providers: [
-    UsersService,
-    JwtStrategy,
-    AccessTokenStrategy,
-    RefreshTokenStrategy,
-  ],
+  providers: [UsersService, AccessTokenStrategy, RefreshTokenStrategy],
   exports: [JwtModule, PassportModule],
 })
 export class UsersModule {}
