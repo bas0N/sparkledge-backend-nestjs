@@ -60,7 +60,6 @@ export class DocumentsController {
     return await this.documentsService.getDocumentById(id, user);
   }
   @Get()
-  @Get()
   async getAllDocuments() {
     return await this.documentsService.getAllDocuments();
   }

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   InternalServerErrorException,
   Res,
@@ -88,6 +89,20 @@ export class UsersService {
     return token;
   }
 
+  async getViewedDocuments(user: User): Promise<string[]> {
+    //finds user with the given id
+    const userFound = await this.prismaService.user.findUnique({
+      where: { id: Number(user.id) },
+    });
+    //throws error if the user has not been found
+    if (!userFound) {
+      throw new BadRequestException(
+        'User with the given id has not been found in the db.',
+      );
+    }
+    //returns the array of ids in the use object
+    return userFound.viewedDocuments;
+  }
   async setCurrentRefreshToken(refreshToken: string, userEmail: string) {
     const salt = await bcrypt.genSalt();
     const currentHashedRefreshToken = await bcrypt.hash(refreshToken, salt);

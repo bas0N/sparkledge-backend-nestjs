@@ -1,8 +1,10 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   Req,
   UseGuards,
@@ -41,5 +43,11 @@ export class UsersController {
   @Post('refresh')
   async refreshToken(@GetUser() user: User) {
     return this.userService.refreshToken(user.email, user.refreshToken);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('viewedDocuments')
+  async getViewedDocuments(@GetUser() user: User) {
+    return this.userService.getViewedDocuments(user);
   }
 }

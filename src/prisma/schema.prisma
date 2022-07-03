@@ -85,6 +85,7 @@ model Document{
   file File @relation(fields:[fileId],references: [id])
   fileId Int
   viewsNumber Int @default(0)
+
 }
 model File{
     id Int @default(autoincrement()) @id
