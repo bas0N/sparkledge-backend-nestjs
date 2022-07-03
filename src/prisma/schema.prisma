@@ -87,6 +87,7 @@ model Document{
   viewsNumber Int @default(0)
   likesNumber Int @default(0)
   likesList String[]
+
 }
 model File{
     id Int @default(autoincrement()) @id
