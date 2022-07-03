@@ -74,9 +74,11 @@ export class DocumentsController {
   async toggleLike(@Param('id') id, @GetUser() user: User) {
     return this.documentsService.toggleLike(user, id);
   }
-  @Get()
+  @Get('check-if-liked/:id')
   @UseGuards(AuthGuard('jwt'))
-  async checkIfLiked(@GetUser() user: User, documentId: string) {}
+  async checkIfLiked(@Param('id') id, @GetUser() user: User) {
+    return this.documentsService.checkIfLiked(user, id);
+  }
   /*
   @Patch()
   async updateDocument() {}

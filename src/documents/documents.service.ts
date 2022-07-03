@@ -126,11 +126,14 @@ export class DocumentsService {
           },
         },
       });
-      if (!updatedDocument) {
-        throw new BadRequestException(
-          'Document with the given id has not been found',
-        );
-      }
+      await this.prismaService.document.update({
+        where: { id: Number(documentId) },
+        data: {
+          likesNumber: {
+            decrement: 1,
+          },
+        },
+      });
       return { message: 'Document disliked.', status: false };
     }
     document.likesList.push(user.id.toString());
@@ -143,8 +146,38 @@ export class DocumentsService {
         },
       },
     });
-    console.log(updatedDocument);
+    //add like to the likes counter
+    await this.prismaService.document.update({
+      where: { id: Number(documentId) },
+      data: {
+        likesNumber: {
+          increment: 1,
+        },
+      },
+    });
     return { message: 'Document liked.', status: true };
+  }
+  async checkIfLiked(user: User, documentId: string) {
+    const document = await this.prismaService.document.findUnique({
+      where: { id: Number(documentId) },
+    });
+    if (!document) {
+      throw new BadRequestException(
+        `Document of id: ${documentId} has not been found.`,
+      );
+    }
+    const index = document.likesList.indexOf(user.id.toString());
+    if (index > -1) {
+      return {
+        message: `Document of id: ${documentId} is liked by the user of id: ${user.id}.`,
+        status: true,
+      };
+    } else {
+      return {
+        message: `Document of id: ${documentId} is not liked by the user of id: ${user.id}.`,
+        status: false,
+      };
+    }
   }
 }
 
