@@ -60,7 +60,6 @@ export class DocumentsController {
     return await this.documentsService.getDocumentById(id, user);
   }
   @Get()
-  @Get()
   async getAllDocuments() {
     return await this.documentsService.getAllDocuments();
   }
@@ -70,6 +69,14 @@ export class DocumentsController {
     return await this.documentsService.deleteDocument(id, user);
   }
 
+  @Post('toggle-like/:id')
+  @UseGuards(AuthGuard('jwt'))
+  async toggleLike(@Param('id') id, @GetUser() user: User) {
+    return this.documentsService.toggleLike(user, id);
+  }
+  @Get()
+  @UseGuards(AuthGuard('jwt'))
+  async checkIfLiked(@GetUser() user: User, documentId: string) {}
   /*
   @Patch()
   async updateDocument() {}

@@ -1,4 +1,10 @@
-import { Injectable, NotFoundException, Req, Res } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+  Req,
+  Res,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -94,6 +100,51 @@ export class DocumentsService {
     } catch (err) {
       throw new NotFoundException(`Document with id ${id} not found.`);
     }
+  }
+  async toggleLike(user: User, documentId: string) {
+    const document: Document = await this.prismaService.document.findUnique({
+      where: { id: Number(documentId) },
+    });
+    //check if the document exist
+    if (!document) {
+      throw new BadRequestException(
+        `Document of id: ${documentId} has not been found.`,
+      );
+    }
+    //check if the given element exists in the array
+    const index = document.likesList.indexOf(user.id.toString());
+    //if it exists, remove it and push one more time
+    if (index > -1) {
+      // only splice array when item is found
+      document.likesList.splice(index, 1); // 2nd parameter means remove one item only
+      //update the document object
+      const updatedDocument = await this.prismaService.document.update({
+        where: { id: Number(documentId) },
+        data: {
+          likesList: {
+            set: document.likesList,
+          },
+        },
+      });
+      if (!updatedDocument) {
+        throw new BadRequestException(
+          'Document with the given id has not been found',
+        );
+      }
+      return { message: 'Document disliked.', status: false };
+    }
+    document.likesList.push(user.id.toString());
+    console.log(document.likesList);
+    const updatedDocument = await this.prismaService.document.update({
+      where: { id: Number(documentId) },
+      data: {
+        likesList: {
+          set: document.likesList,
+        },
+      },
+    });
+    console.log(updatedDocument);
+    return { message: 'Document liked.', status: true };
   }
 }
 
