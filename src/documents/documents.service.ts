@@ -69,7 +69,8 @@ export class DocumentsService {
       return res.status(500).json(`Failed to upload image file: ${error}`);
     }
   }
-  async getDocumentById(id: string): Promise<Document> {
+  async getDocumentById(id: string, user: User): Promise<Document> {
+    //retrieve document from db
     const document = await this.prismaService.document.findUnique({
       where: { id: Number(id) },
     });

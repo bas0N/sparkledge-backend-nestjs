@@ -6,7 +6,6 @@ import { PassportModule } from '@nestjs/passport';
 import { UserSchema } from './user.model';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
-import { JwtStrategy } from './jwt.strategy';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { AccessTokenStrategy } from './strategies/access-token.strategy';
 import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';

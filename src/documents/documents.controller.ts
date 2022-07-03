@@ -56,8 +56,8 @@ export class DocumentsController {
     return this.documentsService.getDocumentsFiltered(parameters);
   }
   @Get('/:id')
-  async getDocumentById(@Param('id') id) {
-    return await this.documentsService.getDocumentById(id);
+  async getDocumentById(@Param('id') id, @GetUser() user: User) {
+    return await this.documentsService.getDocumentById(id, user);
   }
   @Get()
   @Get()

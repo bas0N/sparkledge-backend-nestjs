@@ -1,11 +1,17 @@
-import { Req, Res, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Req,
+  Res,
+  Injectable,
+  NotFoundException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import * as multer from 'multer';
 import * as AWS from 'aws-sdk';
 import * as multerS3 from 'multer-s3';
 import { S3 } from 'aws-sdk';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { v4 as uuid } from 'uuid';
-import { File } from '@prisma/client';
+import { File, User } from '@prisma/client';
 const AWS_S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME;
 
 @Injectable()
@@ -30,8 +36,8 @@ export class FilesService {
     console.log(createdFile);
     return createdFile;
   }
-  //not yet implemented
-
+  //returns a stream with a file (not fully developed)
+  //the full functionality including changing viewed documents is present in:getFileKeyAsUrl method
   async getFileByKeyAsStream(fileKey: string, @Res() res) {
     const s3 = new S3();
     //checks if the file exists with the given fileKey
@@ -55,9 +61,10 @@ export class FilesService {
     }
     //it will be expanded for the array of files in the future
   }
-  async getFileKeyAsUrl(documentId: string, @Res() res) {
+  //returns an url to the desired file
+  async getFileKeyAsUrl(documentId: string, @Res() res, user: User) {
     const s3 = new S3();
-    //increments the views count
+    //increments the views count in the document object
     const document = await this.prismaService.document.update({
       where: { id: Number(documentId) },
       data: {
@@ -66,6 +73,53 @@ export class FilesService {
         },
       },
     });
+
+    //find user whose array of viewed documents will be updated
+    const foundUser = await this.prismaService.user.findUnique({
+      where: {
+        id: Number(user.id),
+      },
+    });
+    if (!foundUser) {
+      throw new InternalServerErrorException(
+        `User's object could not be found.`,
+      );
+    }
+
+    //check if the given element exists in the array
+    const index = foundUser.viewedDocuments.indexOf(documentId);
+    //if it exists, remove it and push one more time
+    if (index > -1) {
+      // only splice array when item is found
+      foundUser.viewedDocuments.splice(index, 1); // 2nd parameter means remove one item only
+    }
+    //if the size of it is too big, remove the excess elements
+    if (foundUser.viewedDocuments.length > 9) {
+      //if it
+      foundUser.viewedDocuments.splice(
+        0,
+        foundUser.viewedDocuments.length - 10,
+      );
+    }
+    //ultimatelly, push element to the arrat
+    foundUser.viewedDocuments.push(documentId);
+
+    //update the user with the new array
+    const userUpdated = await this.prismaService.user.update({
+      where: {
+        id: Number(user.id),
+      },
+      data: {
+        viewedDocuments: {
+          set: foundUser.viewedDocuments,
+        },
+      },
+    });
+    if (!userUpdated) {
+      throw new InternalServerErrorException(
+        `Error while updating user's object with a new array.`,
+      );
+    }
 
     //checks if the file exists with the given fileId (retrieved from the document)
     const foundFile = await this.prismaService.file.findUnique({
