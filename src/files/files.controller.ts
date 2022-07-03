@@ -1,6 +1,8 @@
 import { Controller, Get, Param, Res, UseGuards } from '@nestjs/common';
 import { FilesService } from './files.service';
 import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/users/get-user.decorator';
+import { User } from '@prisma/client';
 @Controller('files')
 @UseGuards(AuthGuard('jwt'))
 export class FilesController {
@@ -13,8 +15,11 @@ export class FilesController {
   async getFileKeyAsUrl(
     @Param('documentId') documentId: string,
     @Res({ passthrough: true }) res,
+    @GetUser() user: User,
   ): Promise<string> {
-    const url = await this.filesService.getFileKeyAsUrl(documentId, res);
+    console.log('files controlller');
+    console.log(user);
+    const url = await this.filesService.getFileKeyAsUrl(documentId, res, user);
     //res.status(200).send(url);
     return url;
   }

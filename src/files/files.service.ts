@@ -5,7 +5,7 @@ import * as multerS3 from 'multer-s3';
 import { S3 } from 'aws-sdk';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { v4 as uuid } from 'uuid';
-import { File } from '@prisma/client';
+import { File, User } from '@prisma/client';
 const AWS_S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME;
 
 @Injectable()
@@ -55,7 +55,7 @@ export class FilesService {
     }
     //it will be expanded for the array of files in the future
   }
-  async getFileKeyAsUrl(documentId: string, @Res() res) {
+  async getFileKeyAsUrl(documentId: string, @Res() res, user: User) {
     const s3 = new S3();
     //increments the views count
     const document = await this.prismaService.document.update({
@@ -63,6 +63,20 @@ export class FilesService {
       data: {
         viewsNumber: {
           increment: 1,
+        },
+      },
+    });
+
+    //add viewed document id to the user array
+    console.log(user.id);
+
+    const userUpdate = await this.prismaService.user.update({
+      where: {
+        id: Number(user.id),
+      },
+      data: {
+        viewedDocuments: {
+          push: documentId,
         },
       },
     });

@@ -19,6 +19,8 @@ model User{
     temporaryToken String?
     refreshToken String?
     documents Document[]
+    viewedDocuments String[]
+
 }
 
 model University{
