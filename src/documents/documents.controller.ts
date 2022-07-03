@@ -69,6 +69,16 @@ export class DocumentsController {
     return await this.documentsService.deleteDocument(id, user);
   }
 
+  @Post('toggle-like/:id')
+  @UseGuards(AuthGuard('jwt'))
+  async toggleLike(@Param('id') id, @GetUser() user: User) {
+    return this.documentsService.toggleLike(user, id);
+  }
+  @Get('check-if-liked/:id')
+  @UseGuards(AuthGuard('jwt'))
+  async checkIfLiked(@Param('id') id, @GetUser() user: User) {
+    return this.documentsService.checkIfLiked(user, id);
+  }
   /*
   @Patch()
   async updateDocument() {}
