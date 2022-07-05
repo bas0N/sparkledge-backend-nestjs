@@ -9,7 +9,9 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "prebuild": "rimraf dist",
+    "prebuild": "npm run clean && npm run prisma:generate",
+    "prisma:generate": "npx prisma generate --schema src/prisma/schema.prisma",
+    "clean": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
