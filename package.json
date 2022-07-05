@@ -9,7 +9,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "prebuild": "npm run clean && npm run prisma:generate",
+    "prebuild": "npm run prisma:generate",
     "prisma:generate": "npx prisma generate --schema src/prisma/schema.prisma",
     "clean": "rimraf dist",
     "build": "nest build",
