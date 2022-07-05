@@ -2,15 +2,10 @@ import {
   BadRequestException,
   ForbiddenException,
   InternalServerErrorException,
-  Res,
   UnauthorizedException,
-  UseFilters,
 } from '@nestjs/common';
 import { ConflictException, Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { CreateUserDto } from './dto/createUser.dto';
-import { UserEnt } from './user.entity';
+
 import * as bcrypt from 'bcrypt';
 import { SigninUserDto } from './dto/signinUser.dto';
 import { JwtService } from '@nestjs/jwt';

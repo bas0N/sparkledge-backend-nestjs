@@ -5,8 +5,6 @@ import {
   Req,
   Res,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
 import { PrismaService } from 'src/prisma/prisma.service';
 //import { Document } from './document.model';
 import { CreateDocumentDto } from './dto/create-document.dto';

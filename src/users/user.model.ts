@@ -1,35 +1,3 @@
-import * as mongoose from 'mongoose';
-
-export const UserSchema = new mongoose.Schema({
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  firstName: {
-    type: String,
-    required: true,
-  },
-  lastName: {
-    type: String,
-    required: true,
-  },
-
-  password: {
-    type: String,
-    required: true,
-  },
-  temporaryToken: {
-    type: String,
-  },
-  verified: {
-    type: Boolean,
-    required: true,
-    default: false,
-  },
-  refreshToken: { type: String },
-});
-
 export interface User {
   email: String;
   firstName: String;
