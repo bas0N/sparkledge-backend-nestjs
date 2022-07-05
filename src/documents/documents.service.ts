@@ -66,8 +66,8 @@ export class DocumentsService {
           university: { connect: { id: Number(universityId) } },
           faculty: { connect: { id: Number(facultyId) } },
           programme: { connect: { id: Number(programmeId) } },
-          user: { connect: { id: user.id } },
-          file: { connect: { id: createdFile.id } },
+          user: { connect: { id: Number(user.id) } },
+          file: { connect: { id: Number(createdFile.id) } },
         },
       });
       return res.status(200).json({ document: createdDocument });
