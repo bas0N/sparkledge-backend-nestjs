@@ -2,7 +2,8 @@ import { Body, Controller, Get, Post } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { University, Faculty, Programme, Course } from '.prisma/client';
 import { InfrastructureService } from './infrastructure.service';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags('infrastructure')
 @Controller('infrastructure')
 export class InfrastructureController {
   constructor(
