@@ -36,7 +36,7 @@ export class InfrastructureController {
     return this.infrastructureService.addCourse(course);
   }
   @Get('universities')
-  getUniversities() {
+  getUniversities(): Promise<University[]> {
     return this.infrastructureService.getUniversities();
   }
 

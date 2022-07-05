@@ -40,7 +40,7 @@ export class DocumentsService {
     user: User,
     @Res() res,
     fileBuffer: Buffer,
-  ): Promise<Document> {
+  ) {
     const {
       title,
       description,
@@ -67,7 +67,9 @@ export class DocumentsService {
           file: { connect: { id: Number(createdFile.id) } },
         },
       });
-      return createdDocument;
+      console.log('inside document service:');
+      console.log(createdDocument);
+      return { document: createdDocument };
     } catch (error) {
       return res.status(500).json(`Failed to upload image file: ${error}`);
     }
