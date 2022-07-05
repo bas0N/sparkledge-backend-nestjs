@@ -1,9 +1,10 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 export class CreateDocumentDto {
   @IsNotEmpty()
   title: string;
-  description: string = ' ';
+  @IsOptional()
+  description: string;
   @IsNotEmpty()
   courseId: string;
   @IsNotEmpty()

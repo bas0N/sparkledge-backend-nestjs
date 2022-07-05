@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { University, Faculty, Programme, Course } from '.prisma/client';
 import { InfrastructureService } from './infrastructure.service';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiParam, ApiTags } from '@nestjs/swagger';
 @ApiTags('infrastructure')
 @Controller('infrastructure')
 export class InfrastructureController {
@@ -39,15 +39,26 @@ export class InfrastructureController {
   getUniversities(): Promise<University[]> {
     return this.infrastructureService.getUniversities();
   }
-
+  @ApiParam({
+    name: 'universityId',
+    description: 'Id of the university to which retrieved faculties belong.',
+  })
   @Get('faculties/:id')
   getFaculties(@Param('id') universityId: string) {
     return this.infrastructureService.getFaculties(universityId);
   }
+  @ApiParam({
+    name: 'facultyId',
+    description: 'Gets the Action id',
+  })
   @Get('programmes/:id')
   getProgrammes(@Param('id') facultyId: string) {
     return this.infrastructureService.getProgrammes(facultyId);
   }
+  @ApiParam({
+    name: 'programmeId',
+    description: 'Gets the Action id',
+  })
   @Get('courses/:id')
   getCourses(@Param('id') programmeId: string) {
     return this.infrastructureService.getCourses(programmeId);
