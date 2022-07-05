@@ -56,7 +56,7 @@ export class DocumentsController {
         file.buffer,
       );
     } catch (err) {
-      console.log(err);
+      console.log(err.toString());
     }
   }
   @Get('filtered')
