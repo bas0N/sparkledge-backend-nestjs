@@ -41,18 +41,15 @@ export class DocumentsController {
   async addNewDocument(
     @GetUser() user: User,
     @Body() createDocumentDto: CreateDocumentDto,
-    @Res() res,
     @UploadedFile() file: Express.Multer.File,
   ) {
     //file extension check
     if (path.extname(file.originalname) !== '.pdf') {
       throw new BadRequestException('File extension must be of type .pdf .');
     }
-
     return await this.documentsService.addNewDocument(
       createDocumentDto,
       user,
-      res,
       file.buffer,
     );
   }

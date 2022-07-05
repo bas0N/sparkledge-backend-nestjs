@@ -3,7 +3,7 @@ import { IsNotEmpty } from 'class-validator';
 export class CreateDocumentDto {
   @IsNotEmpty()
   title: string;
-  description: string;
+  description: string = ' ';
   @IsNotEmpty()
   courseId: string;
   @IsNotEmpty()

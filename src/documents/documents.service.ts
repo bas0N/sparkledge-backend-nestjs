@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
   Req,
   Res,
@@ -38,7 +39,6 @@ export class DocumentsService {
   async addNewDocument(
     document: CreateDocumentDto,
     user: User,
-    @Res() res,
     fileBuffer: Buffer,
   ) {
     const {
@@ -71,7 +71,7 @@ export class DocumentsService {
       console.log(createdDocument);
       return { document: createdDocument };
     } catch (error) {
-      return res.status(500).json(`Failed to upload image file: ${error}`);
+      throw new InternalServerErrorException('Error during document upload.');
     }
   }
   async getDocumentById(id: string, user: User): Promise<Document> {
