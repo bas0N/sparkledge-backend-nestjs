@@ -45,6 +45,14 @@ export class InfrastructureService {
       where: { universityId: Number(universityId) },
     });
   }
-  async getProgrammes(facultyId: string) {}
-  async getCourses(programmeId: string) {}
+  async getProgrammes(facultyId: string) {
+    return this.prismaService.programme.findMany({
+      where: { facultyId: Number(facultyId) },
+    });
+  }
+  async getCourses(programmeId: string) {
+    return this.prismaService.course.findMany({
+      where: { programmeId: Number(programmeId) },
+    });
+  }
 }

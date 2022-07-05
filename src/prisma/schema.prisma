@@ -73,7 +73,7 @@ model Course{
 model Document{
   id Int @default(autoincrement()) @id
   title String
-  description String
+  description String @default(" ")
   course Course @relation(fields:[courseId],references:[id])
   courseId Int
   programme Programme @relation(fields:[programmeId],references:[id])
