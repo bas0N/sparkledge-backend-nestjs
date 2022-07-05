@@ -20,25 +20,24 @@ export class DocumentsService {
     private filesService: FilesService,
   ) {}
   async getDocumentsFiltered(
-    parameters: FilterDocumentsDto,
+    filterDocumentsDto: FilterDocumentsDto,
   ): Promise<Document[]> {
-    console.log(parameters.universityId);
+    console.log(filterDocumentsDto.universityId);
     const documents: Array<Document> =
       await this.prismaService.document.findMany({
         where: {
-          universityId: Number(parameters?.universityId) || undefined,
-          facultyId: Number(parameters?.facultyId) || undefined,
-          programmeId: Number(parameters?.programmeId) || undefined,
-          courseId: Number(parameters?.courseId) || undefined,
+          universityId: Number(filterDocumentsDto?.universityId) || undefined,
+          facultyId: Number(filterDocumentsDto?.facultyId) || undefined,
+          programmeId: Number(filterDocumentsDto?.programmeId) || undefined,
+          courseId: Number(filterDocumentsDto?.courseId) || undefined,
         },
       });
     return documents;
   }
 
   async addNewDocument(
-    document: Document,
+    document: CreateDocumentDto,
     user: User,
-    @Req() req,
     @Res() res,
     fileBuffer: Buffer,
   ): Promise<Document> {

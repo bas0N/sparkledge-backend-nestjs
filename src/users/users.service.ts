@@ -13,6 +13,7 @@ import { JwtPayload } from './jwt-payload.interface';
 import { User } from '.prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
+import { CreateUserDto } from './dto/createUser.dto';
 
 @Injectable()
 export class UsersService {
@@ -25,7 +26,7 @@ export class UsersService {
     password,
     firstName,
     lastName,
-  }: User): Promise<User> {
+  }: CreateUserDto): Promise<User> {
     //hash te password
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -59,7 +60,7 @@ export class UsersService {
       await this.setCurrentRefreshToken(refreshToken, email);
       return { accessToken: accessToken, refreshToken: refreshToken };
     } else {
-      throw new UnauthorizedException('Invalid login credentials. ');
+      throw new UnauthorizedException('Invalid login credentials.');
     }
   }
   async logout(userEmail: string) {

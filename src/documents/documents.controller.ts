@@ -20,18 +20,27 @@ import { GetUser } from 'src/users/get-user.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 import { FilterDocumentsDto } from './dto/filter-documents.dto';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiQuery,
+  ApiTags,
+} from '@nestjs/swagger';
+import { CreateDocumentDto } from './dto/create-document.dto';
 var path = require('path');
-
+@ApiTags('documents')
 @Controller('documents')
 @UseGuards(AuthGuard('jwt'))
 @UseInterceptors(FileInterceptor('file'))
 export class DocumentsController {
   constructor(private documentsService: DocumentsService) {}
+
   @Post()
+  @ApiCreatedResponse({ description: 'New document created.' })
+  @ApiBearerAuth()
   async addNewDocument(
     @GetUser() user: User,
-    @Body() document: Document,
-    @Req() req,
+    @Body() createDocumentDto: CreateDocumentDto,
     @Res() res,
     @UploadedFile() file: Express.Multer.File,
   ) {
@@ -40,20 +49,16 @@ export class DocumentsController {
       throw new BadRequestException('File extension must be of type .pdf .');
     }
     return await this.documentsService.addNewDocument(
-      document,
+      createDocumentDto,
       user,
-      req,
       res,
       file.buffer,
     );
   }
   @Get('filtered')
-  async getDocumentsFiltered(
-    @Query() parameters: FilterDocumentsDto,
-    @Req() req,
-  ) {
-    console.log(req);
-    return this.documentsService.getDocumentsFiltered(parameters);
+  @ApiQuery({ name: 'parameters', type: FilterDocumentsDto })
+  async getDocumentsFiltered(@Query() filterDocumentsDto: FilterDocumentsDto) {
+    return this.documentsService.getDocumentsFiltered(filterDocumentsDto);
   }
   @Get('/:id')
   async getDocumentById(@Param('id') id, @GetUser() user: User) {

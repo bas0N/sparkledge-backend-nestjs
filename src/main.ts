@@ -14,9 +14,13 @@ async function bootstrap() {
       new ValidationPipe({ whitelist: true, transform: true }),
     );
     const config = new DocumentBuilder()
-      .setTitle('Sparkledge')
+      .setTitle('Sparkledge API')
       .setDescription('Sparkledge backend endpoints')
-      .setVersion('1.0')
+      .setVersion('1.0.0')
+      .addBearerAuth(
+        { type: 'http', scheme: 'bearer', bearerFormat: 'Token' },
+        'access-token',
+      )
       .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api', app, document);

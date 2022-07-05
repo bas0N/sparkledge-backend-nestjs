@@ -15,38 +15,58 @@ import { UsersService } from './users.service';
 import { User } from '.prisma/client';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from './get-user.decorator';
-
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConflictResponse,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+@ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private userService: UsersService) {}
-
   @Post('/signup')
+  @ApiBody({ type: [CreateUserDto] })
+  @ApiCreatedResponse({ description: 'User Registration' })
+  @ApiConflictResponse({ description: 'Email provided already exists.' })
   @HttpCode(HttpStatus.CREATED)
-  async addNewUser(@Body() user: User): Promise<User> {
-    return this.userService.addNewUser(user);
+  async addNewUser(@Body() createUserDto: CreateUserDto): Promise<User> {
+    return this.userService.addNewUser(createUserDto);
   }
-
   @Post('/signin')
+  @ApiBody({ type: [SigninUserDto] })
+  @ApiOkResponse({ description: 'User logged in.' })
+  @ApiUnauthorizedResponse({
+    description: 'Invalid credentials.',
+  })
   @HttpCode(HttpStatus.OK)
   async signinUser(
     @Body() signinUserDto: SigninUserDto,
   ): Promise<{ accessToken: String }> {
     return this.userService.signInUser(signinUserDto);
   }
-  @UseGuards(AuthGuard('jwt'))
   @Post('logout')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOkResponse({ description: 'User Login' })
+  @ApiUnauthorizedResponse({ description: 'Invalid credentials' })
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.OK)
   async logout(@GetUser() user: User) {
     return this.userService.logout(user.email);
   }
-  @UseGuards(AuthGuard('jwt-refresh'))
   @Post('refresh')
+  @UseGuards(AuthGuard('jwt-refresh'))
+  @ApiBearerAuth()
+  @ApiCreatedResponse({ description: 'Access and refresh tokens renewed' })
   async refreshToken(@GetUser() user: User) {
     return this.userService.refreshToken(user.email, user.refreshToken);
   }
-
-  @UseGuards(AuthGuard('jwt'))
   @Get('viewedDocuments')
+  @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
   async getViewedDocuments(@GetUser() user: User) {
     return this.userService.getViewedDocuments(user);
   }

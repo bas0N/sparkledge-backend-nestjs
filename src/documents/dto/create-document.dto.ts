@@ -5,5 +5,12 @@ export class CreateDocumentDto {
   title: string;
   @IsNotEmpty()
   description: string;
-  createdBy: string;
+  @IsNotEmpty()
+  courseId: string;
+  @IsNotEmpty()
+  programmeId: string;
+  @IsNotEmpty()
+  facultyId: string;
+  @IsNotEmpty()
+  universityId: string;
 }
