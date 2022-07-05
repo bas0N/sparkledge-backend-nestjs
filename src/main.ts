@@ -10,6 +10,7 @@ import { HttpExceptionFilter } from './http-exception.filter';
 async function bootstrap() {
   try {
     const app = await NestFactory.create(AppModule);
+    //to be changed
     app.enableCors({
       origin: function (origin, callback) {
         if (!origin || allowedOrigins.indexOf(origin) !== -1) {

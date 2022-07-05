@@ -48,12 +48,16 @@ export class DocumentsController {
     if (path.extname(file.originalname) !== '.pdf') {
       throw new BadRequestException('File extension must be of type .pdf .');
     }
-    return await this.documentsService.addNewDocument(
-      createDocumentDto,
-      user,
-      res,
-      file.buffer,
-    );
+    try {
+      return await this.documentsService.addNewDocument(
+        createDocumentDto,
+        user,
+        res,
+        file.buffer,
+      );
+    } catch (err) {
+      console.log(err);
+    }
   }
   @Get('filtered')
   @ApiQuery({ name: 'parameters', type: FilterDocumentsDto })

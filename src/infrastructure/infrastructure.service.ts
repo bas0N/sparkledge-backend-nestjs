@@ -37,4 +37,14 @@ export class InfrastructureService {
       },
     });
   }
+  async getUniversities() {
+    return this.prismaService.university.findMany();
+  }
+  async getFaculties(universityId: string) {
+    return this.prismaService.faculty.findMany({
+      where: { universityId: Number(universityId) },
+    });
+  }
+  async getProgrammes(facultyId: string) {}
+  async getCourses(programmeId: string) {}
 }
