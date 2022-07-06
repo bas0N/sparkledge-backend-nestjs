@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Document" ALTER COLUMN "createdAt" SET DATA TYPE TIMESTAMPTZ(3);
