@@ -27,9 +27,18 @@ export class FilesController {
   //provide s3 fileKey
   //return filestream
   //(no views incrementation)
-  @Get('stream/:fileKey')
-  async getFileByKeyAsStream(@Param('fileKey') fileKey, @Res() res) {
-    const file = await this.filesService.getFileByKeyAsStream(fileKey, res);
+  @Get('stream/:documentId')
+  async getFileByKeyAsStream(
+    @Param('documentId') documentId: string,
+    @Res() res,
+    @GetUser() user: User,
+  ) {
+    const file = await this.filesService.getFileByKeyAsStream(
+      documentId,
+      res,
+      user,
+    );
+    console.log(file);
     file.pipe(res);
   }
 }
