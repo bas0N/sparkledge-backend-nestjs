@@ -10,6 +10,7 @@ import { CreateDocumentDto } from './dto/create-document.dto';
 import { Document, File, User } from '@prisma/client';
 import { FilesService } from 'src/files/files.service';
 import { FilterDocumentsDto } from './dto/FilterDocuments.dto';
+import { DocumentDto } from './dto/Document.dto';
 
 @Injectable()
 export class DocumentsService {
@@ -38,7 +39,7 @@ export class DocumentsService {
     document: CreateDocumentDto,
     user: User,
     fileBuffer: Buffer,
-  ): Promise<Document> {
+  ): Promise<DocumentDto> {
     const {
       title,
       description,
@@ -62,11 +63,9 @@ export class DocumentsService {
           programme: { connect: { id: Number(programmeId) } },
           user: { connect: { id: Number(user.id) } },
           file: { connect: { id: Number(createdFile.id) } },
-          createdAt: convertTZ(new Date(), 'Europe/Berlin'),
+          createdAt: convertTZ(new Date(), 'Europe/Warsaw'),
         },
       });
-      console.log('inside document service:');
-      console.log(createdDocument);
       return createdDocument;
     } catch (error) {
       throw new InternalServerErrorException('Error during document upload.');
@@ -94,8 +93,6 @@ export class DocumentsService {
     //add view
     return document;
   }
-
-  async getDocumentsFile(id: string) {}
 
   async getAllDocuments(): Promise<Document[]> {
     const documents = await this.prismaService.document.findMany();

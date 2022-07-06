@@ -4,6 +4,10 @@ import { CreateUniversityDto } from './dto/CreateUniversity.dto';
 import { CreateFacultyDto } from './dto/CreateFaculty.dto';
 import { CreateProgrammeDto } from './dto/CreateProgramme.dto';
 import { CreateCourseDto } from './dto/CreateCourse.dto';
+import { CourseDto } from './dto/Course.dto';
+import { ProgrammeDto } from './dto/Programme.to';
+import { FacultyDto } from './dto/Faculty.dto';
+import { UniversityDto } from './dto/University.dto';
 
 @Injectable()
 export class InfrastructureService {
@@ -47,20 +51,20 @@ export class InfrastructureService {
     });
   }
 
-  async getUniversities() {
+  async getUniversities(): Promise<UniversityDto[]> {
     return this.prismaService.university.findMany();
   }
-  async getFaculties(universityId: string) {
+  async getFaculties(universityId: string): Promise<FacultyDto[]> {
     return this.prismaService.faculty.findMany({
       where: { universityId: Number(universityId) },
     });
   }
-  async getProgrammes(facultyId: string) {
+  async getProgrammes(facultyId: string): Promise<ProgrammeDto[]> {
     return this.prismaService.programme.findMany({
       where: { facultyId: Number(facultyId) },
     });
   }
-  async getCourses(programmeId: string) {
+  async getCourses(programmeId: string): Promise<CourseDto[]> {
     return this.prismaService.course.findMany({
       where: { programmeId: Number(programmeId) },
     });

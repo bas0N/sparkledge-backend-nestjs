@@ -38,7 +38,6 @@ export class FilesController {
       res,
       user,
     );
-    console.log(file);
     file.pipe(res);
   }
 }

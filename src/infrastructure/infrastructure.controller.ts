@@ -1,12 +1,16 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { University, Faculty, Programme, Course } from '.prisma/client';
 import { InfrastructureService } from './infrastructure.service';
-import { ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
 import { CreateUniversityDto } from './dto/CreateUniversity.dto';
 import { CreateFacultyDto } from './dto/CreateFaculty.dto';
 import { CreateProgrammeDto } from './dto/CreateProgramme.dto';
 import { CreateCourseDto } from './dto/CreateCourse.dto';
 import { AuthGuard } from '@nestjs/passport';
+import { CourseDto } from './dto/Course.dto';
+import { FacultyDto } from './dto/Faculty.dto';
+import { ProgrammeDto } from './dto/Programme.to';
+import { UniversityDto } from './dto/University.dto';
 @ApiTags('infrastructure')
 @Controller('infrastructure')
 export class InfrastructureController {
@@ -39,11 +43,13 @@ export class InfrastructureController {
     return this.infrastructureService.addCourse(createCourseDto);
   }
 
+  @ApiOkResponse({ type: UniversityDto })
   @Get('universities')
   getUniversities(): Promise<University[]> {
     return this.infrastructureService.getUniversities();
   }
 
+  @ApiOkResponse({ type: FacultyDto })
   @ApiParam({
     name: 'universityId',
     description: 'Id of the university to which retrieved faculties belong.',
@@ -51,25 +57,29 @@ export class InfrastructureController {
   @Get('faculties/:universityId')
   getFaculties(
     @Param('universityId') universityId: string,
-  ): Promise<Faculty[]> {
+  ): Promise<FacultyDto[]> {
     return this.infrastructureService.getFaculties(universityId);
   }
 
+  @ApiOkResponse({ type: ProgrammeDto })
   @ApiParam({
     name: 'facultyId',
     description: 'Id of the faculty to which retrieved programmes belong.',
   })
   @Get('programmes/:facultyId')
-  getProgrammes(@Param('facultyId') facultyId: string): Promise<Programme[]> {
+  getProgrammes(
+    @Param('facultyId') facultyId: string,
+  ): Promise<ProgrammeDto[]> {
     return this.infrastructureService.getProgrammes(facultyId);
   }
 
+  @ApiOkResponse({ type: CourseDto })
   @ApiParam({
     name: 'programmeId',
     description: 'Id of the programme to which retrieved courses belong.',
   })
   @Get('courses/:programmeId')
-  getCourses(@Param('programmeId') programmeId: string): Promise<Course[]> {
+  getCourses(@Param('programmeId') programmeId: string): Promise<CourseDto[]> {
     return this.infrastructureService.getCourses(programmeId);
   }
 }

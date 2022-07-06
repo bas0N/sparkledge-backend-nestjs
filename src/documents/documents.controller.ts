@@ -25,6 +25,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateDocumentDto } from './dto/create-document.dto';
+import { DocumentDto } from './dto/Document.dto';
 var path = require('path');
 @ApiTags('documents')
 @Controller('documents')
@@ -39,7 +40,7 @@ export class DocumentsController {
     @Body() createDocumentDto: CreateDocumentDto,
     @GetUser() user: User,
     @UploadedFile() file: Express.Multer.File,
-  ): Promise<Document> {
+  ): Promise<DocumentDto> {
     //file extension check
     if (path.extname(file.originalname) !== '.pdf') {
       throw new BadRequestException('File extension must be of type .pdf .');
