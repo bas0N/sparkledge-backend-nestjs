@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -19,6 +20,7 @@ import {
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiOkResponse,
+  ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -46,6 +48,7 @@ export class UsersController {
   ): Promise<{ accessToken: String }> {
     return this.userService.signInUser(signinUserDto);
   }
+
   @Post('logout')
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ description: 'User Login' })
@@ -55,6 +58,7 @@ export class UsersController {
   async logout(@GetUser() user: User) {
     return this.userService.logout(user.email);
   }
+
   @Post('refresh')
   @UseGuards(AuthGuard('jwt-refresh'))
   @ApiBearerAuth()
@@ -67,5 +71,16 @@ export class UsersController {
   @ApiBearerAuth()
   async getViewedDocuments(@GetUser() user: User) {
     return this.userService.getViewedDocuments(user);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @ApiOkResponse({ description: 'User retrieved succesfully.' })
+  @ApiParam({
+    name: 'userId',
+    description: 'Id of the user that is to be retrieved.',
+  })
+  @Get('/:userId')
+  async getUserById(@Param('userId') userId: string): Promise<User> {
+    return await this.userService.getUserById(userId);
   }
 }

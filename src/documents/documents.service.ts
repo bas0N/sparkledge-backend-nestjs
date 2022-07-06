@@ -52,9 +52,7 @@ export class DocumentsService {
       //retrieve object with file id in postgres and s3 key
       const createdFile: File = await this.filesService.fileUpload(fileBuffer);
       //create a document in the db, attach user and fileKey
-      console.log(
-        new Date().toLocaleString('en-US', { timeZone: 'Europe/Warsaw' }),
-      );
+      console.log(convertTZ(new Date(), 'Europe/Warsaw'));
       const createdDocument = await this.prismaService.document.create({
         data: {
           title,
@@ -65,7 +63,7 @@ export class DocumentsService {
           programme: { connect: { id: Number(programmeId) } },
           user: { connect: { id: Number(user.id) } },
           file: { connect: { id: Number(createdFile.id) } },
-          createdAt: new Date(),
+          createdAt: convertTZ(new Date(), 'Europe/Berlin'),
         },
       });
       console.log('inside document service:');
@@ -181,7 +179,13 @@ export class DocumentsService {
     }
   }
 }
-
+function convertTZ(date, tzString) {
+  return new Date(
+    (typeof date === 'string' ? new Date(date) : date).toLocaleString('en-US', {
+      timeZone: tzString,
+    }),
+  );
+}
 /*
   
 

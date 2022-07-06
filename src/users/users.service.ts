@@ -63,6 +63,12 @@ export class UsersService {
       throw new UnauthorizedException('Invalid login credentials.');
     }
   }
+  async getUserById(userId: string): Promise<User> {
+    return await this.prismaService.user.findUnique({
+      where: { id: Number(userId) },
+    });
+  }
+
   async logout(userEmail: string) {
     await this.prismaService.user.updateMany({
       where: { email: userEmail, refreshToken: { not: null } },
