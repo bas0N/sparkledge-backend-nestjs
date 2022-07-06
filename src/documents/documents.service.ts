@@ -52,7 +52,9 @@ export class DocumentsService {
       //retrieve object with file id in postgres and s3 key
       const createdFile: File = await this.filesService.fileUpload(fileBuffer);
       //create a document in the db, attach user and fileKey
-      console.log(new Date());
+      console.log(
+        new Date().toLocaleString('en-US', { timeZone: 'Europe/Warsaw' }),
+      );
       const createdDocument = await this.prismaService.document.create({
         data: {
           title,

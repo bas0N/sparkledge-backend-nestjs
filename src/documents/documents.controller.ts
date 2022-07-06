@@ -62,7 +62,7 @@ export class DocumentsController {
     description: 'Id of the document that is to be retrieved.',
   })
   @Get('/:documentId')
-  async getDocumentById(@Param() id, @GetUser() user: User) {
+  async getDocumentById(@Param('documentId') id, @GetUser() user: User) {
     return await this.documentsService.getDocumentById(id, user);
   }
 
