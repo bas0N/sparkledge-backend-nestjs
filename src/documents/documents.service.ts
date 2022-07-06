@@ -52,7 +52,6 @@ export class DocumentsService {
       //retrieve object with file id in postgres and s3 key
       const createdFile: File = await this.filesService.fileUpload(fileBuffer);
       //create a document in the db, attach user and fileKey
-      console.log(convertTZ(new Date(), 'Europe/Warsaw'));
       const createdDocument = await this.prismaService.document.create({
         data: {
           title,
@@ -78,6 +77,9 @@ export class DocumentsService {
     //retrieve document from db
     const document = await this.prismaService.document.findUnique({
       where: { id: Number(id) },
+      include: {
+        user: true,
+      },
     });
     //no courses found
     if (!document) {
