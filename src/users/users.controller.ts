@@ -4,9 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  Param,
   Post,
-  Req,
   UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/createUser.dto';

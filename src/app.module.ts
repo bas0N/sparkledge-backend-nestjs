@@ -7,7 +7,6 @@ import { DocumentsModule } from './documents/documents.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { InfrastructureModule } from './infrastructure/infrastructure.module';
 import { FilesModule } from './files/files.module';
-import { env } from 'process';
 import { PassportModule } from '@nestjs/passport';
 
 @Module({

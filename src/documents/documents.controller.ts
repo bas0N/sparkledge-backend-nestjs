@@ -7,8 +7,6 @@ import {
   Param,
   Query,
   Post,
-  Req,
-  Res,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -19,11 +17,11 @@ import { Document, User } from '@prisma/client';
 import { GetUser } from 'src/users/get-user.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
-import { FilterDocumentsDto } from './dto/filter-documents.dto';
+import { FilterDocumentsDto } from './dto/FilterDocuments.dto';
 import {
   ApiBearerAuth,
-  ApiCreatedResponse,
-  ApiQuery,
+  ApiOkResponse,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateDocumentDto } from './dto/create-document.dto';
@@ -36,13 +34,12 @@ export class DocumentsController {
   constructor(private documentsService: DocumentsService) {}
 
   @Post()
-  @ApiCreatedResponse({ description: 'New document created.' })
   @ApiBearerAuth()
   async addNewDocument(
-    @GetUser() user: User,
     @Body() createDocumentDto: CreateDocumentDto,
+    @GetUser() user: User,
     @UploadedFile() file: Express.Multer.File,
-  ) {
+  ): Promise<Document> {
     //file extension check
     if (path.extname(file.originalname) !== '.pdf') {
       throw new BadRequestException('File extension must be of type .pdf .');
@@ -53,33 +50,55 @@ export class DocumentsController {
       file.buffer,
     );
   }
+
   @Get('filtered')
-  @ApiQuery({ name: 'parameters', type: FilterDocumentsDto })
+  @ApiParam({ name: 'parameters' })
   async getDocumentsFiltered(@Query() filterDocumentsDto: FilterDocumentsDto) {
     return this.documentsService.getDocumentsFiltered(filterDocumentsDto);
   }
-  @Get('/:id')
-  async getDocumentById(@Param('id') id, @GetUser() user: User) {
+
+  @ApiParam({
+    name: 'documentId',
+    description: 'Id of the document that is to be retrieved.',
+  })
+  @Get('/:documentId')
+  async getDocumentById(@Param() id, @GetUser() user: User) {
     return await this.documentsService.getDocumentById(id, user);
   }
+
+  @ApiOkResponse({ description: 'All documents retrieved.' })
   @Get()
-  async getAllDocuments() {
+  async getAllDocuments(): Promise<Document[]> {
     return await this.documentsService.getAllDocuments();
   }
 
-  @Delete('/:id')
-  async deleteDocument(@Param('id') id: string, @GetUser() user: User) {
+  @ApiOkResponse({ description: 'Document retrieved succesfully.' })
+  @ApiParam({
+    name: 'documentId',
+    description: 'Id of the document that is to be deleted.',
+  })
+  @Delete('/:documentId')
+  async deleteDocument(@Param() id: string, @GetUser() user: User) {
     return await this.documentsService.deleteDocument(id, user);
   }
 
-  @Post('toggle-like/:id')
+  @ApiParam({
+    name: 'documentId',
+    description: 'Id of the document that is to be liked/disliked.',
+  })
+  @Post('toggle-like/:documentId')
   @UseGuards(AuthGuard('jwt'))
-  async toggleLike(@Param('id') id, @GetUser() user: User) {
+  async toggleLike(@Param() id, @GetUser() user: User) {
     return this.documentsService.toggleLike(user, id);
   }
-  @Get('check-if-liked/:id')
+
+  @ApiParam({
+    name: 'documentId',
+    description: 'Id of the document that is to be checked if liked.',
+  })
+  @Get('check-if-liked/:documentId')
   @UseGuards(AuthGuard('jwt'))
-  async checkIfLiked(@Param('id') id, @GetUser() user: User) {
+  async checkIfLiked(@Param() id, @GetUser() user: User) {
     return this.documentsService.checkIfLiked(user, id);
   }
   /*

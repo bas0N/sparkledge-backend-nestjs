@@ -3,16 +3,13 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
-  Req,
-  Res,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 //import { Document } from './document.model';
 import { CreateDocumentDto } from './dto/create-document.dto';
-import { Document, File, Prisma, User } from '@prisma/client';
-import { GetUser } from 'src/users/get-user.decorator';
+import { Document, File, User } from '@prisma/client';
 import { FilesService } from 'src/files/files.service';
-import { FilterDocumentsDto } from './dto/filter-documents.dto';
+import { FilterDocumentsDto } from './dto/FilterDocuments.dto';
 
 @Injectable()
 export class DocumentsService {
@@ -20,6 +17,7 @@ export class DocumentsService {
     private readonly prismaService: PrismaService,
     private filesService: FilesService,
   ) {}
+
   async getDocumentsFiltered(
     filterDocumentsDto: FilterDocumentsDto,
   ): Promise<Document[]> {
@@ -40,7 +38,7 @@ export class DocumentsService {
     document: CreateDocumentDto,
     user: User,
     fileBuffer: Buffer,
-  ) {
+  ): Promise<Document> {
     const {
       title,
       description,
@@ -69,11 +67,12 @@ export class DocumentsService {
       });
       console.log('inside document service:');
       console.log(createdDocument);
-      return { document: createdDocument };
+      return createdDocument;
     } catch (error) {
       throw new InternalServerErrorException('Error during document upload.');
     }
   }
+
   async getDocumentById(id: string, user: User): Promise<Document> {
     //retrieve document from db
     const document = await this.prismaService.document.findUnique({
@@ -86,11 +85,14 @@ export class DocumentsService {
     //add view
     return document;
   }
+
   async getDocumentsFile(id: string) {}
+
   async getAllDocuments(): Promise<Document[]> {
     const documents = await this.prismaService.document.findMany();
     return documents;
   }
+
   async deleteDocument(id: string, user: User) {
     try {
       await this.prismaService.document.delete({
@@ -100,6 +102,7 @@ export class DocumentsService {
       throw new NotFoundException(`Document with id ${id} not found.`);
     }
   }
+
   async toggleLike(user: User, documentId: string) {
     const document: Document = await this.prismaService.document.findUnique({
       where: { id: Number(documentId) },
@@ -123,39 +126,35 @@ export class DocumentsService {
           likesList: {
             set: document.likesList,
           },
-        },
-      });
-      await this.prismaService.document.update({
-        where: { id: Number(documentId) },
-        data: {
           likesNumber: {
             decrement: 1,
           },
         },
       });
+      if (!updatedDocument) {
+        throw new InternalServerErrorException('Document not updated.');
+      }
       return { message: 'Document disliked.', status: false };
     }
     document.likesList.push(user.id.toString());
-    console.log(document.likesList);
     const updatedDocument = await this.prismaService.document.update({
       where: { id: Number(documentId) },
       data: {
         likesList: {
           set: document.likesList,
         },
-      },
-    });
-    //add like to the likes counter
-    await this.prismaService.document.update({
-      where: { id: Number(documentId) },
-      data: {
         likesNumber: {
           increment: 1,
         },
       },
     });
+
+    if (!updatedDocument) {
+      throw new InternalServerErrorException('Document not updated.');
+    }
     return { message: 'Document liked.', status: true };
   }
+
   async checkIfLiked(user: User, documentId: string) {
     const document = await this.prismaService.document.findUnique({
       where: { id: Number(documentId) },

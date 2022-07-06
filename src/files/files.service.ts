@@ -1,19 +1,14 @@
 import {
-  Req,
   Res,
   Injectable,
   NotFoundException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import * as multer from 'multer';
-import * as AWS from 'aws-sdk';
-import * as multerS3 from 'multer-s3';
+
 import { S3 } from 'aws-sdk';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { v4 as uuid } from 'uuid';
 import { File, User } from '@prisma/client';
-const AWS_S3_BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME;
-
 @Injectable()
 export class FilesService {
   constructor(private readonly prismaService: PrismaService) {}

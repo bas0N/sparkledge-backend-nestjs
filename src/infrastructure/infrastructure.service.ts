@@ -1,21 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { University, Faculty, Programme, Course } from '.prisma/client';
+import { CreateUniversityDto } from './dto/CreateUniversity.dto';
+import { CreateFacultyDto } from './dto/createFaculty.dto';
+import { CreateProgrammeDto } from './dto/createProgramme.dto';
+import { CreateCourseDto } from './dto/createCourse.dto';
 
 @Injectable()
 export class InfrastructureService {
   constructor(private readonly prismaService: PrismaService) {}
-  addUniversity({ name }: University) {
+  addUniversity({ name }: CreateUniversityDto) {
     return this.prismaService.university.create({ data: { name } });
   }
-  addFaculty({ name, universityId }: Faculty) {
+  addFaculty({ name, universityId }: CreateFacultyDto) {
     universityId = Number(universityId);
     return this.prismaService.faculty.create({
       data: { name, university: { connect: { id: universityId } } },
     });
   }
 
-  addProgramme({ name, universityId, facultyId }: Programme) {
+  addProgramme({ name, universityId, facultyId }: CreateProgrammeDto) {
     universityId = Number(universityId);
     facultyId = Number(facultyId);
     return this.prismaService.programme.create({
@@ -26,7 +29,13 @@ export class InfrastructureService {
       },
     });
   }
-  addCourse({ name, semester, universityId, facultyId, programmeId }: Course) {
+  addCourse({
+    name,
+    semester,
+    universityId,
+    facultyId,
+    programmeId,
+  }: CreateCourseDto) {
     return this.prismaService.course.create({
       data: {
         name,
@@ -37,6 +46,7 @@ export class InfrastructureService {
       },
     });
   }
+
   async getUniversities() {
     return this.prismaService.university.findMany();
   }

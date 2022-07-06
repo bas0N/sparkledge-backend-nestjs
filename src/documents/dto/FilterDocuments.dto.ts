@@ -1,7 +1,6 @@
-import { IsNumber, IsOptional } from 'class-validator';
+import { IsOptional } from 'class-validator';
 
 export class FilterDocumentsDto {
-  //  @IsNumber()
   @IsOptional()
   universityId;
   @IsOptional()
