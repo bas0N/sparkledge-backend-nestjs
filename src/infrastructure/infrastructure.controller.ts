@@ -44,7 +44,9 @@ export class InfrastructureController {
     description: 'Id of the university to which retrieved faculties belong.',
   })
   @Get('faculties/:universityId')
-  getFaculties(@Param() universityId: string): Promise<Faculty[]> {
+  getFaculties(
+    @Param('universityId') universityId: string,
+  ): Promise<Faculty[]> {
     return this.infrastructureService.getFaculties(universityId);
   }
 
@@ -53,7 +55,7 @@ export class InfrastructureController {
     description: 'Id of the faculty to which retrieved programmes belong.',
   })
   @Get('programmes/:facultyId')
-  getProgrammes(@Param() facultyId: string): Promise<Programme[]> {
+  getProgrammes(@Param('facultyId') facultyId: string): Promise<Programme[]> {
     return this.infrastructureService.getProgrammes(facultyId);
   }
 
@@ -62,7 +64,7 @@ export class InfrastructureController {
     description: 'Id of the programme to which retrieved courses belong.',
   })
   @Get('courses/:programmeId')
-  getCourses(@Param() programmeId: string): Promise<Course[]> {
+  getCourses(@Param('programmeId') programmeId: string): Promise<Course[]> {
     return this.infrastructureService.getCourses(programmeId);
   }
 }

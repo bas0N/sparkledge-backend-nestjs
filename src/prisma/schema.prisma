@@ -89,7 +89,7 @@ model Document{
   viewsNumber Int @default(0)
   likesNumber Int @default(0)
   likesList String[]
-  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  createdAt DateTime @default(now()) 
 
 }
 model File{

@@ -52,7 +52,7 @@ export class DocumentsService {
       //retrieve object with file id in postgres and s3 key
       const createdFile: File = await this.filesService.fileUpload(fileBuffer);
       //create a document in the db, attach user and fileKey
-
+      console.log(new Date());
       const createdDocument = await this.prismaService.document.create({
         data: {
           title,
@@ -63,6 +63,7 @@ export class DocumentsService {
           programme: { connect: { id: Number(programmeId) } },
           user: { connect: { id: Number(user.id) } },
           file: { connect: { id: Number(createdFile.id) } },
+          createdAt: new Date(),
         },
       });
       console.log('inside document service:');
