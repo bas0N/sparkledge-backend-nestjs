@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { University, Faculty, Programme, Course } from '.prisma/client';
 import { InfrastructureService } from './infrastructure.service';
 import { ApiParam, ApiTags } from '@nestjs/swagger';
@@ -6,22 +6,26 @@ import { CreateUniversityDto } from './dto/CreateUniversity.dto';
 import { CreateFacultyDto } from './dto/CreateFaculty.dto';
 import { CreateProgrammeDto } from './dto/CreateProgramme.dto';
 import { CreateCourseDto } from './dto/CreateCourse.dto';
+import { AuthGuard } from '@nestjs/passport';
 @ApiTags('infrastructure')
 @Controller('infrastructure')
 export class InfrastructureController {
   constructor(private infrastructureService: InfrastructureService) {}
-
+  @UseGuards(AuthGuard('jwt'))
   @Post('university')
   addUniversity(
     @Body() createUniversityDto: CreateUniversityDto,
   ): Promise<University> {
     return this.infrastructureService.addUniversity(createUniversityDto);
   }
+
+  @UseGuards(AuthGuard('jwt'))
   @Post('faculty')
   addFaculty(@Body() createFacultyDto: CreateFacultyDto): Promise<Faculty> {
     return this.infrastructureService.addFaculty(createFacultyDto);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post('programme')
   addProgramme(
     @Body() createProgrammeDto: CreateProgrammeDto,
@@ -29,6 +33,7 @@ export class InfrastructureController {
     return this.infrastructureService.addProgramme(createProgrammeDto);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Post('course')
   addCourse(@Body() createCourseDto: CreateCourseDto): Promise<Course> {
     return this.infrastructureService.addCourse(createCourseDto);

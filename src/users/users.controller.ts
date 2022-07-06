@@ -36,6 +36,7 @@ export class UsersController {
   async addNewUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.userService.addNewUser(createUserDto);
   }
+
   @Post('/signin')
   @ApiBody({ type: [SigninUserDto] })
   @ApiOkResponse({ description: 'User logged in.' })
