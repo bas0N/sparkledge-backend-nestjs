@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUniversityDto } from './dto/CreateUniversity.dto';
-import { CreateFacultyDto } from './dto/createFaculty.dto';
-import { CreateProgrammeDto } from './dto/createProgramme.dto';
-import { CreateCourseDto } from './dto/createCourse.dto';
+import { CreateFacultyDto } from './dto/CreateFaculty.dto';
+import { CreateProgrammeDto } from './dto/CreateProgramme.dto';
+import { CreateCourseDto } from './dto/CreateCourse.dto';
 
 @Injectable()
 export class InfrastructureService {
