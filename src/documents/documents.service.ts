@@ -78,7 +78,13 @@ export class DocumentsService {
     const document = await this.prismaService.document.findUnique({
       where: { id: Number(id) },
       include: {
-        user: true,
+        user: {
+          select: {
+            email: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
       },
     });
     //no courses found
