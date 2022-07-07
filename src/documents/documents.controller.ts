@@ -89,7 +89,7 @@ export class DocumentsController {
   })
   @Post('toggle-like/:documentId')
   @UseGuards(AuthGuard('jwt'))
-  async toggleLike(@Param() id, @GetUser() user: User) {
+  async toggleLike(@Param('documentId') id, @GetUser() user: User) {
     return this.documentsService.toggleLike(user, id);
   }
 
@@ -99,7 +99,7 @@ export class DocumentsController {
   })
   @Get('check-if-liked/:documentId')
   @UseGuards(AuthGuard('jwt'))
-  async checkIfLiked(@Param() id, @GetUser() user: User) {
+  async checkIfLiked(@Param('documentId') id, @GetUser() user: User) {
     return this.documentsService.checkIfLiked(user, id);
   }
   /*

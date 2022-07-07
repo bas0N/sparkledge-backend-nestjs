@@ -14,14 +14,12 @@ import { User } from '.prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { CreateUserDto } from './dto/createUser.dto';
-import { AuthenticationService } from 'src/authentication/authentication.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly prismaService: PrismaService,
     private jwtService: JwtService,
-    private authenticationService: AuthenticationService,
   ) {}
   async addNewUser({
     email,
@@ -37,7 +35,6 @@ export class UsersService {
       const user = await this.prismaService.user.create({
         data: { email, password: hashedPassword, firstName, lastName },
       });
-      this.authenticationService.sendVerificationLink(email);
       return user;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -69,6 +66,11 @@ export class UsersService {
   async getUserById(userId: string): Promise<User> {
     return await this.prismaService.user.findUnique({
       where: { id: Number(userId) },
+    });
+  }
+  async getUserByEmail(email: string): Promise<User> {
+    return await this.prismaService.user.findUnique({
+      where: { email },
     });
   }
 

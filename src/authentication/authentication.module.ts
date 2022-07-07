@@ -4,11 +4,21 @@ import { AuthenticationController } from './authentication.controller';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { EmailService } from 'src/email/email.service';
 import { EmailModule } from 'src/email/email.module';
+import { UsersModule } from 'src/users/users.module';
+import { UsersService } from 'src/users/users.service';
+import { PrismaModule } from 'src/prisma/prisma.module';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Module({
-  imports: [JwtModule.register({}), EmailModule],
-  providers: [JwtService, AuthenticationService, EmailService],
+  imports: [JwtModule.register({}), EmailModule, UsersModule, PrismaModule],
+  providers: [
+    JwtService,
+    AuthenticationService,
+    UsersService,
+    EmailService,
+    PrismaService,
+  ],
   controllers: [AuthenticationController],
-  exports: [JwtModule],
+  exports: [JwtModule, UsersModule],
 })
 export class AuthenticationModule {}

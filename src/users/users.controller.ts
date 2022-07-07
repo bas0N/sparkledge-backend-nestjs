@@ -24,17 +24,23 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { AuthenticationService } from 'src/authentication/authentication.service';
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
-  constructor(private userService: UsersService) {}
+  constructor(
+    private userService: UsersService,
+    private authenticationService: AuthenticationService,
+  ) {}
   @Post('/signup')
   @ApiBody({ type: [CreateUserDto] })
   @ApiCreatedResponse({ description: 'User Registration' })
   @ApiConflictResponse({ description: 'Email provided already exists.' })
   @HttpCode(HttpStatus.CREATED)
   async addNewUser(@Body() createUserDto: CreateUserDto): Promise<User> {
-    return this.userService.addNewUser(createUserDto);
+    const user = this.userService.addNewUser(createUserDto);
+    await this.authenticationService.sendVerificationLink(createUserDto.email);
+    return user;
   }
 
   @Post('/signin')

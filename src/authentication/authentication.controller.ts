@@ -7,7 +7,7 @@ import { AuthenticationService } from './authentication.service';
 export class AuthenticationController {
   constructor(private readonly authenticationService: AuthenticationService) {}
   @Post()
-  async validateEmail(@Query() token: string) {
-    return this.authenticationService.validateEmail(token);
+  async validateEmailWithToken(@Query() token: string) {
+    return this.authenticationService.validateEmailWithToken(token);
   }
 }
