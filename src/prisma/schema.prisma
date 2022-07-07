@@ -18,6 +18,7 @@ model User{
     firstName String
     lastName String
     password String
+    isVerified Boolean @default(false)
     temporaryToken String?
     refreshToken String?
     documents Document[]

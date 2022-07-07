@@ -7,6 +7,8 @@ import { UsersService } from './users.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { AccessTokenStrategy } from './strategies/access-token.strategy';
 import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
+import { AuthenticationService } from 'src/authentication/authentication.service';
+import { EmailModule } from 'src/email/email.module';
 
 @Module({
   imports: [
@@ -14,9 +16,15 @@ import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
     ConfigModule.forRoot(),
     PassportModule,
     JwtModule.register({}),
+    EmailModule,
   ],
   controllers: [UsersController],
-  providers: [UsersService, AccessTokenStrategy, RefreshTokenStrategy],
+  providers: [
+    UsersService,
+    AccessTokenStrategy,
+    RefreshTokenStrategy,
+    AuthenticationService,
+  ],
   exports: [JwtModule, PassportModule],
 })
 export class UsersModule {}

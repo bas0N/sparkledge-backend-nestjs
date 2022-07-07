@@ -8,6 +8,9 @@ import { PrismaModule } from './prisma/prisma.module';
 import { InfrastructureModule } from './infrastructure/infrastructure.module';
 import { FilesModule } from './files/files.module';
 import { PassportModule } from '@nestjs/passport';
+import { EmailModule } from './email/email.module';
+import { AuthenticationModule } from './authentication/authentication.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -18,6 +21,9 @@ import { PassportModule } from '@nestjs/passport';
     InfrastructureModule,
     FilesModule,
     PassportModule,
+    EmailModule,
+    AuthenticationModule,
+    JwtModule,
   ],
   controllers: [AppController],
   providers: [AppService],
