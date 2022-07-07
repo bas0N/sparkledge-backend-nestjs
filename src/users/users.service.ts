@@ -14,6 +14,7 @@ import { User } from '.prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { CreateUserDto } from './dto/createUser.dto';
+import { DocumentDto } from 'src/documents/dto/Document.dto';
 
 @Injectable()
 export class UsersService {
@@ -96,7 +97,7 @@ export class UsersService {
     return token;
   }
 
-  async getViewedDocuments(user: User): Promise<string[]> {
+  async getViewedDocuments(user: User): Promise<DocumentDto[]> {
     //finds user with the given id
     const userFound = await this.prismaService.user.findUnique({
       where: { id: Number(user.id) },
@@ -107,8 +108,28 @@ export class UsersService {
         'User with the given id has not been found in the db.',
       );
     }
+    //Change the for of array into numbers
+    const arrOfNumId = userFound.viewedDocuments.map((str) => {
+      return Number(str);
+    });
+    //return an array of elements for the corresponding array of ids
+    const documents = await this.prismaService.document.findMany({
+      where: {
+        id: { in: arrOfNumId },
+      },
+      include: {
+        user: {
+          select: {
+            email: true,
+            firstName: true,
+            lastName: true,
+          },
+        },
+      },
+    });
+
     //returns the array of ids in the use object
-    return userFound.viewedDocuments;
+    return documents;
   }
   async setCurrentRefreshToken(refreshToken: string, userEmail: string) {
     const salt = await bcrypt.genSalt();
