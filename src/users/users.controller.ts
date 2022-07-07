@@ -39,7 +39,7 @@ export class UsersController {
   @HttpCode(HttpStatus.CREATED)
   async addNewUser(@Body() createUserDto: CreateUserDto): Promise<User> {
     const user = this.userService.addNewUser(createUserDto);
-    await this.authenticationService.sendVerificationLink(createUserDto.email);
+    this.authenticationService.sendVerificationLink(createUserDto.email);
     return user;
   }
 

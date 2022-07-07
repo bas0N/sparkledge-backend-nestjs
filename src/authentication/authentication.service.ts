@@ -17,7 +17,7 @@ export class AuthenticationService {
       secret: process.env.JWT_EMAIL_VERIFICATION_TOKEN_SECRET,
       expiresIn: process.env.JWT_VERIFICATION_TOKEN_EXPIRATION_TIME,
     });
-    const url = `${process.env.API_URL}/authentication/email?token=${token}`;
+    const url = `${process.env.API_URL}/authentication/email/${token}`;
     const text = `Witamy w sparkledge. Żeby potwierdzić email, kliknij w link: ${url}`;
     return this.emailService.sendMail({
       from: process.env.ZOHO_EMAIL,
@@ -49,5 +49,6 @@ export class AuthenticationService {
     if (user.isVerified) {
       throw new BadRequestException('Email already verified');
     }
+    await this.userService.markEmailAsVerified(email);
   }
 }

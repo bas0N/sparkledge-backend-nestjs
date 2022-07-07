@@ -151,6 +151,12 @@ export class UsersService {
     await this.setCurrentRefreshToken(refreshToken, userEmail);
     return { accessToken: accessToken, refreshToken: refreshToken };
   }
+  async markEmailAsVerified(email: string) {
+    return this.prismaService.user.update({
+      where: { email },
+      data: { isVerified: true },
+    });
+  }
 
   // async refresh(refreshStr: string): Promise<string | undefined> {
   //   // need to create this helper function.

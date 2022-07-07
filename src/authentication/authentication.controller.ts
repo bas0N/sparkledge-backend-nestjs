@@ -1,4 +1,4 @@
-import { Controller, Post, Query } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthenticationService } from './authentication.service';
 
@@ -6,8 +6,15 @@ import { AuthenticationService } from './authentication.service';
 @ApiTags('authentication')
 export class AuthenticationController {
   constructor(private readonly authenticationService: AuthenticationService) {}
-  @Post()
-  async validateEmailWithToken(@Query() token: string) {
-    return this.authenticationService.validateEmailWithToken(token);
+  @Get('email/:token')
+  async validateEmailWithToken(@Param('token') token: string) {
+    const email = await this.authenticationService.decodeInformationToken(
+      token,
+    );
+    await this.authenticationService.confirmEmail(email);
+  }
+  @Get('elo')
+  async check() {
+    return 'esssaa';
   }
 }
