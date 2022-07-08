@@ -29,12 +29,12 @@ import { DocumentDto } from './dto/Document.dto';
 var path = require('path');
 @ApiTags('documents')
 @Controller('documents')
-@UseGuards(AuthGuard('jwt'))
 @UseInterceptors(FileInterceptor('file'))
 export class DocumentsController {
   constructor(private documentsService: DocumentsService) {}
 
   @Post()
+  @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
   async addNewDocument(
     @Body() createDocumentDto: CreateDocumentDto,
@@ -62,12 +62,14 @@ export class DocumentsController {
     name: 'documentId',
     description: 'Id of the document that is to be retrieved.',
   })
+  @UseGuards(AuthGuard('jwt'))
   @Get('/:documentId')
   async getDocumentById(@Param('documentId') id, @GetUser() user: User) {
     return await this.documentsService.getDocumentById(id, user);
   }
 
   @ApiOkResponse({ description: 'All documents retrieved.' })
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   async getAllDocuments(): Promise<Document[]> {
     return await this.documentsService.getAllDocuments();
@@ -78,6 +80,7 @@ export class DocumentsController {
     name: 'documentId',
     description: 'Id of the document that is to be deleted.',
   })
+  @UseGuards(AuthGuard('jwt'))
   @Delete('/:documentId')
   async deleteDocument(@Param() id: string, @GetUser() user: User) {
     return await this.documentsService.deleteDocument(id, user);
@@ -87,6 +90,7 @@ export class DocumentsController {
     name: 'documentId',
     description: 'Id of the document that is to be liked/disliked.',
   })
+  @UseGuards(AuthGuard('jwt'))
   @Post('toggle-like/:documentId')
   @UseGuards(AuthGuard('jwt'))
   async toggleLike(@Param('documentId') id, @GetUser() user: User) {
@@ -97,6 +101,7 @@ export class DocumentsController {
     name: 'documentId',
     description: 'Id of the document that is to be checked if liked.',
   })
+  @UseGuards(AuthGuard('jwt'))
   @Get('check-if-liked/:documentId')
   @UseGuards(AuthGuard('jwt'))
   async checkIfLiked(@Param('documentId') id, @GetUser() user: User) {
