@@ -11,13 +11,21 @@ export class AuthenticationService {
     private readonly emailService: EmailService,
     private readonly userService: UsersService,
   ) {}
-  public sendVerificationLink(email: string) {
+  async resendVerificationLink(email: string) {
+    const user = await this.userService.getUserByEmail(email);
+    if (user.isVerified) {
+      throw new BadRequestException('User is already verified.');
+    }
+    await this.sendVerificationLink(email);
+  }
+
+  async sendVerificationLink(email: string) {
     const payload: VerificationTokenPayload = { email };
     const token = this.jwtService.sign(payload, {
       secret: process.env.JWT_EMAIL_VERIFICATION_TOKEN_SECRET,
       expiresIn: process.env.JWT_VERIFICATION_TOKEN_EXPIRATION_TIME,
     });
-    const url = `${process.env.API_URL}/authentication/email/${token}`;
+    const url = `${process.env.API_URL}/authentication/${token}`;
     const text = `Witamy w sparkledge. Żeby potwierdzić email, kliknij w link: ${url}`;
     return this.emailService.sendMail({
       from: process.env.ZOHO_EMAIL,
