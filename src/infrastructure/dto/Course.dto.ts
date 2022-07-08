@@ -18,8 +18,4 @@ export class CourseDto {
   courseType: CourseType;
   @IsNotEmpty()
   degree: Degree;
-  /*@IsNotEmpty()
-  courseType: CourseType;
-  @IsNotEmpty()
-  degree: Degree;*/
 }
