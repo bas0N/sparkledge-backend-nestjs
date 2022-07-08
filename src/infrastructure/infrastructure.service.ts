@@ -70,7 +70,7 @@ export class InfrastructureService {
   }
   async getCourses(programmeId: string): Promise<CourseDto[]> {
     return this.prismaService.course.findMany({
-      where: { programmeId: Number(programmeId) },
+      where: { programmeId: Number(programmeId), degree: 'PHD' },
     });
   }
 }
