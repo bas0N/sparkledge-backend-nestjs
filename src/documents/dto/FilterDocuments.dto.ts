@@ -1,14 +1,18 @@
-import { IsOptional } from 'class-validator';
+import { IsOptional, Max, Min } from 'class-validator';
 
 export class FilterDocumentsDto {
   @IsOptional()
-  universityId;
+  universityId: string;
   @IsOptional()
-  facultyId;
+  facultyId: string;
   @IsOptional()
-  programmeId;
+  programmeId: string;
   @IsOptional()
-  courseId;
+  courseId: string;
   @IsOptional()
-  sort;
+  sort: string;
+  @IsOptional()
+  @Min(0)
+  @Max(10)
+  semester: string;
 }
