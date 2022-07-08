@@ -39,6 +39,8 @@ export class InfrastructureService {
     universityId,
     facultyId,
     programmeId,
+    courseType,
+    degree,
   }: CreateCourseDto) {
     return this.prismaService.course.create({
       data: {
@@ -47,6 +49,8 @@ export class InfrastructureService {
         university: { connect: { id: Number(universityId) } },
         faculty: { connect: { id: Number(facultyId) } },
         programme: { connect: { id: Number(programmeId) } },
+        courseType,
+        degree,
       },
     });
   }
@@ -66,7 +70,7 @@ export class InfrastructureService {
   }
   async getCourses(programmeId: string): Promise<CourseDto[]> {
     return this.prismaService.course.findMany({
-      where: { programmeId: Number(programmeId) },
+      where: { programmeId: Number(programmeId), degree: 'PHD' },
     });
   }
 }

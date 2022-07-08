@@ -26,16 +26,18 @@ import {
 } from '@nestjs/swagger';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { DocumentDto } from './dto/Document.dto';
+import { LikeStatusDto } from './dto/LikeStatus.dto';
 var path = require('path');
 @ApiTags('documents')
 @Controller('documents')
-@UseGuards(AuthGuard('jwt'))
 @UseInterceptors(FileInterceptor('file'))
 export class DocumentsController {
   constructor(private documentsService: DocumentsService) {}
 
   @Post()
+  @UseGuards(AuthGuard('jwt'))
   @ApiBearerAuth()
+  @ApiOkResponse({ description: 'Document created.', type: DocumentDto })
   async addNewDocument(
     @Body() createDocumentDto: CreateDocumentDto,
     @GetUser() user: User,
@@ -54,7 +56,9 @@ export class DocumentsController {
 
   @Get('filtered')
   @ApiParam({ name: 'parameters' })
-  async getDocumentsFiltered(@Query() filterDocumentsDto: FilterDocumentsDto) {
+  async getDocumentsFiltered(
+    @Query() filterDocumentsDto: FilterDocumentsDto,
+  ): Promise<DocumentDto[]> {
     return this.documentsService.getDocumentsFiltered(filterDocumentsDto);
   }
 
@@ -62,22 +66,28 @@ export class DocumentsController {
     name: 'documentId',
     description: 'Id of the document that is to be retrieved.',
   })
+  @UseGuards(AuthGuard('jwt'))
   @Get('/:documentId')
-  async getDocumentById(@Param('documentId') id, @GetUser() user: User) {
+  async getDocumentById(
+    @Param('documentId') id,
+    @GetUser() user: User,
+  ): Promise<Document> {
     return await this.documentsService.getDocumentById(id, user);
   }
 
-  @ApiOkResponse({ description: 'All documents retrieved.' })
+  @ApiOkResponse({ description: 'All documents retrieved.', type: DocumentDto })
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   async getAllDocuments(): Promise<Document[]> {
     return await this.documentsService.getAllDocuments();
   }
 
-  @ApiOkResponse({ description: 'Document retrieved succesfully.' })
+  @ApiOkResponse({ description: 'Document deleted succesfully.' })
   @ApiParam({
     name: 'documentId',
     description: 'Id of the document that is to be deleted.',
   })
+  @UseGuards(AuthGuard('jwt'))
   @Delete('/:documentId')
   async deleteDocument(@Param() id: string, @GetUser() user: User) {
     return await this.documentsService.deleteDocument(id, user);
@@ -87,9 +97,13 @@ export class DocumentsController {
     name: 'documentId',
     description: 'Id of the document that is to be liked/disliked.',
   })
+  @UseGuards(AuthGuard('jwt'))
   @Post('toggle-like/:documentId')
   @UseGuards(AuthGuard('jwt'))
-  async toggleLike(@Param('documentId') id, @GetUser() user: User) {
+  async toggleLike(
+    @Param('documentId') id,
+    @GetUser() user: User,
+  ): Promise<LikeStatusDto> {
     return this.documentsService.toggleLike(user, id);
   }
 
@@ -97,9 +111,13 @@ export class DocumentsController {
     name: 'documentId',
     description: 'Id of the document that is to be checked if liked.',
   })
+  @UseGuards(AuthGuard('jwt'))
   @Get('check-if-liked/:documentId')
   @UseGuards(AuthGuard('jwt'))
-  async checkIfLiked(@Param('documentId') id, @GetUser() user: User) {
+  async checkIfLiked(
+    @Param('documentId') id,
+    @GetUser() user: User,
+  ): Promise<LikeStatusDto> {
     return this.documentsService.checkIfLiked(user, id);
   }
   /*

@@ -1,5 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
-
+import { CourseType } from '@prisma/client';
+import { Degree } from '@prisma/client';
 export class CourseDto {
   @IsNotEmpty()
   id: number;
@@ -13,4 +14,8 @@ export class CourseDto {
   facultyId: number;
   @IsNotEmpty()
   universityId: number;
+  @IsNotEmpty()
+  courseType: CourseType;
+  @IsNotEmpty()
+  degree: Degree;
 }

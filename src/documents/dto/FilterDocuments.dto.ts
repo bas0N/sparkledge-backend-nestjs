@@ -1,9 +1,10 @@
-import { IsOptional, Max, Min } from 'class-validator';
-
+import { IsNotEmpty, IsOptional } from 'class-validator';
+import { CourseType } from '@prisma/client';
+import { Degree } from '@prisma/client';
 export class FilterDocumentsDto {
-  @IsOptional()
+  @IsNotEmpty()
   universityId: string;
-  @IsOptional()
+  @IsNotEmpty()
   facultyId: string;
   @IsOptional()
   programmeId: string;
@@ -12,7 +13,9 @@ export class FilterDocumentsDto {
   @IsOptional()
   sort: string;
   @IsOptional()
-  @Min(0)
-  @Max(10)
+  degree: Degree;
+  @IsOptional()
+  courseType: CourseType;
+  @IsOptional()
   semester: string;
 }

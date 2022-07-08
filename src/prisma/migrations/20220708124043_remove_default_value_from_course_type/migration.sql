@@ -1,0 +1,3 @@
+-- AlterTable
+ALTER TABLE "Course" ALTER COLUMN "courseType" DROP DEFAULT,
+ALTER COLUMN "degree" DROP DEFAULT;

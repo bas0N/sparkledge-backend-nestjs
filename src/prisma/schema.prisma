@@ -60,6 +60,8 @@ model Course{
   id Int @default(autoincrement()) @id
   name String
   semester Int
+  courseType CourseType 
+  degree Degree 
   programme Programme @relation(fields:[programmeId],references:[id])
   programmeId Int
   faculty Faculty @relation(fields:[facultyId],references:[id])
@@ -97,4 +99,15 @@ model File{
     id Int @default(autoincrement()) @id
     key String @unique
     documents Document[]
+}
+
+ enum CourseType {
+  FACULTATIVE
+  OBLIGATORY
+}
+
+ enum Degree {
+  BACHELOR
+  MASTER
+  PHD
 }

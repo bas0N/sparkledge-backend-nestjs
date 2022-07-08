@@ -11,7 +11,7 @@ import { Document, File, User } from '@prisma/client';
 import { FilesService } from 'src/files/files.service';
 import { FilterDocumentsDto } from './dto/FilterDocuments.dto';
 import { DocumentDto } from './dto/Document.dto';
-
+import { LikeStatusDto } from './dto/LikeStatus.dto';
 @Injectable()
 export class DocumentsService {
   constructor(
@@ -22,7 +22,6 @@ export class DocumentsService {
   async getDocumentsFiltered(
     filterDocumentsDto: FilterDocumentsDto,
   ): Promise<Document[]> {
-    console.log(filterDocumentsDto.universityId);
     const documents: Array<Document> =
       await this.prismaService.document.findMany({
         where: {
@@ -30,8 +29,16 @@ export class DocumentsService {
           facultyId: Number(filterDocumentsDto?.facultyId) || undefined,
           programmeId: Number(filterDocumentsDto?.programmeId) || undefined,
           courseId: Number(filterDocumentsDto?.courseId) || undefined,
+          course: {
+            is: {
+              semester: Number(filterDocumentsDto?.semester) || undefined,
+              degree: filterDocumentsDto?.degree || undefined,
+              courseType: filterDocumentsDto?.courseType || undefined,
+            },
+          },
         },
       });
+    console.log(documents);
     return documents;
   }
 
@@ -109,7 +116,7 @@ export class DocumentsService {
     }
   }
 
-  async toggleLike(user: User, documentId: string) {
+  async toggleLike(user: User, documentId: string): Promise<LikeStatusDto> {
     const document: Document = await this.prismaService.document.findUnique({
       where: { id: Number(documentId) },
     });
@@ -161,7 +168,7 @@ export class DocumentsService {
     return { message: 'Document liked.', status: true };
   }
 
-  async checkIfLiked(user: User, documentId: string) {
+  async checkIfLiked(user: User, documentId: string): Promise<LikeStatusDto> {
     const document = await this.prismaService.document.findUnique({
       where: { id: Number(documentId) },
     });
