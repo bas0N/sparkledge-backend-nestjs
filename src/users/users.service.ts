@@ -54,7 +54,11 @@ export class UsersService {
 
     const user = await this.prismaService.user.findFirst({ where: { email } });
     if (user && (await bcrypt.compare(password, user.password))) {
-      const payload: JwtPayload = { id: user.id.toString(), email };
+      const payload: JwtPayload = {
+        id: user.id.toString(),
+        email,
+        isVerified: user.isVerified,
+      };
       const accessToken: string = await this.getJwtAccessToken(payload);
       //for refresh token added
       const refreshToken: string = await this.getJwtRefreshToken(payload);
@@ -164,7 +168,11 @@ export class UsersService {
     if (!refreshTokenMatches) {
       throw new ForbiddenException('Access denied.');
     }
-    const payload: JwtPayload = { id: user.id.toString(), email: userEmail };
+    const payload: JwtPayload = {
+      id: user.id.toString(),
+      email: userEmail,
+      isVerified: user.isVerified,
+    };
 
     const accessToken: string = await this.getJwtAccessToken(payload);
     //for refresh token added

@@ -27,6 +27,7 @@ import {
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { DocumentDto } from './dto/Document.dto';
 import { LikeStatusDto } from './dto/LikeStatus.dto';
+import { EmailVerificationGuard } from 'src/authentication/authentication.guard';
 var path = require('path');
 @ApiTags('documents')
 @Controller('documents')
@@ -36,6 +37,7 @@ export class DocumentsController {
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
+  @UseGuards(EmailVerificationGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ description: 'Document created.', type: DocumentDto })
   async addNewDocument(
@@ -66,7 +68,6 @@ export class DocumentsController {
     name: 'documentId',
     description: 'Id of the document that is to be retrieved.',
   })
-  @UseGuards(AuthGuard('jwt'))
   @Get('/:documentId')
   async getDocumentById(
     @Param('documentId') id,
@@ -76,7 +77,6 @@ export class DocumentsController {
   }
 
   @ApiOkResponse({ description: 'All documents retrieved.', type: DocumentDto })
-  @UseGuards(AuthGuard('jwt'))
   @Get()
   async getAllDocuments(): Promise<Document[]> {
     return await this.documentsService.getAllDocuments();
@@ -88,6 +88,7 @@ export class DocumentsController {
     description: 'Id of the document that is to be deleted.',
   })
   @UseGuards(AuthGuard('jwt'))
+  @UseGuards(EmailVerificationGuard)
   @Delete('/:documentId')
   async deleteDocument(@Param() id: string, @GetUser() user: User) {
     return await this.documentsService.deleteDocument(id, user);
@@ -98,6 +99,7 @@ export class DocumentsController {
     description: 'Id of the document that is to be liked/disliked.',
   })
   @UseGuards(AuthGuard('jwt'))
+  @UseGuards(EmailVerificationGuard)
   @Post('toggle-like/:documentId')
   @UseGuards(AuthGuard('jwt'))
   async toggleLike(
@@ -112,6 +114,7 @@ export class DocumentsController {
     description: 'Id of the document that is to be checked if liked.',
   })
   @UseGuards(AuthGuard('jwt'))
+  @UseGuards(EmailVerificationGuard)
   @Get('check-if-liked/:documentId')
   @UseGuards(AuthGuard('jwt'))
   async checkIfLiked(
