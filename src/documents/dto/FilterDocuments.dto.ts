@@ -11,11 +11,25 @@ export class FilterDocumentsDto {
   @IsOptional()
   courseId: string;
   @IsOptional()
-  sort: string;
+  sortPropety: SortPropety;
+  @IsOptional()
+  sortValue: SortValue;
   @IsOptional()
   degree: Degree;
   @IsOptional()
   courseType: CourseType;
   @IsOptional()
   semester: string;
+}
+
+enum SortValue {
+  asc,
+  desc,
+}
+
+enum SortPropety {
+  createdAt,
+  title,
+  viewsNumber,
+  likesNumber,
 }

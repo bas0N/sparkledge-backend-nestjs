@@ -93,4 +93,17 @@ export class UsersController {
   async getUserById(@Param('userId') userId: string): Promise<User> {
     return await this.userService.getUserById(userId);
   }
+
+  @Post('sendForgotPasswordLink')
+  async sendForgotPasswordLink(@Body() email: string) {
+    return await this.userService.sendForgotPasswordLink(email);
+  }
+  @Post('resetPassword/:email/:token')
+  async resetPassword(
+    @Param('email') email: string,
+    @Param('token') token: string,
+    @Body() newPassword: string,
+  ) {
+    return await this.userService.resetPassword(email, token, newPassword);
+  }
 }

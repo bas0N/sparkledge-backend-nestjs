@@ -9,6 +9,7 @@ import { AccessTokenStrategy } from './strategies/access-token.strategy';
 import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
 import { AuthenticationService } from 'src/authentication/authentication.service';
 import { EmailModule } from 'src/email/email.module';
+import { EmailService } from 'src/email/email.service';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { EmailModule } from 'src/email/email.module';
   controllers: [UsersController],
   providers: [
     UsersService,
+    EmailService,
     AccessTokenStrategy,
     RefreshTokenStrategy,
     AuthenticationService,

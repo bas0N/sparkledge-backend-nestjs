@@ -22,6 +22,11 @@ export class DocumentsService {
   async getDocumentsFiltered(
     filterDocumentsDto: FilterDocumentsDto,
   ): Promise<Document[]> {
+    const sortProperties = {};
+    sortProperties[filterDocumentsDto.sortPropety] =
+      filterDocumentsDto.sortValue;
+
+    console.log(sortProperties);
     const documents: Array<Document> =
       await this.prismaService.document.findMany({
         where: {
@@ -37,8 +42,17 @@ export class DocumentsService {
             },
           },
         },
+        include: {
+          user: {
+            select: {
+              email: true,
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+        orderBy: sortProperties,
       });
-    console.log(documents);
     return documents;
   }
 
