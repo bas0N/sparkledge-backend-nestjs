@@ -95,14 +95,14 @@ export class UsersController {
   }
 
   @Post('sendForgotPasswordLink')
-  async sendForgotPasswordLink(@Body() email: string) {
+  async sendForgotPasswordLink(@Body('email') email: string) {
     return await this.userService.sendForgotPasswordLink(email);
   }
   @Post('resetPassword/:email/:token')
   async resetPassword(
     @Param('email') email: string,
     @Param('token') token: string,
-    @Body() newPassword: string,
+    @Body('newPassword') newPassword: string,
   ) {
     return await this.userService.resetPassword(email, token, newPassword);
   }
