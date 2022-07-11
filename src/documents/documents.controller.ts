@@ -10,6 +10,7 @@ import {
   UploadedFile,
   UseGuards,
   UseInterceptors,
+  Patch,
 } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -28,6 +29,7 @@ import { CreateDocumentDto } from './dto/create-document.dto';
 import { DocumentDto } from './dto/Document.dto';
 import { LikeStatusDto } from './dto/LikeStatus.dto';
 import { EmailVerificationGuard } from 'src/authentication/authentication.guard';
+import { UpdateDocumentDto } from './dto/UpdateDocument.dto';
 var path = require('path');
 @ApiTags('documents')
 @Controller('documents')
@@ -55,7 +57,15 @@ export class DocumentsController {
       file.buffer,
     );
   }
-
+  @UseGuards(AuthGuard('jwt'), EmailVerificationGuard)
+  @Patch()
+  @ApiOkResponse({ description: 'Document updated.' })
+  async updateDocument(
+    @Body() updateDocumentDto: UpdateDocumentDto,
+    @GetUser() user: User,
+  ) {
+    return this.documentsService.updateDocument(updateDocumentDto, user);
+  }
   @Get('filtered')
   @ApiParam({ name: 'parameters' })
   async getDocumentsFiltered(

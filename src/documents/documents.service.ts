@@ -12,12 +12,34 @@ import { FilesService } from 'src/files/files.service';
 import { FilterDocumentsDto } from './dto/FilterDocuments.dto';
 import { DocumentDto } from './dto/Document.dto';
 import { LikeStatusDto } from './dto/LikeStatus.dto';
+import { UpdateDocumentDto } from './dto/UpdateDocument.dto';
 @Injectable()
 export class DocumentsService {
   constructor(
     private readonly prismaService: PrismaService,
     private filesService: FilesService,
   ) {}
+
+  async updateDocument(updateDocumentDto: UpdateDocumentDto, user: User) {
+    const userDb = await this.prismaService.user.findUnique({
+      where: { email: user.email },
+    });
+    if (!userDb) {
+      throw new BadRequestException('User not found.');
+    }
+    if (Number(updateDocumentDto.id) !== userDb.id) {
+      throw new BadRequestException(
+        'You do not own this material - cannot update.',
+      );
+    }
+    return this.prismaService.document.update({
+      where: { id: Number(updateDocumentDto.id) },
+      data: {
+        title: updateDocumentDto?.title,
+        description: updateDocumentDto?.description,
+      },
+    });
+  }
 
   async getDocumentsFiltered(
     filterDocumentsDto: FilterDocumentsDto,
