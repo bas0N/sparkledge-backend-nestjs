@@ -15,13 +15,54 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { CreateUserDto } from './dto/createUser.dto';
 import { DocumentDto } from 'src/documents/dto/Document.dto';
+import { EmailService } from 'src/email/email.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly prismaService: PrismaService,
     private jwtService: JwtService,
+    private readonly emailService: EmailService,
   ) {}
+  async resetPassword(email: string, token: string, newPassword: string) {
+    const user = await this.getUserByEmail(email);
+    const secret = user.password;
+    //verify if the token is true
+    const payload = this.jwtService.verify(token, { secret });
+    if (typeof payload === 'object' && 'email' in payload) {
+      //hash the password
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+      //update the user object
+      this.prismaService.user.update({
+        where: { email },
+        data: { password: hashedPassword },
+      });
+      return;
+    } else {
+      throw new BadRequestException('Invalid token or email.');
+    }
+  }
+  async sendForgotPasswordLink(email: string) {
+    const user: User = await this.getUserByEmail(email);
+    if (!user) {
+      throw new BadRequestException('Email not found.');
+    }
+    const payload = { email };
+    const token = this.jwtService.sign(payload, {
+      secret: user.password,
+      expiresIn: process.env.JWT_FORGOT_PASSWORD_TOKEN_EXPIRATION_TIME,
+    });
+    //link to react page
+    const url = `FRONTEND-URL.com/${user.email}/${token}`;
+    const text = `Witamy w sparkledge. Żeby zresetować hasło, kliknij w link: ${url}`;
+    return this.emailService.sendMail({
+      from: process.env.ZOHO_EMAIL,
+      to: email,
+      subject: 'Email confirmation',
+      text,
+    });
+  }
   async addNewUser({
     email,
     password,
