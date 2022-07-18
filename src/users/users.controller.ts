@@ -25,7 +25,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthenticationService } from 'src/authentication/authentication.service';
-import { EmailVerificationGuard } from 'src/authentication/authentication.guard';
+//import { EmailVerificationGuard } from 'src/authentication/authentication.guard';
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
@@ -76,14 +76,14 @@ export class UsersController {
   }
   @Get('viewedDocuments')
   @UseGuards(AuthGuard('jwt'))
-  @UseGuards(EmailVerificationGuard)
+  //@UseGuards(EmailVerificationGuard)
   @ApiBearerAuth()
   async getViewedDocuments(@GetUser() user: User) {
     return this.userService.getViewedDocuments(user);
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @UseGuards(EmailVerificationGuard)
+  //@UseGuards(EmailVerificationGuard)
   @ApiOkResponse({ description: 'User retrieved succesfully.' })
   @ApiParam({
     name: 'userId',
