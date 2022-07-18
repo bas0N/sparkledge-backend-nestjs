@@ -11,13 +11,13 @@ import { CourseDto } from './dto/Course.dto';
 import { FacultyDto } from './dto/Faculty.dto';
 import { ProgrammeDto } from './dto/Programme.to';
 import { UniversityDto } from './dto/University.dto';
-import { EmailVerificationGuard } from 'src/authentication/authentication.guard';
+//import { EmailVerificationGuard } from 'src/authentication/authentication.guard';
 @ApiTags('infrastructure')
 @Controller('infrastructure')
 export class InfrastructureController {
   constructor(private infrastructureService: InfrastructureService) {}
   @UseGuards(AuthGuard('jwt'))
-  @UseGuards(EmailVerificationGuard)
+  //@UseGuards(EmailVerificationGuard)
   @Post('university')
   addUniversity(
     @Body() createUniversityDto: CreateUniversityDto,
@@ -26,14 +26,14 @@ export class InfrastructureController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @UseGuards(EmailVerificationGuard)
+  //@UseGuards(EmailVerificationGuard)
   @Post('faculty')
   addFaculty(@Body() createFacultyDto: CreateFacultyDto): Promise<Faculty> {
     return this.infrastructureService.addFaculty(createFacultyDto);
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @UseGuards(EmailVerificationGuard)
+  //@UseGuards(EmailVerificationGuard)
   @Post('programme')
   addProgramme(
     @Body() createProgrammeDto: CreateProgrammeDto,
@@ -42,7 +42,7 @@ export class InfrastructureController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @UseGuards(EmailVerificationGuard)
+  //@UseGuards(EmailVerificationGuard)
   @Post('course')
   addCourse(@Body() createCourseDto: CreateCourseDto): Promise<Course> {
     return this.infrastructureService.addCourse(createCourseDto);
