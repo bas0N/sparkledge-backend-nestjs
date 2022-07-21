@@ -33,12 +33,13 @@ export class UsersService {
       //hash the password
       const salt = await bcrypt.genSalt();
       const hashedPassword = await bcrypt.hash(newPassword, salt);
+
       //update the user object
-      this.prismaService.user.update({
+      const user = this.prismaService.user.update({
         where: { email },
         data: { password: hashedPassword },
       });
-      return;
+      return user;
     } else {
       throw new BadRequestException('Invalid token or email.');
     }
@@ -54,7 +55,7 @@ export class UsersService {
       expiresIn: process.env.JWT_FORGOT_PASSWORD_TOKEN_EXPIRATION_TIME,
     });
     //link to react page
-    const url = `FRONTEND-URL.com/${user.email}/${token}`;
+    const url = `https://www.sparkledge.pl/resetPassword/${user.email}/${token}`;
     const text = `Witamy w sparkledge. Żeby zresetować hasło, kliknij w link: ${url}`;
     return this.emailService.sendMail({
       from: process.env.ZOHO_EMAIL,

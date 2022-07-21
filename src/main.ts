@@ -37,6 +37,6 @@ async function bootstrap() {
     region: process.env.AWS_BUCKET_REGION,
   });
   app.useGlobalFilters(new HttpExceptionFilter());
-  await app.listen(process.env.PORT || 8080);
+  await app.listen(process.env.PORT || 3002);
 }
 bootstrap();
