@@ -25,7 +25,7 @@ export class AuthenticationService {
       secret: process.env.JWT_EMAIL_VERIFICATION_TOKEN_SECRET,
       expiresIn: process.env.JWT_VERIFICATION_TOKEN_EXPIRATION_TIME,
     });
-    const url = `${process.env.API_URL}/authentication/${token}`;
+    const url = `https://www.sparkledge.pl/authentication/${token}`;
     const text = `Witamy w sparkledge. Żeby potwierdzić email, kliknij w link: ${url}`;
     return this.emailService.sendMail({
       from: process.env.ZOHO_EMAIL,
