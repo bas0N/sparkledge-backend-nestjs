@@ -16,6 +16,8 @@ import { Prisma } from '@prisma/client';
 import { CreateUserDto } from './dto/createUser.dto';
 import { DocumentDto } from 'src/documents/dto/Document.dto';
 import { EmailService } from 'src/email/email.service';
+import handlebars from 'handlebars';
+const fs = require('fs').promises;
 
 @Injectable()
 export class UsersService {
@@ -56,12 +58,23 @@ export class UsersService {
     });
     //link to react page
     const url = `https://www.sparkledge.pl/resetPassword/${user.email}/${token}`;
-    const text = `Witamy w sparkledge. Żeby zresetować hasło, kliknij w link: ${url}`;
+    const html = await fs.readFile(
+      'src/email/templates/VerifyEmailTemplate.html',
+      'utf8',
+    );
+
+    //changing variables with handlebars
+    var template = handlebars.compile(html);
+    var replacements = {
+      email: email,
+      changePasswordLink: url,
+    };
+    var htmlToSend = template(replacements);
     return this.emailService.sendMail({
       from: process.env.ZOHO_EMAIL,
       to: email,
-      subject: 'Email confirmation',
-      text,
+      subject: 'Sparkledge - przywróć hasło',
+      html: htmlToSend,
     });
   }
   async addNewUser({

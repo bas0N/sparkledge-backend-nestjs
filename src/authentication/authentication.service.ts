@@ -42,12 +42,10 @@ export class AuthenticationService {
     };
     var htmlToSend = template(replacements);
 
-    const text = `Witamy w sparkledge. Żeby potwierdzić email, kliknij w link: ${url}`;
     return this.emailService.sendMail({
       from: process.env.ZOHO_EMAIL,
       to: email,
-      subject: 'Email confirmation',
-      text,
+      subject: 'Sparkledge - potwierdź adres email',
       html: htmlToSend,
     });
   }
