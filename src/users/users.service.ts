@@ -59,7 +59,7 @@ export class UsersService {
     //link to react page
     const url = `https://www.sparkledge.pl/resetPassword/${user.email}/${token}`;
     const html = await fs.readFile(
-      'src/email/templates/VerifyEmailTemplate.html',
+      'src/email/templates/ForgotPasswordTemplate.html',
       'utf8',
     );
 
