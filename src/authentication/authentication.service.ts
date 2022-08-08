@@ -3,6 +3,8 @@ import { JwtService } from '@nestjs/jwt';
 import { EmailService } from 'src/email/email.service';
 import { UsersService } from 'src/users/users.service';
 import VerificationTokenPayload from './verificationTokenPayload.interface';
+import handlebars from 'handlebars';
+const fs = require('fs').promises;
 
 @Injectable()
 export class AuthenticationService {
@@ -26,12 +28,27 @@ export class AuthenticationService {
       expiresIn: process.env.JWT_VERIFICATION_TOKEN_EXPIRATION_TIME,
     });
     const url = `https://www.sparkledge.pl/authentication/${token}`;
+
+    const html = await fs.readFile(
+      'src/email/templates/VerifyEmailTemplate.html',
+      'utf8',
+    );
+
+    //changing variables with handlebars
+    var template = handlebars.compile(html);
+    var replacements = {
+      email: email,
+      verificationLink: url,
+    };
+    var htmlToSend = template(replacements);
+
     const text = `Witamy w sparkledge. Żeby potwierdzić email, kliknij w link: ${url}`;
     return this.emailService.sendMail({
       from: process.env.ZOHO_EMAIL,
       to: email,
       subject: 'Email confirmation',
       text,
+      html: htmlToSend,
     });
   }
   async validateEmailWithToken(token: string) {}
