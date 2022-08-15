@@ -19,6 +19,7 @@ import { GetUser } from 'src/users/get-user.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 import { FilterDocumentsDto } from './dto/FilterDocuments.dto';
+import { AddCommentDto } from './dto/AddComment.dto';
 import {
   ApiBearerAuth,
   ApiOkResponse,
@@ -132,6 +133,14 @@ export class DocumentsController {
     @GetUser() user: User,
   ): Promise<LikeStatusDto> {
     return this.documentsService.checkIfLiked(user, id);
+  }
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/add-comment')
+  async addComment(
+    @Body() addCommentDto: AddCommentDto,
+    @GetUser() user: User,
+  ) {
+    return this.documentsService.addComment(user, addCommentDto);
   }
   /*
   @Patch()

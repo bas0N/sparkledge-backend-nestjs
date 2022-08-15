@@ -13,6 +13,8 @@ import { FilterDocumentsDto } from './dto/FilterDocuments.dto';
 import { DocumentDto } from './dto/Document.dto';
 import { LikeStatusDto } from './dto/LikeStatus.dto';
 import { UpdateDocumentDto } from './dto/UpdateDocument.dto';
+import { AddCommentDto } from './dto/AddComment.dto';
+import { Comment } from '.prisma/client';
 @Injectable()
 export class DocumentsService {
   constructor(
@@ -91,6 +93,8 @@ export class DocumentsService {
       facultyId,
       universityId,
     } = document;
+    const date = new Date();
+    date.setHours(date.getHours() + 2);
     try {
       //upload document to s3 and postgres
       //retrieve object with file id in postgres and s3 key
@@ -106,7 +110,7 @@ export class DocumentsService {
           programme: { connect: { id: Number(programmeId) } },
           user: { connect: { id: Number(user.id) } },
           file: { connect: { id: Number(createdFile.id) } },
-          createdAt: convertTZ(new Date(), 'Europe/Warsaw'),
+          createdAt: date,
         },
       });
       return createdDocument;
@@ -140,6 +144,24 @@ export class DocumentsService {
   async getAllDocuments(): Promise<Document[]> {
     const documents = await this.prismaService.document.findMany();
     return documents;
+  }
+  async addComment(user: User, comment: AddCommentDto): Promise<Comment> {
+    const { documentId, content } = comment;
+    const date = new Date();
+    date.setHours(date.getHours() + 2);
+    try {
+      const comment = await this.prismaService.comment.create({
+        data: {
+          author: { connect: { id: Number(user.id) } },
+          document: { connect: { id: Number(documentId) } },
+          content,
+          createdAt: date,
+        },
+      });
+      return comment;
+    } catch (err) {
+      throw new Error(err);
+    }
   }
 
   async deleteDocument(id: string, user: User) {
