@@ -20,8 +20,10 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
 import { FilterDocumentsDto } from './dto/FilterDocuments.dto';
 import { AddCommentDto } from './dto/AddComment.dto';
+import { Comment } from '.prisma/client';
 import {
   ApiBearerAuth,
+  ApiCreatedResponse,
   ApiOkResponse,
   ApiParam,
   ApiTags,
@@ -134,6 +136,7 @@ export class DocumentsController {
   ): Promise<LikeStatusDto> {
     return this.documentsService.checkIfLiked(user, id);
   }
+  @ApiCreatedResponse({ description: 'Comment Added.', type: AddCommentDto })
   @UseGuards(AuthGuard('jwt'))
   @Post('/add-comment')
   async addComment(
@@ -141,6 +144,14 @@ export class DocumentsController {
     @GetUser() user: User,
   ) {
     return this.documentsService.addComment(user, addCommentDto);
+  }
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/get-comments/:documentId')
+  async getComments(
+    @Param('documentId') id,
+    @GetUser() user: User,
+  ): Promise<Comment[]> {
+    return this.documentsService.getComments(id);
   }
   /*
   @Patch()

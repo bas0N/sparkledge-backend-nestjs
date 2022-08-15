@@ -163,6 +163,16 @@ export class DocumentsService {
       throw new Error(err);
     }
   }
+  async getComments(id: string) {
+    try {
+      const comments: Comment[] = await this.prismaService.document
+        .findUnique({ where: { id: Number(id) } })
+        .comments();
+      return comments;
+    } catch (err) {
+      throw new NotFoundException(`Document with id ${id} not found.`);
+    }
+  }
 
   async deleteDocument(id: string, user: User) {
     try {
@@ -249,13 +259,7 @@ export class DocumentsService {
     }
   }
 }
-function convertTZ(date, tzString) {
-  return new Date(
-    (typeof date === 'string' ? new Date(date) : date).toLocaleString('en-US', {
-      timeZone: tzString,
-    }),
-  );
-}
+
 /*
   
 
