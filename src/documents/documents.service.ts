@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 //import { Document } from './document.model';
@@ -171,6 +172,24 @@ export class DocumentsService {
       return comments;
     } catch (err) {
       throw new NotFoundException(`Document with id ${id} not found.`);
+    }
+  }
+  async deleteComment(user: User, id: string) {
+    try {
+      const comment = await this.prismaService.comment.findUnique({
+        where: { id: Number(id) },
+      });
+      if ((comment.id = user.id)) {
+        const commentDeleted = await this.prismaService.comment.delete({
+          where: { id: Number(id) },
+        });
+        return commentDeleted;
+      }
+      throw new UnauthorizedException(
+        `You are not the creator of the comment with id ${id}, thus you cannot delete it.`,
+      );
+    } catch (err) {
+      throw new NotFoundException(`Comment with id ${id} not found.`);
     }
   }
 

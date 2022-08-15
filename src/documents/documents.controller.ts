@@ -138,7 +138,7 @@ export class DocumentsController {
   }
   @ApiCreatedResponse({ description: 'Comment Added.', type: AddCommentDto })
   @UseGuards(AuthGuard('jwt'))
-  @Post('/add-comment')
+  @Post('/comments/add-comment')
   async addComment(
     @Body() addCommentDto: AddCommentDto,
     @GetUser() user: User,
@@ -146,12 +146,17 @@ export class DocumentsController {
     return this.documentsService.addComment(user, addCommentDto);
   }
   @UseGuards(AuthGuard('jwt'))
-  @Get('/get-comments/:documentId')
-  async getComments(
+  @Get('/comments/get-comments/:documentId')
+  async getComments(@Param('documentId') id): Promise<Comment[]> {
+    return this.documentsService.getComments(id);
+  }
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('/comments/delete-comment/:documentId')
+  async deleteDomment(
     @Param('documentId') id,
     @GetUser() user: User,
-  ): Promise<Comment[]> {
-    return this.documentsService.getComments(id);
+  ): Promise<Comment> {
+    return this.documentsService.deleteComment(user, id);
   }
   /*
   @Patch()
