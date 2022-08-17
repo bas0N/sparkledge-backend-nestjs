@@ -167,8 +167,20 @@ export class DocumentsService {
   async getComments(id: string) {
     try {
       const comments: Comment[] = await this.prismaService.document
-        .findUnique({ where: { id: Number(id) } })
-        .comments();
+        .findUnique({
+          where: { id: Number(id) },
+        })
+        .comments({
+          include: {
+            author: {
+              select: {
+                email: true,
+                firstName: true,
+                lastName: true,
+              },
+            },
+          },
+        });
       return comments;
     } catch (err) {
       throw new NotFoundException(`Document with id ${id} not found.`);
