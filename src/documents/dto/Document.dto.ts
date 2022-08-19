@@ -17,7 +17,7 @@ export class DocumentDto {
   universityId: number;
   @IsNotEmpty()
   @IsNotEmpty()
-  userId: number;
+  userId: string;
   @IsNotEmpty()
   fileId: number;
   @IsNotEmpty()

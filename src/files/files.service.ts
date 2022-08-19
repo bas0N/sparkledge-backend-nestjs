@@ -54,7 +54,7 @@ export class FilesService {
       //find user whose array of viewed documents will be updated
       const foundUser = await this.prismaService.user.findUnique({
         where: {
-          id: Number(user.id),
+          id: user.id,
         },
       });
       if (!foundUser) {
@@ -82,7 +82,7 @@ export class FilesService {
       //update the user with the new array
       const userUpdated = await this.prismaService.user.update({
         where: {
-          id: Number(user.id),
+          id: user.id,
         },
         data: {
           viewedDocuments: {
@@ -136,7 +136,7 @@ export class FilesService {
     //find user whose array of viewed documents will be updated
     const foundUser = await this.prismaService.user.findUnique({
       where: {
-        id: Number(user.id),
+        id: user.id,
       },
     });
     if (!foundUser) {
@@ -164,7 +164,7 @@ export class FilesService {
     //update the user with the new array
     const userUpdated = await this.prismaService.user.update({
       where: {
-        id: Number(user.id),
+        id: user.id,
       },
       data: {
         viewedDocuments: {

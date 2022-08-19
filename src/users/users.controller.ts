@@ -82,7 +82,7 @@ export class UsersController {
     return this.userService.getViewedDocuments(user);
   }
 
-  @UseGuards(AuthGuard('jwt'))
+  //@UseGuards(AuthGuard('jwt'))
   //@UseGuards(EmailVerificationGuard)
   @ApiOkResponse({ description: 'User retrieved succesfully.' })
   @ApiParam({

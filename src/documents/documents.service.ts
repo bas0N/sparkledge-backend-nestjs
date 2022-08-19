@@ -30,7 +30,7 @@ export class DocumentsService {
     if (!userDb) {
       throw new BadRequestException('User not found.');
     }
-    if (Number(updateDocumentDto.id) !== userDb.id) {
+    if (updateDocumentDto.id !== userDb.id) {
       throw new BadRequestException(
         'You do not own this material - cannot update.',
       );
@@ -109,7 +109,7 @@ export class DocumentsService {
           university: { connect: { id: Number(universityId) } },
           faculty: { connect: { id: Number(facultyId) } },
           programme: { connect: { id: Number(programmeId) } },
-          user: { connect: { id: Number(user.id) } },
+          user: { connect: { id: user.id } },
           file: { connect: { id: Number(createdFile.id) } },
           createdAt: date,
         },
@@ -153,7 +153,7 @@ export class DocumentsService {
     try {
       const comment = await this.prismaService.comment.create({
         data: {
-          author: { connect: { id: Number(user.id) } },
+          author: { connect: { id: user.id } },
           document: { connect: { id: Number(documentId) } },
           content,
           createdAt: date,
@@ -191,7 +191,7 @@ export class DocumentsService {
       const comment = await this.prismaService.comment.findUnique({
         where: { id: Number(id) },
       });
-      if ((comment.id = user.id)) {
+      if ((comment.userId = user.id)) {
         const commentDeleted = await this.prismaService.comment.delete({
           where: { id: Number(id) },
         });
@@ -290,9 +290,3 @@ export class DocumentsService {
     }
   }
 }
-
-/*
-  
-
-  updateDocument() {}
-*/

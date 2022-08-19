@@ -13,7 +13,7 @@ datasource db {
 }
 
 model User{
-    id Int @default(autoincrement()) @id
+    id String @default(uuid()) @id
     email String @unique
     firstName String
     lastName String
@@ -87,7 +87,7 @@ model Document{
   university University @relation(fields:[universityId],references:[id])
   universityId Int
   user User @relation(fields:[userId],references:[id])
-  userId Int
+  userId String
   file File @relation(fields:[fileId],references: [id])
   fileId Int
   viewsNumber Int @default(0)
@@ -118,7 +118,7 @@ model Comment{
   id Int @default(autoincrement()) @id
   content String
   author User @relation(fields:[userId],references:[id])
-  userId Int
+  userId String
   document Document @relation(fields:[documentId],references: [id])
   documentId Int 
   likesNumber Int @default(0)

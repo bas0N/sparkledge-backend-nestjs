@@ -93,6 +93,7 @@ export class UsersService {
       });
       return user;
     } catch (error) {
+      console.log(error);
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
           throw new ConflictException('Email provided already exists.');
@@ -110,7 +111,7 @@ export class UsersService {
     const user = await this.prismaService.user.findFirst({ where: { email } });
     if (user && (await bcrypt.compare(password, user.password))) {
       const payload: JwtPayload = {
-        id: user.id.toString(),
+        id: user.id,
         email,
         isVerified: user.isVerified,
       };
@@ -125,7 +126,7 @@ export class UsersService {
   }
   async getUserById(userId: string): Promise<User> {
     return await this.prismaService.user.findUnique({
-      where: { id: Number(userId) },
+      where: { id: userId },
     });
   }
   async getUserByEmail(email: string): Promise<User> {
@@ -159,7 +160,7 @@ export class UsersService {
   async getViewedDocuments(user: User): Promise<DocumentDto[]> {
     //finds user with the given id
     const userFound = await this.prismaService.user.findUnique({
-      where: { id: Number(user.id) },
+      where: { id: user.id },
     });
     //throws error if the user has not been found
     if (!userFound) {
