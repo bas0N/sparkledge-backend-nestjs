@@ -23,6 +23,7 @@ model User{
     refreshToken String?
     documents Document[]
     comments Comment[]
+    reports Report[]
     viewedDocuments String[]
 
 }
@@ -94,6 +95,7 @@ model Document{
   likesNumber Int @default(0)
   likesList String[]
   comments Comment[]
+  reports Report[]
   createdAt DateTime @default(now()) 
 
 }
@@ -123,4 +125,23 @@ model Comment{
   documentId Int 
   likesNumber Int @default(0)
   createdAt DateTime @default(now())  
+}
+model Report{
+  id String @default(uuid()) @id
+  reportType ReportType
+  personReporting User @relation(fields:[userId],references:[id])
+  userId String
+  documentReported Document @relation(fields:[documentId],references:[id])
+  documentId Int
+  content String @default("no-content")
+
+}
+
+enum ReportType {
+  MINECOPYRIGHTSVIOLATION
+  SOMEONESCOPYRIGHTSVIOLATION
+  HATEFULCONTENT
+  INAPPROPRIATECONTENT
+  SEXUALCONTENT
+  OTHER
 }
