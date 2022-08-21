@@ -25,6 +25,7 @@ model User{
     comments Comment[]
     reports Report[]
     viewedDocuments String[]
+    registeredBy RegisteredBy @default(EMAIL)
 
 }
 
@@ -135,6 +136,10 @@ model Report{
   documentId Int
   content String @default("no-content")
 
+}
+enum RegisteredBy {
+  EMAIL
+  GOOGLE
 }
 
 enum ReportType {
