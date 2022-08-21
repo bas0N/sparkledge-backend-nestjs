@@ -89,7 +89,12 @@ export class UsersService {
 
     try {
       const user = await this.prismaService.user.create({
-        data: { email, password: hashedPassword, firstName, lastName },
+        data: {
+          email,
+          password: hashedPassword,
+          firstName,
+          lastName,
+        },
       });
       return user;
     } catch (error) {

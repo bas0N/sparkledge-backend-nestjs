@@ -1,14 +1,22 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
+
 import { JwtService } from '@nestjs/jwt';
 import { EmailService } from 'src/email/email.service';
 import { UsersService } from 'src/users/users.service';
 import VerificationTokenPayload from './verificationTokenPayload.interface';
 import handlebars from 'handlebars';
+import { JwtPayload } from 'src/users/jwt-payload.interface';
 const fs = require('fs').promises;
 
 @Injectable()
 export class AuthenticationService {
   constructor(
+    private readonly prismaService: PrismaService,
     private readonly jwtService: JwtService,
     private readonly emailService: EmailService,
     private readonly userService: UsersService,
@@ -73,5 +81,69 @@ export class AuthenticationService {
       throw new BadRequestException('Email already verified');
     }
     await this.userService.markEmailAsVerified(email);
+  }
+  async googleRedirect(req) {
+    if (!req.user) {
+      return new InternalServerErrorException('No user from google');
+    }
+    const user = await this.userService.getUserByEmail(req.user.email);
+    console.log('getUserByEmail');
+    console.log(user);
+    const googleUser = req.user;
+    console.log('get user google ');
+
+    console.log(googleUser);
+
+    if (!user) {
+      const registeredUser = await this.prismaService.user.create({
+        data: {
+          email: googleUser.email,
+          firstName: googleUser.firstName,
+          lastName: googleUser.lastName,
+          password: 'null',
+          isVerified: true,
+          registeredBy: 'GOOGLE',
+        },
+      });
+
+      if (!registeredUser) {
+        throw new InternalServerErrorException('Error while adding new user.');
+      }
+      console.log('registered user');
+      console.log(registeredUser);
+      const payload: JwtPayload = {
+        id: registeredUser.id,
+        email: registeredUser.email,
+        isVerified: true,
+      };
+
+      const accessToken: string = await this.userService.getJwtAccessToken(
+        payload,
+      );
+      //for refresh token added
+      const refreshToken: string = await this.userService.getJwtRefreshToken(
+        payload,
+      );
+      await this.userService.setCurrentRefreshToken(
+        refreshToken,
+        registeredUser.email,
+      );
+      return { accessToken: accessToken, refreshToken: refreshToken };
+    }
+    const payload: JwtPayload = {
+      id: user.id,
+      email: user.email,
+      isVerified: true,
+    };
+
+    const accessToken: string = await this.userService.getJwtAccessToken(
+      payload,
+    );
+    //for refresh token added
+    const refreshToken: string = await this.userService.getJwtRefreshToken(
+      payload,
+    );
+    await this.userService.setCurrentRefreshToken(refreshToken, user.email);
+    return { accessToken: accessToken, refreshToken: refreshToken };
   }
 }

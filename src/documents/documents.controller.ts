@@ -33,6 +33,7 @@ import { DocumentDto } from './dto/Document.dto';
 import { LikeStatusDto } from './dto/LikeStatus.dto';
 //import { EmailVerificationGuard } from 'src/authentication/authentication.guard';
 import { UpdateDocumentDto } from './dto/UpdateDocument.dto';
+import { AddReportDto } from './dto/AddReport.dto';
 var path = require('path');
 @ApiTags('documents')
 @Controller('documents')
@@ -162,4 +163,10 @@ export class DocumentsController {
   @Patch()
   async updateDocument() {}
   */
+  @ApiCreatedResponse({ description: 'Report Added.', type: AddReportDto })
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/report/add-report')
+  async addReport(@Body() addReportDto: AddReportDto, @GetUser() user: User) {
+    return this.documentsService.addReport(addReportDto, user);
+  }
 }

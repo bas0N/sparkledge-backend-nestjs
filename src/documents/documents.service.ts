@@ -16,12 +16,42 @@ import { LikeStatusDto } from './dto/LikeStatus.dto';
 import { UpdateDocumentDto } from './dto/UpdateDocument.dto';
 import { AddCommentDto } from './dto/AddComment.dto';
 import { Comment } from '.prisma/client';
+import { AddReportDto } from './dto/AddReport.dto';
 @Injectable()
 export class DocumentsService {
   constructor(
     private readonly prismaService: PrismaService,
     private filesService: FilesService,
   ) {}
+
+  async addReport(addReportData: AddReportDto, user: User) {
+    const { documentId, reportType, content } = addReportData;
+    try {
+      const document = this.prismaService.document.findFirst({
+        where: { id: Number(documentId) },
+      });
+      if (!document) {
+        throw new BadRequestException('Invalid document Id');
+      }
+
+      const report = await this.prismaService.report.create({
+        data: {
+          documentId: Number(documentId),
+          userId: user.id,
+          reportType,
+          content,
+        },
+      });
+      if (!report) {
+        throw new InternalServerErrorException('Report not added.');
+      }
+      return report;
+    } catch (err) {
+      throw new Error(err);
+    }
+    console.log(addReportData);
+    console.log(user);
+  }
 
   async updateDocument(updateDocumentDto: UpdateDocumentDto, user: User) {
     const userDb = await this.prismaService.user.findUnique({
