@@ -43,6 +43,7 @@ export class DocumentsService {
           userId: user.id,
           reportType,
           content,
+          createdAt: currentDate,
         },
       });
       if (!report) {
@@ -157,6 +158,7 @@ export class DocumentsService {
       });
       return createdDocument;
     } catch (error) {
+      console.log(error);
       throw new InternalServerErrorException('Error during document upload.');
     }
   }

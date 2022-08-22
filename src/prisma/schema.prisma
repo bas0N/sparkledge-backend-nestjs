@@ -135,7 +135,7 @@ model Report{
   documentReported Document @relation(fields:[documentId],references:[id])
   documentId Int
   content String @default("no-content")
-
+  createdAt DateTime @default(now()) 
 }
 enum RegisteredBy {
   EMAIL
