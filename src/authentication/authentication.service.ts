@@ -11,6 +11,8 @@ import { UsersService } from 'src/users/users.service';
 import VerificationTokenPayload from './verificationTokenPayload.interface';
 import handlebars from 'handlebars';
 import { JwtPayload } from 'src/users/jwt-payload.interface';
+import { GoogleAuthenticateDto } from './dto/GoogleAuthenticate.dto';
+import { googleClient } from './googleClient';
 const fs = require('fs').promises;
 
 @Injectable()
@@ -21,6 +23,16 @@ export class AuthenticationService {
     private readonly emailService: EmailService,
     private readonly userService: UsersService,
   ) {}
+  async googleAuthenticate({ token }: GoogleAuthenticateDto) {
+    console.log(token);
+    const ticket = await googleClient.verifyIdToken({
+      idToken: token,
+      audience: `${process.env.GOOGLE_CLIENT_ID}`,
+    });
+    const { name, email, picture } = ticket.getPayload();
+    console.log(name, email, picture);
+    return;
+  }
   async resendVerificationLink(email: string) {
     const user = await this.userService.getUserByEmail(email);
     if (user.isVerified) {

@@ -9,6 +9,7 @@ import { UsersService } from 'src/users/users.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { GoogleStrategy } from './google.strategy';
+import { googleClient } from './googleClient';
 
 @Module({
   imports: [JwtModule.register({}), EmailModule, UsersModule, PrismaModule],
