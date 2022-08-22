@@ -17,6 +17,7 @@ import { UpdateDocumentDto } from './dto/UpdateDocument.dto';
 import { AddCommentDto } from './dto/AddComment.dto';
 import { Comment } from '.prisma/client';
 import { AddReportDto } from './dto/AddReport.dto';
+import { sendMessage } from 'src/slack/slackBot';
 @Injectable()
 export class DocumentsService {
   constructor(
@@ -33,7 +34,9 @@ export class DocumentsService {
       if (!document) {
         throw new BadRequestException('Invalid document Id');
       }
+      console.log('send message response');
 
+      const currentDate = new Date();
       const report = await this.prismaService.report.create({
         data: {
           documentId: Number(documentId),
@@ -45,12 +48,20 @@ export class DocumentsService {
       if (!report) {
         throw new InternalServerErrorException('Report not added.');
       }
+      await sendMessage(
+        user.id,
+        user.email,
+        documentId.toString(),
+        report.id,
+        reportType,
+        content,
+        currentDate,
+      );
+
       return report;
     } catch (err) {
       throw new Error(err);
     }
-    console.log(addReportData);
-    console.log(user);
   }
 
   async updateDocument(updateDocumentDto: UpdateDocumentDto, user: User) {
