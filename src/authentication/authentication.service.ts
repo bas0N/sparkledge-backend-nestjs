@@ -23,15 +23,7 @@ export class AuthenticationService {
     private readonly emailService: EmailService,
     private readonly userService: UsersService,
   ) {}
-  async googleAuthenticate({ token }: GoogleAuthenticateDto) {
-    console.log(token);
-    const ticket = await googleClient.verifyIdToken({
-      idToken: token,
-      audience: `${process.env.GOOGLE_CLIENT_ID}`,
-    });
-    const { name, email, picture } = ticket.getPayload();
-    return { name, email, picture };
-  }
+
   async resendVerificationLink(email: string) {
     const user = await this.userService.getUserByEmail(email);
     if (user.isVerified) {
@@ -92,6 +84,77 @@ export class AuthenticationService {
       throw new BadRequestException('Email already verified');
     }
     await this.userService.markEmailAsVerified(email);
+  }
+  async googleAuthenticate({ token }: GoogleAuthenticateDto) {
+    console.log(token);
+    try {
+      const ticket = await googleClient.verifyIdToken({
+        idToken: token,
+        audience: `${process.env.GOOGLE_CLIENT_ID}`,
+      });
+      if (!ticket) {
+        return new InternalServerErrorException('No user from google');
+      }
+      console.log();
+      const ticketPayload = ticket.getPayload();
+      console.log(ticketPayload);
+      const user = await this.userService.getUserByEmail(ticketPayload.email);
+      if (!user) {
+        const registeredUser = await this.prismaService.user.create({
+          data: {
+            email: ticketPayload.email,
+            firstName: ticketPayload.name,
+            lastName: ticketPayload.given_name,
+            password: 'null',
+            isVerified: true,
+            registeredBy: 'GOOGLE',
+          },
+        });
+
+        if (!registeredUser) {
+          throw new InternalServerErrorException(
+            'Error while adding new user.',
+          );
+        }
+        console.log('registered user');
+        console.log(registeredUser);
+        const payload: JwtPayload = {
+          id: registeredUser.id,
+          email: registeredUser.email,
+          isVerified: true,
+        };
+
+        const accessToken: string = await this.userService.getJwtAccessToken(
+          payload,
+        );
+        //for refresh token added
+        const refreshToken: string = await this.userService.getJwtRefreshToken(
+          payload,
+        );
+        await this.userService.setCurrentRefreshToken(
+          refreshToken,
+          registeredUser.email,
+        );
+        return { accessToken: accessToken, refreshToken: refreshToken };
+      }
+      const payload: JwtPayload = {
+        id: user.id,
+        email: user.email,
+        isVerified: true,
+      };
+
+      const accessToken: string = await this.userService.getJwtAccessToken(
+        payload,
+      );
+      //for refresh token added
+      const refreshToken: string = await this.userService.getJwtRefreshToken(
+        payload,
+      );
+      await this.userService.setCurrentRefreshToken(refreshToken, user.email);
+      return { accessToken: accessToken, refreshToken: refreshToken };
+    } catch (err) {
+      throw new InternalServerErrorException(err);
+    }
   }
   async googleRedirect(req) {
     if (!req.user) {
