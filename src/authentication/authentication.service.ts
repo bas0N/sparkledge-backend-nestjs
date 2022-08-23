@@ -30,8 +30,7 @@ export class AuthenticationService {
       audience: `${process.env.GOOGLE_CLIENT_ID}`,
     });
     const { name, email, picture } = ticket.getPayload();
-    console.log(name, email, picture);
-    return;
+    return { name, email, picture };
   }
   async resendVerificationLink(email: string) {
     const user = await this.userService.getUserByEmail(email);
