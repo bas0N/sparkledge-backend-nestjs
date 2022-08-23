@@ -74,11 +74,13 @@ export class UsersController {
   async refreshToken(@GetUser() user: User) {
     return this.userService.refreshToken(user.email, user.refreshToken);
   }
+
   @Get('viewedDocuments')
   @UseGuards(AuthGuard('jwt'))
   //@UseGuards(EmailVerificationGuard)
-  @ApiBearerAuth()
+  //@ApiBearerAuth()
   async getViewedDocuments(@GetUser() user: User) {
+    console.log('user controller');
     return this.userService.getViewedDocuments(user);
   }
 

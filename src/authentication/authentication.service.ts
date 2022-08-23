@@ -95,7 +95,6 @@ export class AuthenticationService {
       if (!ticket) {
         return new InternalServerErrorException('No user from google');
       }
-      console.log();
       const ticketPayload = ticket.getPayload();
       console.log(ticketPayload);
       const user = await this.userService.getUserByEmail(ticketPayload.email);
@@ -121,7 +120,7 @@ export class AuthenticationService {
         const payload: JwtPayload = {
           id: registeredUser.id,
           email: registeredUser.email,
-          isVerified: true,
+          isVerified: registeredUser.isVerified,
         };
 
         const accessToken: string = await this.userService.getJwtAccessToken(
@@ -194,6 +193,7 @@ export class AuthenticationService {
       const accessToken: string = await this.userService.getJwtAccessToken(
         payload,
       );
+
       //for refresh token added
       const refreshToken: string = await this.userService.getJwtRefreshToken(
         payload,

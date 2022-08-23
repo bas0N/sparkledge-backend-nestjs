@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
@@ -26,13 +34,13 @@ export class AuthenticationController {
   async resendVerificationLink(@GetUser() user: User) {
     return await this.authenticationService.resendVerificationLink(user.email);
   }
-  // @Get('google/auth')
-  // @UseGuards(AuthGuard('google'))
-  // async googleAuth(@Req() req) {}
+  @Get('google/auth')
+  @UseGuards(AuthGuard('google'))
+  async googleAuth(@Req() req) {}
 
-  // @Get('google/redirect')
-  // @UseGuards(AuthGuard('google'))
-  // async googleRedirect(@Req() req) {
-  //   return await this.authenticationService.googleRedirect(req);
-  // }
+  @Get('google/redirect')
+  @UseGuards(AuthGuard('google'))
+  async googleRedirect(@Req() req) {
+    return await this.authenticationService.googleRedirect(req);
+  }
 }

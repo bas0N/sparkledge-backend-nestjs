@@ -9,6 +9,8 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { AccessTokenStrategy } from 'src/users/strategies/access-token.strategy';
 import { RefreshTokenStrategy } from 'src/users/strategies/refresh-token.strategy';
+import { UsersService } from 'src/users/users.service';
+import { EmailService } from 'src/email/email.service';
 @Module({
   imports: [
     PrismaModule,
@@ -18,6 +20,12 @@ import { RefreshTokenStrategy } from 'src/users/strategies/refresh-token.strateg
     JwtModule.register({}),
   ],
   controllers: [DocumentsController],
-  providers: [DocumentsService, AccessTokenStrategy, RefreshTokenStrategy],
+  providers: [
+    DocumentsService,
+    AccessTokenStrategy,
+    RefreshTokenStrategy,
+    UsersService,
+    EmailService,
+  ],
 })
 export class DocumentsModule {}

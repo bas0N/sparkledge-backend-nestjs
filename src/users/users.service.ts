@@ -163,6 +163,7 @@ export class UsersService {
   }
 
   async getViewedDocuments(user: User): Promise<DocumentDto[]> {
+    console.log(user);
     //finds user with the given id
     const userFound = await this.prismaService.user.findUnique({
       where: { id: user.id },
