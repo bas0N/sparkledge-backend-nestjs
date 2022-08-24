@@ -86,7 +86,6 @@ export class AuthenticationService {
     await this.userService.markEmailAsVerified(email);
   }
   async googleAuthenticate({ token }: GoogleAuthenticateDto) {
-    console.log(token);
     try {
       const ticket = await googleClient.verifyIdToken({
         idToken: token,
@@ -96,8 +95,9 @@ export class AuthenticationService {
         return new InternalServerErrorException('No user from google');
       }
       const ticketPayload = ticket.getPayload();
-      console.log(ticketPayload);
+
       const user = await this.userService.getUserByEmail(ticketPayload.email);
+
       if (!user) {
         const registeredUser = await this.prismaService.user.create({
           data: {
@@ -115,8 +115,7 @@ export class AuthenticationService {
             'Error while adding new user.',
           );
         }
-        console.log('registered user');
-        console.log(registeredUser);
+
         const payload: JwtPayload = {
           id: registeredUser.id,
           email: registeredUser.email,
@@ -126,31 +125,34 @@ export class AuthenticationService {
         const accessToken: string = await this.userService.getJwtAccessToken(
           payload,
         );
+
         //for refresh token added
         const refreshToken: string = await this.userService.getJwtRefreshToken(
           payload,
         );
+
         await this.userService.setCurrentRefreshToken(
           refreshToken,
           registeredUser.email,
         );
         return { accessToken: accessToken, refreshToken: refreshToken };
-      }
-      const payload: JwtPayload = {
-        id: user.id,
-        email: user.email,
-        isVerified: true,
-      };
+      } else {
+        const payload: JwtPayload = {
+          id: user.id,
+          email: user.email,
+          isVerified: true,
+        };
+        const accessToken: string = await this.userService.getJwtAccessToken(
+          payload,
+        );
 
-      const accessToken: string = await this.userService.getJwtAccessToken(
-        payload,
-      );
-      //for refresh token added
-      const refreshToken: string = await this.userService.getJwtRefreshToken(
-        payload,
-      );
-      await this.userService.setCurrentRefreshToken(refreshToken, user.email);
-      return { accessToken: accessToken, refreshToken: refreshToken };
+        //for refresh token added
+        const refreshToken: string = await this.userService.getJwtRefreshToken(
+          payload,
+        );
+        await this.userService.setCurrentRefreshToken(refreshToken, user.email);
+        return { accessToken: accessToken, refreshToken: refreshToken };
+      }
     } catch (err) {
       throw new InternalServerErrorException(err);
     }
@@ -160,13 +162,7 @@ export class AuthenticationService {
       return new InternalServerErrorException('No user from google');
     }
     const user = await this.userService.getUserByEmail(req.user.email);
-    console.log('getUserByEmail');
-    console.log(user);
     const googleUser = req.user;
-    console.log('get user google ');
-
-    console.log(googleUser);
-
     if (!user) {
       const registeredUser = await this.prismaService.user.create({
         data: {
@@ -182,8 +178,7 @@ export class AuthenticationService {
       if (!registeredUser) {
         throw new InternalServerErrorException('Error while adding new user.');
       }
-      console.log('registered user');
-      console.log(registeredUser);
+
       const payload: JwtPayload = {
         id: registeredUser.id,
         email: registeredUser.email,
