@@ -91,7 +91,6 @@ export class DocumentsController {
   }
 
   @ApiOkResponse({ description: 'All documents retrieved.', type: DocumentDto })
-  @UseGuards(AuthGuard('jwt'))
   @Get()
   async getAllDocuments(): Promise<Document[]> {
     return await this.documentsService.getAllDocuments();
