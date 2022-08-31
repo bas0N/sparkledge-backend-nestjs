@@ -2,7 +2,7 @@
   "name": "sparkledge-backend-nestjs",
   "version": "0.0.1",
   "engines": {
-    "node": "v18.0.0"
+    "node": "v16.16.0"
   },
   "description": "",
   "author": "",
