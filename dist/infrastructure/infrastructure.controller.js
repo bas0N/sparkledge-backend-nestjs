@@ -18,14 +18,14 @@ const common_1 = require("@nestjs/common");
 const infrastructure_service_1 = require("./infrastructure.service");
 const swagger_1 = require("@nestjs/swagger");
 const createUniversity_dto_1 = require("./dto/createUniversity.dto");
-const CreateFaculty_dto_1 = require("./dto/CreateFaculty.dto");
-const CreateProgramme_dto_1 = require("./dto/CreateProgramme.dto");
-const CreateCourse_dto_1 = require("./dto/CreateCourse.dto");
+const createFaculty_dto_1 = require("./dto/createFaculty.dto");
+const createProgramme_dto_1 = require("./dto/createProgramme.dto");
+const createCourse_dto_1 = require("./dto/createCourse.dto");
 const passport_1 = require("@nestjs/passport");
-const Course_dto_1 = require("./dto/Course.dto");
-const Faculty_dto_1 = require("./dto/Faculty.dto");
-const Programme_to_1 = require("./dto/Programme.to");
-const University_dto_1 = require("./dto/University.dto");
+const course_dto_1 = require("./dto/course.dto");
+const faculty_dto_1 = require("./dto/faculty.dto");
+const programme_dto_1 = require("./dto/programme.dto");
+const university_dto_1 = require("./dto/university.dto");
 let InfrastructureController = class InfrastructureController {
     constructor(infrastructureService) {
         this.infrastructureService = infrastructureService;
@@ -70,7 +70,7 @@ __decorate([
     openapi.ApiResponse({ status: 201, type: Object }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [CreateFaculty_dto_1.CreateFacultyDto]),
+    __metadata("design:paramtypes", [createFaculty_dto_1.CreateFacultyDto]),
     __metadata("design:returntype", Promise)
 ], InfrastructureController.prototype, "addFaculty", null);
 __decorate([
@@ -79,7 +79,7 @@ __decorate([
     openapi.ApiResponse({ status: 201, type: Object }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [CreateProgramme_dto_1.CreateProgrammeDto]),
+    __metadata("design:paramtypes", [createProgramme_dto_1.CreateProgrammeDto]),
     __metadata("design:returntype", Promise)
 ], InfrastructureController.prototype, "addProgramme", null);
 __decorate([
@@ -88,11 +88,11 @@ __decorate([
     openapi.ApiResponse({ status: 201, type: Object }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [CreateCourse_dto_1.CreateCourseDto]),
+    __metadata("design:paramtypes", [createCourse_dto_1.CreateCourseDto]),
     __metadata("design:returntype", Promise)
 ], InfrastructureController.prototype, "addCourse", null);
 __decorate([
-    (0, swagger_1.ApiOkResponse)({ type: University_dto_1.UniversityDto }),
+    (0, swagger_1.ApiOkResponse)({ type: university_dto_1.UniversityDto }),
     (0, common_1.Get)('universities'),
     openapi.ApiResponse({ status: 200, type: [Object] }),
     __metadata("design:type", Function),
@@ -100,39 +100,39 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], InfrastructureController.prototype, "getUniversities", null);
 __decorate([
-    (0, swagger_1.ApiOkResponse)({ type: Faculty_dto_1.FacultyDto }),
+    (0, swagger_1.ApiOkResponse)({ type: faculty_dto_1.FacultyDto }),
     (0, swagger_1.ApiParam)({
         name: 'universityId',
         description: 'Id of the university to which retrieved faculties belong.',
     }),
     (0, common_1.Get)('faculties/:universityId'),
-    openapi.ApiResponse({ status: 200, type: [require("./dto/Faculty.dto").FacultyDto] }),
+    openapi.ApiResponse({ status: 200, type: [require("./dto/faculty.dto").FacultyDto] }),
     __param(0, (0, common_1.Param)('universityId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], InfrastructureController.prototype, "getFaculties", null);
 __decorate([
-    (0, swagger_1.ApiOkResponse)({ type: Programme_to_1.ProgrammeDto }),
+    (0, swagger_1.ApiOkResponse)({ type: programme_dto_1.ProgrammeDto }),
     (0, swagger_1.ApiParam)({
         name: 'facultyId',
         description: 'Id of the faculty to which retrieved programmes belong.',
     }),
     (0, common_1.Get)('programmes/:facultyId'),
-    openapi.ApiResponse({ status: 200, type: [require("./dto/Programme.to").ProgrammeDto] }),
+    openapi.ApiResponse({ status: 200, type: [require("./dto/programme.dto").ProgrammeDto] }),
     __param(0, (0, common_1.Param)('facultyId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], InfrastructureController.prototype, "getProgrammes", null);
 __decorate([
-    (0, swagger_1.ApiOkResponse)({ type: Course_dto_1.CourseDto }),
+    (0, swagger_1.ApiOkResponse)({ type: course_dto_1.CourseDto }),
     (0, swagger_1.ApiParam)({
         name: 'programmeId',
         description: 'Id of the programme to which retrieved courses belong.',
     }),
     (0, common_1.Get)('courses/:programmeId'),
-    openapi.ApiResponse({ status: 200, type: [require("./dto/Course.dto").CourseDto] }),
+    openapi.ApiResponse({ status: 200, type: [require("./dto/course.dto").CourseDto] }),
     __param(0, (0, common_1.Param)('programmeId')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),

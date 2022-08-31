@@ -3,14 +3,14 @@ import { University, Faculty, Programme, Course } from '.prisma/client';
 import { InfrastructureService } from './infrastructure.service';
 import { ApiOkResponse, ApiParam, ApiTags } from '@nestjs/swagger';
 import { CreateUniversityDto } from './dto/createUniversity.dto';
-import { CreateFacultyDto } from './dto/CreateFaculty.dto';
-import { CreateProgrammeDto } from './dto/CreateProgramme.dto';
-import { CreateCourseDto } from './dto/CreateCourse.dto';
+import { CreateFacultyDto } from './dto/createFaculty.dto';
+import { CreateProgrammeDto } from './dto/createProgramme.dto';
+import { CreateCourseDto } from './dto/createCourse.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { CourseDto } from './dto/Course.dto';
-import { FacultyDto } from './dto/Faculty.dto';
-import { ProgrammeDto } from './dto/Programme.to';
-import { UniversityDto } from './dto/University.dto';
+import { CourseDto } from './dto/course.dto';
+import { FacultyDto } from './dto/faculty.dto';
+import { ProgrammeDto } from './dto/programme.dto';
+import { UniversityDto } from './dto/university.dto';
 //import { EmailVerificationGuard } from 'src/authentication/authentication.guard';
 @ApiTags('infrastructure')
 @Controller('infrastructure')

@@ -1,12 +1,12 @@
 import { University, Faculty, Programme, Course } from '.prisma/client';
 import { InfrastructureService } from './infrastructure.service';
 import { CreateUniversityDto } from './dto/createUniversity.dto';
-import { CreateFacultyDto } from './dto/CreateFaculty.dto';
-import { CreateProgrammeDto } from './dto/CreateProgramme.dto';
-import { CreateCourseDto } from './dto/CreateCourse.dto';
-import { CourseDto } from './dto/Course.dto';
-import { FacultyDto } from './dto/Faculty.dto';
-import { ProgrammeDto } from './dto/Programme.to';
+import { CreateFacultyDto } from './dto/createFaculty.dto';
+import { CreateProgrammeDto } from './dto/createProgramme.dto';
+import { CreateCourseDto } from './dto/createCourse.dto';
+import { CourseDto } from './dto/course.dto';
+import { FacultyDto } from './dto/faculty.dto';
+import { ProgrammeDto } from './dto/programme.dto';
 export declare class InfrastructureController {
     private infrastructureService;
     constructor(infrastructureService: InfrastructureService);
