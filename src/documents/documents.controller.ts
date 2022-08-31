@@ -18,8 +18,8 @@ import { Document, User } from '@prisma/client';
 import { GetUser } from 'src/users/get-user.decorator';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Express } from 'express';
-import { FilterDocumentsDto } from './dto/FilterDocuments.dto';
-import { AddCommentDto } from './dto/AddComment.dto';
+import { FilterDocumentsDto } from './dto/filterDocuments.dto';
+import { AddCommentDto } from './dto/addComment.dto';
 import { Comment } from '.prisma/client';
 import {
   ApiBearerAuth,
@@ -29,11 +29,11 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateDocumentDto } from './dto/create-document.dto';
-import { DocumentDto } from './dto/Document.dto';
-import { LikeStatusDto } from './dto/LikeStatus.dto';
+import { DocumentDto } from './dto/document.dto';
+import { LikeStatusDto } from './dto/likeStatus.dto';
 //import { EmailVerificationGuard } from 'src/authentication/authentication.guard';
-import { UpdateDocumentDto } from './dto/UpdateDocument.dto';
-import { AddReportDto } from './dto/AddReport.dto';
+import { UpdateDocumentDto } from './dto/updateDocument.dto';
+import { AddReportDto } from './dto/addReport.dto';
 var path = require('path');
 @ApiTags('documents')
 @Controller('documents')
