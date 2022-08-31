@@ -1,0 +1,155 @@
+"use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.UsersController = void 0;
+const openapi = require("@nestjs/swagger");
+const common_1 = require("@nestjs/common");
+const createUser_dto_1 = require("./dto/createUser.dto");
+const signinUser_dto_1 = require("./dto/signinUser.dto");
+const users_service_1 = require("./users.service");
+const passport_1 = require("@nestjs/passport");
+const get_user_decorator_1 = require("./get-user.decorator");
+const swagger_1 = require("@nestjs/swagger");
+const authentication_service_1 = require("../authentication/authentication.service");
+let UsersController = class UsersController {
+    constructor(userService, authenticationService) {
+        this.userService = userService;
+        this.authenticationService = authenticationService;
+    }
+    async addNewUser(createUserDto) {
+        const user = this.userService.addNewUser(createUserDto);
+        this.authenticationService.sendVerificationLink(createUserDto.email);
+        return user;
+    }
+    async signinUser(signinUserDto) {
+        return this.userService.signInUser(signinUserDto);
+    }
+    async logout(user) {
+        return this.userService.logout(user.email);
+    }
+    async refreshToken(user) {
+        return this.userService.refreshToken(user.email, user.refreshToken);
+    }
+    async getViewedDocuments(user) {
+        console.log('user controller');
+        return this.userService.getViewedDocuments(user);
+    }
+    async getUserById(userId) {
+        return await this.userService.getUserById(userId);
+    }
+    async sendForgotPasswordLink(email) {
+        return await this.userService.sendForgotPasswordLink(email);
+    }
+    async resetPassword(email, token, newPassword) {
+        return await this.userService.resetPassword(email, token, newPassword);
+    }
+};
+__decorate([
+    (0, common_1.Post)('/signup'),
+    (0, swagger_1.ApiBody)({ type: [createUser_dto_1.CreateUserDto] }),
+    (0, swagger_1.ApiCreatedResponse)({ description: 'User Registration' }),
+    (0, swagger_1.ApiConflictResponse)({ description: 'Email provided already exists.' }),
+    (0, common_1.HttpCode)(common_1.HttpStatus.CREATED),
+    openapi.ApiResponse({ status: common_1.HttpStatus.CREATED, type: Object }),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [createUser_dto_1.CreateUserDto]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "addNewUser", null);
+__decorate([
+    (0, common_1.Post)('/signin'),
+    (0, swagger_1.ApiBody)({ type: [signinUser_dto_1.SigninUserDto] }),
+    (0, swagger_1.ApiOkResponse)({ description: 'User logged in.' }),
+    (0, swagger_1.ApiUnauthorizedResponse)({
+        description: 'Invalid credentials.',
+    }),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    openapi.ApiResponse({ status: common_1.HttpStatus.OK }),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [signinUser_dto_1.SigninUserDto]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "signinUser", null);
+__decorate([
+    (0, common_1.Post)('logout'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
+    (0, swagger_1.ApiOkResponse)({ description: 'User Login' }),
+    (0, swagger_1.ApiUnauthorizedResponse)({ description: 'Invalid credentials' }),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, common_1.HttpCode)(common_1.HttpStatus.OK),
+    openapi.ApiResponse({ status: common_1.HttpStatus.OK }),
+    __param(0, (0, get_user_decorator_1.GetUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "logout", null);
+__decorate([
+    (0, common_1.Post)('refresh'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt-refresh')),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiCreatedResponse)({ description: 'Access and refresh tokens renewed' }),
+    openapi.ApiResponse({ status: 201 }),
+    __param(0, (0, get_user_decorator_1.GetUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "refreshToken", null);
+__decorate([
+    (0, common_1.Get)('viewedDocuments'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
+    openapi.ApiResponse({ status: 200, type: [require("../documents/dto/Document.dto").DocumentDto] }),
+    __param(0, (0, get_user_decorator_1.GetUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getViewedDocuments", null);
+__decorate([
+    (0, swagger_1.ApiOkResponse)({ description: 'User retrieved succesfully.' }),
+    (0, swagger_1.ApiParam)({
+        name: 'userId',
+        description: 'Id of the user that is to be retrieved.',
+    }),
+    (0, common_1.Get)('/:userId'),
+    openapi.ApiResponse({ status: 200, type: Object }),
+    __param(0, (0, common_1.Param)('userId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getUserById", null);
+__decorate([
+    (0, common_1.Post)('sendForgotPasswordLink'),
+    openapi.ApiResponse({ status: 201, type: Object }),
+    __param(0, (0, common_1.Body)('email')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "sendForgotPasswordLink", null);
+__decorate([
+    (0, common_1.Post)('resetPassword/:email/:token'),
+    openapi.ApiResponse({ status: 201, type: Object }),
+    __param(0, (0, common_1.Param)('email')),
+    __param(1, (0, common_1.Param)('token')),
+    __param(2, (0, common_1.Body)('newPassword')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, String]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "resetPassword", null);
+UsersController = __decorate([
+    (0, swagger_1.ApiTags)('users'),
+    (0, common_1.Controller)('users'),
+    __metadata("design:paramtypes", [users_service_1.UsersService,
+        authentication_service_1.AuthenticationService])
+], UsersController);
+exports.UsersController = UsersController;
+//# sourceMappingURL=users.controller.js.map

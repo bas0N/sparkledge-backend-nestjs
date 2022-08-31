@@ -1,0 +1,1 @@
+{"version":3,"file":"googleClient.js","sourceRoot":"","sources":["../../src/authentication/googleClient.ts"],"names":[],"mappings":";;;AAAA,6DAAmD;AAEtC,QAAA,YAAY,GAAG,IAAI,kCAAY,CAAC;IAC3C,QAAQ,EAAE,GAAG,OAAO,CAAC,GAAG,CAAC,gBAAgB,EAAE;IAC3C,YAAY,EAAE,GAAG,OAAO,CAAC,GAAG,CAAC,oBAAoB,EAAE;CACpD,CAAC,CAAC"}
