@@ -1,6 +1,6 @@
 import { University, Faculty, Programme, Course } from '.prisma/client';
 import { InfrastructureService } from './infrastructure.service';
-import { CreateUniversityDto } from './dto/CreateUniversity.dto';
+import { CreateUniversityDto } from './dto/createUniversity.dto';
 import { CreateFacultyDto } from './dto/CreateFaculty.dto';
 import { CreateProgrammeDto } from './dto/CreateProgramme.dto';
 import { CreateCourseDto } from './dto/CreateCourse.dto';

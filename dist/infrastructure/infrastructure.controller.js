@@ -17,7 +17,7 @@ const openapi = require("@nestjs/swagger");
 const common_1 = require("@nestjs/common");
 const infrastructure_service_1 = require("./infrastructure.service");
 const swagger_1 = require("@nestjs/swagger");
-const CreateUniversity_dto_1 = require("./dto/CreateUniversity.dto");
+const createUniversity_dto_1 = require("./dto/createUniversity.dto");
 const CreateFaculty_dto_1 = require("./dto/CreateFaculty.dto");
 const CreateProgramme_dto_1 = require("./dto/CreateProgramme.dto");
 const CreateCourse_dto_1 = require("./dto/CreateCourse.dto");
@@ -61,7 +61,7 @@ __decorate([
     openapi.ApiResponse({ status: 201, type: Object }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [CreateUniversity_dto_1.CreateUniversityDto]),
+    __metadata("design:paramtypes", [createUniversity_dto_1.CreateUniversityDto]),
     __metadata("design:returntype", Promise)
 ], InfrastructureController.prototype, "addUniversity", null);
 __decorate([
