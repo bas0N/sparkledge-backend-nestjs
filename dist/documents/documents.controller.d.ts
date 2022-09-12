@@ -4,7 +4,7 @@ import { Document, User } from '@prisma/client';
 import { FilterDocumentsDto } from './dto/FilterDocuments.dto';
 import { AddCommentDto } from './dto/AddComment.dto';
 import { Comment } from '.prisma/client';
-import { CreateDocumentDto } from './dto/Create-document.dto';
+import { CreateDocumentDto } from './dto/CreateDocument.dto';
 import { DocumentDto } from './dto/Document.dto';
 import { LikeStatusDto } from './dto/LikeStatus.dto';
 import { UpdateDocumentDto } from './dto/UpdateDocument.dto';

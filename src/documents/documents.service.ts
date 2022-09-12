@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 //import { Document } from './document.model';
-import { CreateDocumentDto } from './dto/Create-document.dto';
+import { CreateDocumentDto } from './dto/CreateDocument.dto';
 import { Document, File, User } from '@prisma/client';
 import { FilesService } from 'src/files/files.service';
 import { FilterDocumentsDto } from './dto/FilterDocuments.dto';

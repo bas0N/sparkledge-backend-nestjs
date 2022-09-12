@@ -1,6 +1,6 @@
 /// <reference types="node" />
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateDocumentDto } from './dto/Create-document.dto';
+import { CreateDocumentDto } from './dto/CreateDocument.dto';
 import { Document, User } from '@prisma/client';
 import { FilesService } from 'src/files/files.service';
 import { FilterDocumentsDto } from './dto/FilterDocuments.dto';

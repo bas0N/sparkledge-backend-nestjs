@@ -28,7 +28,7 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateDocumentDto } from './dto/Create-document.dto';
+import { CreateDocumentDto } from './dto/CreateDocument.dto';
 import { DocumentDto } from './dto/Document.dto';
 import { LikeStatusDto } from './dto/LikeStatus.dto';
 //import { EmailVerificationGuard } from 'src/authentication/authentication.guard';

@@ -22,7 +22,7 @@ const platform_express_1 = require("@nestjs/platform-express");
 const FilterDocuments_dto_1 = require("./dto/FilterDocuments.dto");
 const AddComment_dto_1 = require("./dto/AddComment.dto");
 const swagger_1 = require("@nestjs/swagger");
-const Create_document_dto_1 = require("./dto/Create-document.dto");
+const CreateDocument_dto_1 = require("./dto/CreateDocument.dto");
 const Document_dto_1 = require("./dto/Document.dto");
 const UpdateDocument_dto_1 = require("./dto/UpdateDocument.dto");
 const AddReport_dto_1 = require("./dto/AddReport.dto");
@@ -81,7 +81,7 @@ __decorate([
     __param(1, (0, get_user_decorator_1.GetUser)()),
     __param(2, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Create_document_dto_1.CreateDocumentDto, Object, Object]),
+    __metadata("design:paramtypes", [CreateDocument_dto_1.CreateDocumentDto, Object, Object]),
     __metadata("design:returntype", Promise)
 ], DocumentsController.prototype, "addNewDocument", null);
 __decorate([
