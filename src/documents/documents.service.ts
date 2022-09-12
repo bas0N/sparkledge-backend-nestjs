@@ -7,16 +7,16 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 //import { Document } from './document.model';
-import { CreateDocumentDto } from './dto/create-document.dto';
+import { CreateDocumentDto } from './dto/Create-document.dto';
 import { Document, File, User } from '@prisma/client';
 import { FilesService } from 'src/files/files.service';
-import { FilterDocumentsDto } from './dto/filterDocuments.dto';
-import { DocumentDto } from './dto/document.dto';
-import { LikeStatusDto } from './dto/likeStatus.dto';
-import { UpdateDocumentDto } from './dto/updateDocument.dto';
-import { AddCommentDto } from './dto/addComment.dto';
+import { FilterDocumentsDto } from './dto/FilterDocuments.dto';
+import { DocumentDto } from './dto/Document.dto';
+import { LikeStatusDto } from './dto/LikeStatus.dto';
+import { UpdateDocumentDto } from './dto/UpdateDocument.dto';
+import { AddCommentDto } from './dto/AddComment.dto';
 import { Comment } from '.prisma/client';
-import { AddReportDto } from './dto/addReport.dto';
+import { AddReportDto } from './dto/AddReport.dto';
 import { sendMessage } from 'src/slack/slackBot';
 @Injectable()
 export class DocumentsService {

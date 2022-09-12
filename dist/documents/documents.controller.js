@@ -19,13 +19,13 @@ const documents_service_1 = require("./documents.service");
 const passport_1 = require("@nestjs/passport");
 const get_user_decorator_1 = require("../users/get-user.decorator");
 const platform_express_1 = require("@nestjs/platform-express");
-const filterDocuments_dto_1 = require("./dto/filterDocuments.dto");
-const addComment_dto_1 = require("./dto/addComment.dto");
+const FilterDocuments_dto_1 = require("./dto/FilterDocuments.dto");
+const AddComment_dto_1 = require("./dto/AddComment.dto");
 const swagger_1 = require("@nestjs/swagger");
-const create_document_dto_1 = require("./dto/create-document.dto");
-const document_dto_1 = require("./dto/document.dto");
-const updateDocument_dto_1 = require("./dto/updateDocument.dto");
-const addReport_dto_1 = require("./dto/addReport.dto");
+const Create_document_dto_1 = require("./dto/Create-document.dto");
+const Document_dto_1 = require("./dto/Document.dto");
+const UpdateDocument_dto_1 = require("./dto/UpdateDocument.dto");
+const AddReport_dto_1 = require("./dto/AddReport.dto");
 var path = require('path');
 let DocumentsController = class DocumentsController {
     constructor(documentsService) {
@@ -75,13 +75,13 @@ __decorate([
     (0, common_1.Post)(),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     (0, swagger_1.ApiBearerAuth)(),
-    (0, swagger_1.ApiOkResponse)({ description: 'Document created.', type: document_dto_1.DocumentDto }),
-    openapi.ApiResponse({ status: 201, type: require("./dto/document.dto").DocumentDto }),
+    (0, swagger_1.ApiOkResponse)({ description: 'Document created.', type: Document_dto_1.DocumentDto }),
+    openapi.ApiResponse({ status: 201, type: require("./dto/Document.dto").DocumentDto }),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, get_user_decorator_1.GetUser)()),
     __param(2, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [create_document_dto_1.CreateDocumentDto, Object, Object]),
+    __metadata("design:paramtypes", [Create_document_dto_1.CreateDocumentDto, Object, Object]),
     __metadata("design:returntype", Promise)
 ], DocumentsController.prototype, "addNewDocument", null);
 __decorate([
@@ -92,16 +92,16 @@ __decorate([
     __param(0, (0, common_1.Body)()),
     __param(1, (0, get_user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [updateDocument_dto_1.UpdateDocumentDto, Object]),
+    __metadata("design:paramtypes", [UpdateDocument_dto_1.UpdateDocumentDto, Object]),
     __metadata("design:returntype", Promise)
 ], DocumentsController.prototype, "updateDocument", null);
 __decorate([
     (0, common_1.Get)('filtered'),
     (0, swagger_1.ApiParam)({ name: 'parameters' }),
-    openapi.ApiResponse({ status: 200, type: [require("./dto/document.dto").DocumentDto] }),
+    openapi.ApiResponse({ status: 200, type: [require("./dto/Document.dto").DocumentDto] }),
     __param(0, (0, common_1.Query)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [filterDocuments_dto_1.FilterDocumentsDto]),
+    __metadata("design:paramtypes", [FilterDocuments_dto_1.FilterDocumentsDto]),
     __metadata("design:returntype", Promise)
 ], DocumentsController.prototype, "getDocumentsFiltered", null);
 __decorate([
@@ -118,7 +118,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], DocumentsController.prototype, "getDocumentById", null);
 __decorate([
-    (0, swagger_1.ApiOkResponse)({ description: 'All documents retrieved.', type: document_dto_1.DocumentDto }),
+    (0, swagger_1.ApiOkResponse)({ description: 'All documents retrieved.', type: Document_dto_1.DocumentDto }),
     (0, common_1.Get)(),
     openapi.ApiResponse({ status: 200, type: [Object] }),
     __metadata("design:type", Function),
@@ -148,7 +148,7 @@ __decorate([
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     (0, common_1.Post)('toggle-like/:documentId'),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
-    openapi.ApiResponse({ status: 201, type: require("./dto/likeStatus.dto").LikeStatusDto }),
+    openapi.ApiResponse({ status: 201, type: require("./dto/LikeStatus.dto").LikeStatusDto }),
     __param(0, (0, common_1.Param)('documentId')),
     __param(1, (0, get_user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
@@ -163,7 +163,7 @@ __decorate([
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     (0, common_1.Get)('check-if-liked/:documentId'),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
-    openapi.ApiResponse({ status: 200, type: require("./dto/likeStatus.dto").LikeStatusDto }),
+    openapi.ApiResponse({ status: 200, type: require("./dto/LikeStatus.dto").LikeStatusDto }),
     __param(0, (0, common_1.Param)('documentId')),
     __param(1, (0, get_user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
@@ -171,14 +171,14 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], DocumentsController.prototype, "checkIfLiked", null);
 __decorate([
-    (0, swagger_1.ApiCreatedResponse)({ description: 'Comment Added.', type: addComment_dto_1.AddCommentDto }),
+    (0, swagger_1.ApiCreatedResponse)({ description: 'Comment Added.', type: AddComment_dto_1.AddCommentDto }),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     (0, common_1.Post)('/comments/add-comment'),
     openapi.ApiResponse({ status: 201, type: Object }),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, get_user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [addComment_dto_1.AddCommentDto, Object]),
+    __metadata("design:paramtypes", [AddComment_dto_1.AddCommentDto, Object]),
     __metadata("design:returntype", Promise)
 ], DocumentsController.prototype, "addComment", null);
 __decorate([
@@ -201,14 +201,14 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], DocumentsController.prototype, "deleteDomment", null);
 __decorate([
-    (0, swagger_1.ApiCreatedResponse)({ description: 'Report Added.', type: addReport_dto_1.AddReportDto }),
+    (0, swagger_1.ApiCreatedResponse)({ description: 'Report Added.', type: AddReport_dto_1.AddReportDto }),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     (0, common_1.Post)('/report/add-report'),
     openapi.ApiResponse({ status: 201, type: Object }),
     __param(0, (0, common_1.Body)()),
     __param(1, (0, get_user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [addReport_dto_1.AddReportDto, Object]),
+    __metadata("design:paramtypes", [AddReport_dto_1.AddReportDto, Object]),
     __metadata("design:returntype", Promise)
 ], DocumentsController.prototype, "addReport", null);
 DocumentsController = __decorate([

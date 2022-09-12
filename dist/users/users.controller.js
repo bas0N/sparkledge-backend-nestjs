@@ -108,7 +108,7 @@ __decorate([
 __decorate([
     (0, common_1.Get)('viewedDocuments'),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
-    openapi.ApiResponse({ status: 200, type: [require("../documents/dto/document.dto").DocumentDto] }),
+    openapi.ApiResponse({ status: 200, type: [require("../documents/dto/Document.dto").DocumentDto] }),
     __param(0, (0, get_user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),

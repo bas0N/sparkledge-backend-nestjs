@@ -4,7 +4,7 @@ import { JwtPayload } from './jwt-payload.interface';
 import { User } from '.prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/createUser.dto';
-import { DocumentDto } from 'src/documents/dto/document.dto';
+import { DocumentDto } from 'src/documents/dto/Document.dto';
 import { EmailService } from 'src/email/email.service';
 export declare class UsersService {
     private readonly prismaService;

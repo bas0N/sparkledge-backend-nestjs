@@ -1,15 +1,15 @@
 /// <reference types="node" />
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateDocumentDto } from './dto/create-document.dto';
+import { CreateDocumentDto } from './dto/Create-document.dto';
 import { Document, User } from '@prisma/client';
 import { FilesService } from 'src/files/files.service';
-import { FilterDocumentsDto } from './dto/filterDocuments.dto';
-import { DocumentDto } from './dto/document.dto';
-import { LikeStatusDto } from './dto/likeStatus.dto';
-import { UpdateDocumentDto } from './dto/updateDocument.dto';
-import { AddCommentDto } from './dto/addComment.dto';
+import { FilterDocumentsDto } from './dto/FilterDocuments.dto';
+import { DocumentDto } from './dto/Document.dto';
+import { LikeStatusDto } from './dto/LikeStatus.dto';
+import { UpdateDocumentDto } from './dto/UpdateDocument.dto';
+import { AddCommentDto } from './dto/AddComment.dto';
 import { Comment } from '.prisma/client';
-import { AddReportDto } from './dto/addReport.dto';
+import { AddReportDto } from './dto/AddReport.dto';
 export declare class DocumentsService {
     private readonly prismaService;
     private filesService;
