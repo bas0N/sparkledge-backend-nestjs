@@ -11,6 +11,8 @@ async function bootstrap() {
   //to be changed
   app.enableCors({
     origin: function (origin, callback) {
+      console.log('allowed origins: ', JSON.stringify(allowedOrigins));
+      console.log('origin: ', origin);
       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
