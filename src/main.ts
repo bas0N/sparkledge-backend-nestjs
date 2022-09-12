@@ -16,7 +16,13 @@ async function bootstrap() {
       if (!origin || allowedOrigins.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
-        callback(new Error('Not allowed by CORS'));
+        callback(
+          new Error(
+            `NOT ALLOWED BY CORS: ${origin}, allowed: ${JSON.stringify(
+              allowedOrigins,
+            )}`,
+          ),
+        );
       }
     },
   });
