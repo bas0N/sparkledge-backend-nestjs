@@ -10,7 +10,5 @@ exports.allowedOrigins = [
     'http://localhost:4000',
     'http://localhost:3000',
     'https://sparkledge-test-version.netlify.app',
-    'https://www.spark-ledge.com',
-    'https://www.spark-ledge.com/',
 ];
 //# sourceMappingURL=allowedOrigins.js.map

@@ -14,7 +14,7 @@ import { User } from '.prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Prisma } from '@prisma/client';
 import { CreateUserDto } from './dto/createUser.dto';
-import { DocumentDto } from 'src/documents/dto/document.dto';
+import { DocumentDto } from 'src/documents/dto/Document.dto';
 import { EmailService } from 'src/email/email.service';
 import handlebars from 'handlebars';
 const fs = require('fs').promises;
