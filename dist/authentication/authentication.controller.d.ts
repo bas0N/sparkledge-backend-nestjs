@@ -1,6 +1,6 @@
 import { User } from '@prisma/client';
 import { AuthenticationService } from './authentication.service';
-import { GoogleAuthenticateDto } from './dto/googleAuthenticate.dto';
+import { GoogleAuthenticateDto } from './dto/GoogleAuthenticate.dto';
 export declare class AuthenticationController {
     private readonly authenticationService;
     constructor(authenticationService: AuthenticationService);
