@@ -19,7 +19,7 @@ const passport_1 = require("@nestjs/passport");
 const swagger_1 = require("@nestjs/swagger");
 const get_user_decorator_1 = require("../users/get-user.decorator");
 const authentication_service_1 = require("./authentication.service");
-const GoogleAuthenticate_dto_1 = require("./dto/GoogleAuthenticate.dto");
+const googleAuthenticate_dto_1 = require("./dto/googleAuthenticate.dto");
 let AuthenticationController = class AuthenticationController {
     constructor(authenticationService) {
         this.authenticationService = authenticationService;
@@ -44,7 +44,7 @@ __decorate([
     openapi.ApiResponse({ status: 201, type: Object }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [GoogleAuthenticate_dto_1.GoogleAuthenticateDto]),
+    __metadata("design:paramtypes", [googleAuthenticate_dto_1.GoogleAuthenticateDto]),
     __metadata("design:returntype", Promise)
 ], AuthenticationController.prototype, "googleAuthenticate", null);
 __decorate([

@@ -3,7 +3,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { EmailService } from 'src/email/email.service';
 import { UsersService } from 'src/users/users.service';
-import { GoogleAuthenticateDto } from './dto/GoogleAuthenticate.dto';
+import { GoogleAuthenticateDto } from './dto/googleAuthenticate.dto';
 export declare class AuthenticationService {
     private readonly prismaService;
     private readonly jwtService;
