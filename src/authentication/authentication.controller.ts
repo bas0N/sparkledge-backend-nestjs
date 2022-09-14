@@ -12,7 +12,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { User } from '@prisma/client';
 import { GetUser } from 'src/users/get-user.decorator';
 import { AuthenticationService } from './authentication.service';
-import { GoogleAuthenticateDto } from './dto/googleAuthenticate.dto';
+import { GoogleAuthenticateDto } from './dto/GoogleAuthenticate.dto';
 
 @Controller('authentication')
 @ApiTags('authentication')

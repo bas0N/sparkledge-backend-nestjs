@@ -11,7 +11,7 @@ import { UsersService } from 'src/users/users.service';
 import VerificationTokenPayload from './verificationTokenPayload.interface';
 import handlebars from 'handlebars';
 import { JwtPayload } from 'src/users/jwt-payload.interface';
-import { GoogleAuthenticateDto } from './dto/googleAuthenticate.dto';
+import { GoogleAuthenticateDto } from './dto/GoogleAuthenticate.dto';
 import { googleClient } from './googleClient';
 const fs = require('fs').promises;
 

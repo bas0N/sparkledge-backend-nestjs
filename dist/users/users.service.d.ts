@@ -24,6 +24,7 @@ export declare class UsersService {
     getJwtAccessToken(payload: JwtPayload): Promise<string>;
     getJwtRefreshToken(payload: JwtPayload): Promise<string>;
     getViewedDocuments(user: User): Promise<DocumentDto[]>;
+    getPublishedDocuments(user: User): Promise<DocumentDto[]>;
     setCurrentRefreshToken(refreshToken: string, userEmail: string): Promise<void>;
     getUserIfRefreshTokenMatches(refreshToken: string, email: string): Promise<User>;
     refreshToken(userEmail: string, refreshToken: string): Promise<{

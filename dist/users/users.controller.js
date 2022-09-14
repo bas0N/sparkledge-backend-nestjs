@@ -45,6 +45,10 @@ let UsersController = class UsersController {
         console.log('user controller');
         return this.userService.getViewedDocuments(user);
     }
+    async getPublishedDocuments(user) {
+        console.log('user controller');
+        return this.userService.getPublishedDocuments(user);
+    }
     async getUserById(userId) {
         return await this.userService.getUserById(userId);
     }
@@ -114,6 +118,15 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getViewedDocuments", null);
+__decorate([
+    (0, common_1.Get)('publishedDocuments'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
+    openapi.ApiResponse({ status: 200, type: [require("../documents/dto/Document.dto").DocumentDto] }),
+    __param(0, (0, get_user_decorator_1.GetUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getPublishedDocuments", null);
 __decorate([
     (0, swagger_1.ApiOkResponse)({ description: 'User retrieved succesfully.' }),
     (0, swagger_1.ApiParam)({
