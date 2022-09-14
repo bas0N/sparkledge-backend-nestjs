@@ -180,7 +180,7 @@ let UsersService = class UsersService {
                 createdAt: 'desc',
             },
         });
-        return arrayOfDocuments.slice(0, 4);
+        return arrayOfDocuments.slice(0, 9);
     }
     async setCurrentRefreshToken(refreshToken, userEmail) {
         const salt = await bcrypt.genSalt();

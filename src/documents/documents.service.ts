@@ -18,6 +18,7 @@ import { AddCommentDto } from './dto/AddComment.dto';
 import { Comment } from '.prisma/client';
 import { AddReportDto } from './dto/AddReport.dto';
 import { sendMessage } from 'src/slack/slackBot';
+import { AddCommentType } from './dto/AddCommentType';
 @Injectable()
 export class DocumentsService {
   constructor(
@@ -189,7 +190,10 @@ export class DocumentsService {
     const documents = await this.prismaService.document.findMany();
     return documents;
   }
-  async addComment(user: User, comment: AddCommentDto): Promise<Comment> {
+  async addComment(
+    user: User,
+    comment: AddCommentDto,
+  ): Promise<AddCommentType> {
     const { documentId, content } = comment;
     const date = new Date();
     date.setHours(date.getHours() + 2);
@@ -202,7 +206,13 @@ export class DocumentsService {
           createdAt: date,
         },
       });
-      return comment;
+      const returnComment: AddCommentType = {
+        ...comment,
+        firstName: user.firstName,
+        lastName: user.lastName,
+      };
+
+      return returnComment;
     } catch (err) {
       throw new Error(err);
     }

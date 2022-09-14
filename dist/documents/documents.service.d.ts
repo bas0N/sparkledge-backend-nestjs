@@ -10,6 +10,7 @@ import { UpdateDocumentDto } from './dto/UpdateDocument.dto';
 import { AddCommentDto } from './dto/AddComment.dto';
 import { Comment } from '.prisma/client';
 import { AddReportDto } from './dto/AddReport.dto';
+import { AddCommentType } from './dto/AddCommentType';
 export declare class DocumentsService {
     private readonly prismaService;
     private filesService;
@@ -20,7 +21,7 @@ export declare class DocumentsService {
     addNewDocument(document: CreateDocumentDto, user: User, fileBuffer: Buffer): Promise<DocumentDto>;
     getDocumentById(id: string, user: User): Promise<Document>;
     getAllDocuments(): Promise<Document[]>;
-    addComment(user: User, comment: AddCommentDto): Promise<Comment>;
+    addComment(user: User, comment: AddCommentDto): Promise<AddCommentType>;
     getComments(id: string): Promise<Comment[]>;
     deleteComment(user: User, id: string): Promise<Comment>;
     deleteDocument(id: string, user: User): Promise<void>;
