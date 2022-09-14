@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 //import { Document } from './document.model';
-import { CreateDocumentDto } from './dto/create-document.dto';
+import { CreateDocumentDto } from './dto/CreateDocument.dto';
 import { Document, File, User } from '@prisma/client';
 import { FilesService } from 'src/files/files.service';
 import { FilterDocumentsDto } from './dto/FilterDocuments.dto';
@@ -18,6 +18,7 @@ import { AddCommentDto } from './dto/AddComment.dto';
 import { Comment } from '.prisma/client';
 import { AddReportDto } from './dto/AddReport.dto';
 import { sendMessage } from 'src/slack/slackBot';
+import { AddCommentType } from './dto/AddCommentType';
 @Injectable()
 export class DocumentsService {
   constructor(
@@ -189,7 +190,10 @@ export class DocumentsService {
     const documents = await this.prismaService.document.findMany();
     return documents;
   }
-  async addComment(user: User, comment: AddCommentDto): Promise<Comment> {
+  async addComment(
+    user: User,
+    comment: AddCommentDto,
+  ): Promise<AddCommentType> {
     const { documentId, content } = comment;
     const date = new Date();
     date.setHours(date.getHours() + 2);
@@ -202,7 +206,12 @@ export class DocumentsService {
           createdAt: date,
         },
       });
-      return comment;
+      const returnComment: AddCommentType = {
+        ...comment,
+        author: { firstName: user.firstName, lastName: user.lastName },
+      };
+
+      return returnComment;
     } catch (err) {
       throw new Error(err);
     }

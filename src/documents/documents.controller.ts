@@ -28,7 +28,7 @@ import {
   ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { CreateDocumentDto } from './dto/create-document.dto';
+import { CreateDocumentDto } from './dto/CreateDocument.dto';
 import { DocumentDto } from './dto/Document.dto';
 import { LikeStatusDto } from './dto/LikeStatus.dto';
 //import { EmailVerificationGuard } from 'src/authentication/authentication.guard';
@@ -91,7 +91,6 @@ export class DocumentsController {
   }
 
   @ApiOkResponse({ description: 'All documents retrieved.', type: DocumentDto })
-  @UseGuards(AuthGuard('jwt'))
   @Get()
   async getAllDocuments(): Promise<Document[]> {
     return await this.documentsService.getAllDocuments();
