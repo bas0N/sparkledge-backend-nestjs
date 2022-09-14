@@ -160,7 +160,7 @@ let DocumentsService = class DocumentsService {
                     createdAt: date,
                 },
             });
-            const returnComment = Object.assign(Object.assign({}, comment), { firstName: user.firstName, lastName: user.lastName });
+            const returnComment = Object.assign(Object.assign({}, comment), { author: { firstName: user.firstName, lastName: user.lastName } });
             return returnComment;
         }
         catch (err) {

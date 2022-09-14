@@ -208,8 +208,7 @@ export class DocumentsService {
       });
       const returnComment: AddCommentType = {
         ...comment,
-        firstName: user.firstName,
-        lastName: user.lastName,
+        author: { firstName: user.firstName, lastName: user.lastName },
       };
 
       return returnComment;

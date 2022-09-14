@@ -5,8 +5,10 @@ type AddCommentType = {
   documentId: number;
   likesNumber: number;
   createdAt: Date;
-  firstName: String;
-  lastName: string;
+  author: {
+    firstName: String;
+    lastName: string;
+  };
 };
 
 export { AddCommentType };
