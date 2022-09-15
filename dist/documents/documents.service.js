@@ -19,6 +19,36 @@ let DocumentsService = class DocumentsService {
         this.prismaService = prismaService;
         this.filesService = filesService;
     }
+    async getMostPopular() {
+        try {
+            const documents = this.prismaService.document.findMany({
+                orderBy: { viewsNumber: 'desc' },
+                take: 10,
+            });
+            if (!documents) {
+                throw new common_1.InternalServerErrorException('No documents found.');
+            }
+            return documents;
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+    async getMostLiked() {
+        try {
+            const documents = this.prismaService.document.findMany({
+                orderBy: { likesNumber: 'desc' },
+                take: 10,
+            });
+            if (!documents) {
+                throw new common_1.InternalServerErrorException('No documents found.');
+            }
+            return documents;
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
     async addReport(addReportData, user) {
         const { documentId, reportType, content } = addReportData;
         try {

@@ -12,6 +12,8 @@ import { AddReportDto } from './dto/AddReport.dto';
 export declare class DocumentsController {
     private documentsService;
     constructor(documentsService: DocumentsService);
+    getMostPopular(): Promise<DocumentDto[]>;
+    getMostLiked(): Promise<DocumentDto[]>;
     addNewDocument(createDocumentDto: CreateDocumentDto, user: User, file: Express.Multer.File): Promise<DocumentDto>;
     updateDocument(updateDocumentDto: UpdateDocumentDto, user: User): Promise<Document>;
     getDocumentsFiltered(filterDocumentsDto: FilterDocumentsDto): Promise<DocumentDto[]>;

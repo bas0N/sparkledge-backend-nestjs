@@ -41,6 +41,23 @@ var path = require('path');
 export class DocumentsController {
   constructor(private documentsService: DocumentsService) {}
 
+  @Get('most-popular')
+  @UseGuards(AuthGuard('jwt'))
+  //  @UseGuards(EmailVerificationGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ description: 'Documents retrieved.', type: DocumentDto })
+  async getMostPopular(): Promise<DocumentDto[]> {
+    return await this.documentsService.getMostPopular();
+  }
+  @Get('most-liked')
+  @UseGuards(AuthGuard('jwt'))
+  //  @UseGuards(EmailVerificationGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ description: 'Documents retrieved.', type: DocumentDto })
+  async getMostLiked(): Promise<DocumentDto[]> {
+    return await this.documentsService.getMostLiked();
+  }
+
   @Post()
   @UseGuards(AuthGuard('jwt'))
   //  @UseGuards(EmailVerificationGuard)
