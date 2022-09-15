@@ -31,12 +31,33 @@ export class DocumentsService {
       const documents = this.prismaService.document.findMany({
         orderBy: { viewsNumber: 'desc' },
         take: 10,
+        include: {
+          user: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
       });
       if (!documents) {
         throw new InternalServerErrorException('No documents found.');
       }
 
-      return documents;
+      const documentsModified = (await documents).map((document) => {
+        return {
+          id: document.id,
+          title: document.title,
+          createdAt: document.createdAt,
+          viewsNumber: document.viewsNumber,
+          likesNumber: document.viewsNumber,
+          user: {
+            firstName: document.user.firstName,
+            lastName: document.user.lastName,
+          },
+        };
+      });
+      return documentsModified;
     } catch (err) {
       console.log(err);
     }
@@ -46,11 +67,32 @@ export class DocumentsService {
       const documents = this.prismaService.document.findMany({
         orderBy: { likesNumber: 'desc' },
         take: 10,
+        include: {
+          user: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
       });
       if (!documents) {
         throw new InternalServerErrorException('No documents found.');
       }
-      return documents;
+      const documentsModified = (await documents).map((document) => {
+        return {
+          id: document.id,
+          title: document.title,
+          createdAt: document.createdAt,
+          viewsNumber: document.viewsNumber,
+          likesNumber: document.viewsNumber,
+          user: {
+            firstName: document.user.firstName,
+            lastName: document.user.lastName,
+          },
+        };
+      });
+      return documentsModified;
     } catch (err) {
       console.log(err);
     }

@@ -78,17 +78,17 @@ let DocumentsController = class DocumentsController {
     }
 };
 __decorate([
-    (0, common_1.Get)('popular'),
+    (0, common_1.Get)('most-popular'),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     (0, swagger_1.ApiBearerAuth)(),
     (0, swagger_1.ApiOkResponse)({ description: 'Documents retrieved.', type: Document_dto_1.DocumentDto }),
-    openapi.ApiResponse({ status: 200, type: [require("./dto/Document.dto").DocumentDto] }),
+    openapi.ApiResponse({ status: 200, type: [Object] }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], DocumentsController.prototype, "getMostPopular", null);
 __decorate([
-    (0, common_1.Get)('liked'),
+    (0, common_1.Get)('most-liked'),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     (0, swagger_1.ApiBearerAuth)(),
     (0, swagger_1.ApiOkResponse)({ description: 'Documents retrieved.', type: Document_dto_1.DocumentDto }),

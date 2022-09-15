@@ -24,11 +24,32 @@ let DocumentsService = class DocumentsService {
             const documents = this.prismaService.document.findMany({
                 orderBy: { viewsNumber: 'desc' },
                 take: 10,
+                include: {
+                    user: {
+                        select: {
+                            firstName: true,
+                            lastName: true,
+                        },
+                    },
+                },
             });
             if (!documents) {
                 throw new common_1.InternalServerErrorException('No documents found.');
             }
-            return documents;
+            const documentsModified = (await documents).map((document) => {
+                return {
+                    id: document.id,
+                    title: document.title,
+                    createdAt: document.createdAt,
+                    viewsNumber: document.viewsNumber,
+                    likesNumber: document.viewsNumber,
+                    user: {
+                        firstName: document.user.firstName,
+                        lastName: document.user.lastName,
+                    },
+                };
+            });
+            return documentsModified;
         }
         catch (err) {
             console.log(err);

@@ -15,7 +15,17 @@ export declare class DocumentsService {
     private readonly prismaService;
     private filesService;
     constructor(prismaService: PrismaService, filesService: FilesService);
-    getMostPopular(): Promise<Document[]>;
+    getMostPopular(): Promise<{
+        id: number;
+        title: string;
+        createdAt: Date;
+        viewsNumber: number;
+        likesNumber: number;
+        user: {
+            firstName: string;
+            lastName: string;
+        };
+    }[]>;
     getMostLiked(): Promise<Document[]>;
     addReport(addReportData: AddReportDto, user: User): Promise<import(".prisma/client").Report>;
     updateDocument(updateDocumentDto: UpdateDocumentDto, user: User): Promise<Document>;

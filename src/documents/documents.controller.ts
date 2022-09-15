@@ -46,7 +46,7 @@ export class DocumentsController {
   //  @UseGuards(EmailVerificationGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ description: 'Documents retrieved.', type: DocumentDto })
-  async getMostPopular(): Promise<DocumentDto[]> {
+  async getMostPopular(): Promise<any[]> {
     return await this.documentsService.getMostPopular();
   }
   @Get('most-liked')
@@ -54,7 +54,7 @@ export class DocumentsController {
   //  @UseGuards(EmailVerificationGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ description: 'Documents retrieved.', type: DocumentDto })
-  async getMostLiked(): Promise<DocumentDto[]> {
+  async getMostLiked(): Promise<any[]> {
     return await this.documentsService.getMostLiked();
   }
 
