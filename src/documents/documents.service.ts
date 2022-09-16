@@ -50,7 +50,7 @@ export class DocumentsService {
           title: document.title,
           createdAt: document.createdAt,
           viewsNumber: document.viewsNumber,
-          likesNumber: document.viewsNumber,
+          likesNumber: document.likesNumber,
           user: {
             firstName: document.user.firstName,
             lastName: document.user.lastName,
