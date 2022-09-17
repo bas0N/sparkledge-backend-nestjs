@@ -26,7 +26,17 @@ export declare class DocumentsService {
             lastName: string;
         };
     }[]>;
-    getMostLiked(): Promise<Document[]>;
+    getMostLiked(): Promise<{
+        id: number;
+        title: string;
+        createdAt: Date;
+        viewsNumber: number;
+        likesNumber: number;
+        user: {
+            firstName: string;
+            lastName: string;
+        };
+    }[]>;
     addReport(addReportData: AddReportDto, user: User): Promise<import(".prisma/client").Report>;
     updateDocument(updateDocumentDto: UpdateDocumentDto, user: User): Promise<Document>;
     getDocumentsFiltered(filterDocumentsDto: FilterDocumentsDto): Promise<Document[]>;

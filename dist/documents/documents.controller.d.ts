@@ -13,7 +13,7 @@ export declare class DocumentsController {
     private documentsService;
     constructor(documentsService: DocumentsService);
     getMostPopular(): Promise<any[]>;
-    getMostLiked(): Promise<DocumentDto[]>;
+    getMostLiked(): Promise<any[]>;
     addNewDocument(createDocumentDto: CreateDocumentDto, user: User, file: Express.Multer.File): Promise<DocumentDto>;
     updateDocument(updateDocumentDto: UpdateDocumentDto, user: User): Promise<Document>;
     getDocumentsFiltered(filterDocumentsDto: FilterDocumentsDto): Promise<DocumentDto[]>;

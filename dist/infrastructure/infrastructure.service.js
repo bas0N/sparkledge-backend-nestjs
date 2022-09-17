@@ -64,7 +64,7 @@ let InfrastructureService = class InfrastructureService {
     }
     async getCourses(programmeId) {
         return this.prismaService.course.findMany({
-            where: { programmeId: Number(programmeId), degree: 'PHD' },
+            where: { programmeId: Number(programmeId) },
         });
     }
 };
