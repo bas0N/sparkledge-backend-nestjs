@@ -70,7 +70,7 @@ let DocumentsController = class DocumentsController {
     async getComments(id) {
         return this.documentsService.getComments(id);
     }
-    async deleteDomment(id, user) {
+    async deleteComment(id, user) {
         return this.documentsService.deleteComment(user, id);
     }
     async addReport(addReportDto, user) {
@@ -160,7 +160,7 @@ __decorate([
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     (0, common_1.Delete)('/:documentId'),
     openapi.ApiResponse({ status: 200 }),
-    __param(0, (0, common_1.Param)()),
+    __param(0, (0, common_1.Param)('documentId')),
     __param(1, (0, get_user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
@@ -225,7 +225,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
-], DocumentsController.prototype, "deleteDomment", null);
+], DocumentsController.prototype, "deleteComment", null);
 __decorate([
     (0, swagger_1.ApiCreatedResponse)({ description: 'Report Added.', type: AddReport_dto_1.AddReportDto }),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),

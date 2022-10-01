@@ -24,6 +24,6 @@ export declare class DocumentsController {
     checkIfLiked(id: any, user: User): Promise<LikeStatusDto>;
     addComment(addCommentDto: AddCommentDto, user: User): Promise<import("./dto/AddCommentType").AddCommentType>;
     getComments(id: any): Promise<Comment[]>;
-    deleteDomment(id: any, user: User): Promise<Comment>;
+    deleteComment(id: any, user: User): Promise<Comment>;
     addReport(addReportDto: AddReportDto, user: User): Promise<import(".prisma/client").Report>;
 }

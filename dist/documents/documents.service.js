@@ -14,6 +14,7 @@ const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
 const files_service_1 = require("../files/files.service");
 const slackBot_1 = require("../slack/slackBot");
+const aws_sdk_1 = require("aws-sdk");
 let DocumentsService = class DocumentsService {
     constructor(prismaService, filesService) {
         this.prismaService = prismaService;
@@ -281,12 +282,37 @@ let DocumentsService = class DocumentsService {
     }
     async deleteDocument(id, user) {
         try {
+            const document = await this.prismaService.document.findUnique({
+                where: { id: Number(id) },
+            });
+            if (!document) {
+                throw new common_1.BadRequestException('Document with the given id does not exist.');
+            }
+            if (document.userId !== user.id) {
+                throw new common_1.UnauthorizedException('You are not permited to delete this document.');
+            }
+            const s3 = new aws_sdk_1.S3();
+            const file = await this.prismaService.file.findUnique({
+                where: { id: Number(document.fileId) },
+            });
+            var params = {
+                Bucket: process.env.AWS_PUBLIC_BUCKET_NAME,
+                Key: file.key,
+            };
+            s3.deleteObject(params, function (err, data) {
+                if (err) {
+                    console.log(err, err.stack);
+                }
+                else {
+                    console.log('object deleted succesfully');
+                }
+            });
             await this.prismaService.document.delete({
                 where: { id: Number(id) },
             });
         }
         catch (err) {
-            throw new common_1.NotFoundException(`Document with id ${id} not found.`);
+            throw new common_1.NotFoundException(err);
         }
     }
     async toggleLike(user, documentId) {

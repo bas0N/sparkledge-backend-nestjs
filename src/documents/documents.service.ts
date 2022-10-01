@@ -5,6 +5,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+
 import { PrismaService } from 'src/prisma/prisma.service';
 //import { Document } from './document.model';
 import { CreateDocumentDto } from './dto/CreateDocument.dto';
@@ -19,6 +20,7 @@ import { Comment } from '.prisma/client';
 import { AddReportDto } from './dto/AddReport.dto';
 import { sendMessage } from 'src/slack/slackBot';
 import { AddCommentType } from './dto/AddCommentType';
+import { S3 } from 'aws-sdk';
 @Injectable()
 export class DocumentsService {
   constructor(
@@ -331,11 +333,44 @@ export class DocumentsService {
 
   async deleteDocument(id: string, user: User) {
     try {
+      const document = await this.prismaService.document.findUnique({
+        where: { id: Number(id) },
+      });
+      if (!document) {
+        throw new BadRequestException(
+          'Document with the given id does not exist.',
+        );
+      }
+      //add else for roles
+      if (document.userId !== user.id) {
+        throw new UnauthorizedException(
+          'You are not permited to delete this document.',
+        );
+      }
+      // console.log('document: ',document);
+      const s3 = new S3();
+      //file is given a .pdf extension after the initial validation in documents controller
+
+      const file = await this.prismaService.file.findUnique({
+        where: { id: Number(document.fileId) },
+      });
+      var params = {
+        Bucket: process.env.AWS_PUBLIC_BUCKET_NAME,
+        Key: file.key,
+      };
+
+      s3.deleteObject(params, function (err, data) {
+        if (err) {
+          console.log(err, err.stack);
+        } else {
+          console.log('object deleted succesfully');
+        }
+      });
       await this.prismaService.document.delete({
         where: { id: Number(id) },
       });
     } catch (err) {
-      throw new NotFoundException(`Document with id ${id} not found.`);
+      throw new NotFoundException(err);
     }
   }
 

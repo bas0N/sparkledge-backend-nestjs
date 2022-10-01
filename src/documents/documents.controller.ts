@@ -121,7 +121,7 @@ export class DocumentsController {
   @UseGuards(AuthGuard('jwt'))
   //@UseGuards(EmailVerificationGuard)
   @Delete('/:documentId')
-  async deleteDocument(@Param() id: string, @GetUser() user: User) {
+  async deleteDocument(@Param('documentId') id: string, @GetUser() user: User) {
     return await this.documentsService.deleteDocument(id, user);
   }
 
@@ -170,7 +170,7 @@ export class DocumentsController {
   }
   @UseGuards(AuthGuard('jwt'))
   @Delete('/comments/delete-comment/:documentId')
-  async deleteDomment(
+  async deleteComment(
     @Param('documentId') id,
     @GetUser() user: User,
   ): Promise<Comment> {
