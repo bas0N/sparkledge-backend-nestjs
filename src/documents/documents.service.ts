@@ -317,7 +317,11 @@ export class DocumentsService {
       const comment = await this.prismaService.comment.findUnique({
         where: { id: Number(id) },
       });
-      if ((comment.userId = user.id)) {
+      //check if the use is a moderator
+      const isModerator = await this.prismaService.moderators.findUnique({
+        where: { email: user.email },
+      });
+      if (comment.userId === user.id || isModerator) {
         const commentDeleted = await this.prismaService.comment.delete({
           where: { id: Number(id) },
         });
