@@ -46,7 +46,7 @@ export declare class DocumentsService {
     addComment(user: User, comment: AddCommentDto): Promise<AddCommentType>;
     getComments(id: string): Promise<Comment[]>;
     deleteComment(user: User, id: string): Promise<Comment>;
-    deleteDocument(id: string, user: User): Promise<void>;
+    deleteDocument(id: string, user: User): Promise<Document>;
     toggleLike(user: User, documentId: string): Promise<LikeStatusDto>;
     checkIfLiked(user: User, documentId: string): Promise<LikeStatusDto>;
 }

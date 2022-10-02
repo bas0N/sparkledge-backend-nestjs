@@ -137,6 +137,11 @@ model Report{
   content String @default("no-content")
   createdAt DateTime @default(now()) 
 }
+model Moderators{
+  id String @default(uuid()) @id
+  email String @unique
+
+}
 enum RegisteredBy {
   EMAIL
   GOOGLE
@@ -150,3 +155,4 @@ enum ReportType {
   SEXUALCONTENT
   OTHER
 }
+

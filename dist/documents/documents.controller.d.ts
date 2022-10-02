@@ -19,7 +19,7 @@ export declare class DocumentsController {
     getDocumentsFiltered(filterDocumentsDto: FilterDocumentsDto): Promise<DocumentDto[]>;
     getDocumentById(id: any, user: User): Promise<Document>;
     getAllDocuments(): Promise<Document[]>;
-    deleteDocument(id: string, user: User): Promise<void>;
+    deleteDocument(id: string, user: User): Promise<Document>;
     toggleLike(id: any, user: User): Promise<LikeStatusDto>;
     checkIfLiked(id: any, user: User): Promise<LikeStatusDto>;
     addComment(addCommentDto: AddCommentDto, user: User): Promise<import("./dto/AddCommentType").AddCommentType>;

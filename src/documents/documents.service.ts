@@ -341,34 +341,41 @@ export class DocumentsService {
           'Document with the given id does not exist.',
         );
       }
-      //add else for roles
-      if (document.userId !== user.id) {
+      //check if the use is a moderator
+      const isModerator = await this.prismaService.moderators.findUnique({
+        where: { email: user.email },
+      });
+
+      //check if user owns the document or if simply moderator wants to delete it
+      if (document.userId === user.id || isModerator) {
+        // console.log('document: ',document);
+        const s3 = new S3();
+        //file is given a .pdf extension after the initial validation in documents controller
+
+        const file = await this.prismaService.file.findUnique({
+          where: { id: Number(document.fileId) },
+        });
+        var params = {
+          Bucket: process.env.AWS_PUBLIC_BUCKET_NAME,
+          Key: file.key,
+        };
+
+        s3.deleteObject(params, function (err, data) {
+          if (err) {
+            console.log(err, err.stack);
+          } else {
+            console.log('object deleted succesfully');
+          }
+        });
+        return await this.prismaService.document.delete({
+          where: { id: Number(id) },
+        });
+      } //else, throw an error
+      else {
         throw new UnauthorizedException(
           'You are not permited to delete this document.',
         );
       }
-      // console.log('document: ',document);
-      const s3 = new S3();
-      //file is given a .pdf extension after the initial validation in documents controller
-
-      const file = await this.prismaService.file.findUnique({
-        where: { id: Number(document.fileId) },
-      });
-      var params = {
-        Bucket: process.env.AWS_PUBLIC_BUCKET_NAME,
-        Key: file.key,
-      };
-
-      s3.deleteObject(params, function (err, data) {
-        if (err) {
-          console.log(err, err.stack);
-        } else {
-          console.log('object deleted succesfully');
-        }
-      });
-      await this.prismaService.document.delete({
-        where: { id: Number(id) },
-      });
     } catch (err) {
       throw new NotFoundException(err);
     }
