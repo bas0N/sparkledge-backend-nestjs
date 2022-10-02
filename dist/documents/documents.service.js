@@ -268,7 +268,10 @@ let DocumentsService = class DocumentsService {
             const comment = await this.prismaService.comment.findUnique({
                 where: { id: Number(id) },
             });
-            if ((comment.userId = user.id)) {
+            const isModerator = await this.prismaService.moderators.findUnique({
+                where: { email: user.email },
+            });
+            if (comment.userId === user.id || isModerator) {
                 const commentDeleted = await this.prismaService.comment.delete({
                     where: { id: Number(id) },
                 });
@@ -382,6 +385,53 @@ let DocumentsService = class DocumentsService {
                 message: `Document of id: ${documentId} is not liked by the user of id: ${user.id}.`,
                 status: false,
             };
+        }
+    }
+    async isPermittedToDeleteDocument(documentId, user) {
+        try {
+            const isModerator = await this.prismaService.moderators.findUnique({
+                where: { email: user.email },
+            });
+            if (isModerator) {
+                return { isPermitted: true };
+            }
+            const document = await this.prismaService.document.findUnique({
+                where: { id: Number(documentId) },
+            });
+            console.log('document: ', JSON.stringify(document));
+            if (!document) {
+                throw new common_1.BadRequestException('Unable to find document with the given id.');
+            }
+            if (document.userId === user.id) {
+                return { isPermitted: true };
+            }
+            return { isPermitted: false };
+        }
+        catch (err) {
+            throw new common_1.InternalServerErrorException(err);
+        }
+    }
+    async isPermittedToDeleteComment(commentId, user) {
+        try {
+            const isModerator = await this.prismaService.moderators.findUnique({
+                where: { email: user.email },
+            });
+            if (isModerator) {
+                return { isPermitted: true };
+            }
+            const comment = await this.prismaService.comment.findUnique({
+                where: { id: Number(commentId) },
+            });
+            if (!comment) {
+                throw new common_1.BadRequestException('Unable to find document with the given id.');
+            }
+            if (comment.userId === user.id) {
+                return { isPermitted: true };
+            }
+            return { isPermitted: false };
+        }
+        catch (err) {
+            throw new common_1.InternalServerErrorException(err);
         }
     }
 };

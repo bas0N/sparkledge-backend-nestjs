@@ -11,6 +11,7 @@ import { AddCommentDto } from './dto/AddComment.dto';
 import { Comment } from '.prisma/client';
 import { AddReportDto } from './dto/AddReport.dto';
 import { AddCommentType } from './dto/AddCommentType';
+import { IsPermitted } from './dto/IsPermitted.dto';
 export declare class DocumentsService {
     private readonly prismaService;
     private filesService;
@@ -49,4 +50,6 @@ export declare class DocumentsService {
     deleteDocument(id: string, user: User): Promise<Document>;
     toggleLike(user: User, documentId: string): Promise<LikeStatusDto>;
     checkIfLiked(user: User, documentId: string): Promise<LikeStatusDto>;
+    isPermittedToDeleteDocument(documentId: string, user: User): Promise<IsPermitted>;
+    isPermittedToDeleteComment(commentId: string, user: User): Promise<IsPermitted>;
 }

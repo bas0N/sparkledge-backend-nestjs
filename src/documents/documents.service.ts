@@ -21,6 +21,7 @@ import { AddReportDto } from './dto/AddReport.dto';
 import { sendMessage } from 'src/slack/slackBot';
 import { AddCommentType } from './dto/AddCommentType';
 import { S3 } from 'aws-sdk';
+import { IsPermitted } from './dto/IsPermitted.dto';
 @Injectable()
 export class DocumentsService {
   constructor(
@@ -457,6 +458,62 @@ export class DocumentsService {
         message: `Document of id: ${documentId} is not liked by the user of id: ${user.id}.`,
         status: false,
       };
+    }
+  }
+
+  async isPermittedToDeleteDocument(
+    documentId: string,
+    user: User,
+  ): Promise<IsPermitted> {
+    try {
+      const isModerator = await this.prismaService.moderators.findUnique({
+        where: { email: user.email },
+      });
+      if (isModerator) {
+        return { isPermitted: true };
+      }
+      const document = await this.prismaService.document.findUnique({
+        where: { id: Number(documentId) },
+      });
+      console.log('document: ', JSON.stringify(document));
+      if (!document) {
+        throw new BadRequestException(
+          'Unable to find document with the given id.',
+        );
+      }
+      if (document.userId === user.id) {
+        return { isPermitted: true };
+      }
+      return { isPermitted: false };
+    } catch (err) {
+      throw new InternalServerErrorException(err);
+    }
+  }
+  async isPermittedToDeleteComment(
+    commentId: string,
+    user: User,
+  ): Promise<IsPermitted> {
+    try {
+      const isModerator = await this.prismaService.moderators.findUnique({
+        where: { email: user.email },
+      });
+      if (isModerator) {
+        return { isPermitted: true };
+      }
+      const comment = await this.prismaService.comment.findUnique({
+        where: { id: Number(commentId) },
+      });
+      if (!comment) {
+        throw new BadRequestException(
+          'Unable to find document with the given id.',
+        );
+      }
+      if (comment.userId === user.id) {
+        return { isPermitted: true };
+      }
+      return { isPermitted: false };
+    } catch (err) {
+      throw new InternalServerErrorException(err);
     }
   }
 }

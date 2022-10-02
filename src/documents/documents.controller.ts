@@ -34,6 +34,7 @@ import { LikeStatusDto } from './dto/LikeStatus.dto';
 //import { EmailVerificationGuard } from 'src/authentication/authentication.guard';
 import { UpdateDocumentDto } from './dto/UpdateDocument.dto';
 import { AddReportDto } from './dto/AddReport.dto';
+import { IsPermitted } from './dto/IsPermitted.dto';
 var path = require('path');
 @ApiTags('documents')
 @Controller('documents')
@@ -185,5 +186,22 @@ export class DocumentsController {
   @Post('/report/add-report')
   async addReport(@Body() addReportDto: AddReportDto, @GetUser() user: User) {
     return this.documentsService.addReport(addReportDto, user);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/isPermittedToDeleteDocument/:documentId')
+  async isPermittedToDeleteDocument(
+    @Param('documentId') documentId,
+    @GetUser() user: User,
+  ): Promise<IsPermitted> {
+    return this.documentsService.isPermittedToDeleteDocument(documentId, user);
+  }
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/isPermittedToDeleteComment/:documentId')
+  async isPermittedToDeleteComment(
+    @Param('commentId') commentId,
+    @GetUser() user: User,
+  ): Promise<IsPermitted> {
+    return this.documentsService.isPermittedToDeleteComment(commentId, user);
   }
 }

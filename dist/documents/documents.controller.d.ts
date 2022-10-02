@@ -9,6 +9,7 @@ import { DocumentDto } from './dto/Document.dto';
 import { LikeStatusDto } from './dto/LikeStatus.dto';
 import { UpdateDocumentDto } from './dto/UpdateDocument.dto';
 import { AddReportDto } from './dto/AddReport.dto';
+import { IsPermitted } from './dto/IsPermitted.dto';
 export declare class DocumentsController {
     private documentsService;
     constructor(documentsService: DocumentsService);
@@ -26,4 +27,6 @@ export declare class DocumentsController {
     getComments(id: any): Promise<Comment[]>;
     deleteComment(id: any, user: User): Promise<Comment>;
     addReport(addReportDto: AddReportDto, user: User): Promise<import(".prisma/client").Report>;
+    isPermittedToDeleteDocument(documentId: any, user: User): Promise<IsPermitted>;
+    isPermittedToDeleteComment(commentId: any, user: User): Promise<IsPermitted>;
 }
