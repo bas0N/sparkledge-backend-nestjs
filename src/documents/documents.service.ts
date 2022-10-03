@@ -505,7 +505,7 @@ export class DocumentsService {
       });
       if (!comment) {
         throw new BadRequestException(
-          'Unable to find document with the given id.',
+          'Unable to find comment with the given id.',
         );
       }
       if (comment.userId === user.id) {

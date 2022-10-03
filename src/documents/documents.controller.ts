@@ -197,7 +197,7 @@ export class DocumentsController {
     return this.documentsService.isPermittedToDeleteDocument(documentId, user);
   }
   @UseGuards(AuthGuard('jwt'))
-  @Post('/isPermittedToDeleteComment/:documentId')
+  @Post('/isPermittedToDeleteComment/:commentId')
   async isPermittedToDeleteComment(
     @Param('commentId') commentId,
     @GetUser() user: User,
