@@ -372,6 +372,9 @@ export class DocumentsService {
             console.log('object deleted succesfully');
           }
         });
+        await this.prismaService.comment.deleteMany({
+          where: { documentId: document.id },
+        });
         return await this.prismaService.document.delete({
           where: { id: Number(id) },
         });

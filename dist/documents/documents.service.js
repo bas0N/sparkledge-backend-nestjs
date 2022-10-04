@@ -311,6 +311,9 @@ let DocumentsService = class DocumentsService {
                         console.log('object deleted succesfully');
                     }
                 });
+                await this.prismaService.comment.deleteMany({
+                    where: { documentId: document.id },
+                });
                 return await this.prismaService.document.delete({
                     where: { id: Number(id) },
                 });
@@ -423,7 +426,7 @@ let DocumentsService = class DocumentsService {
                 where: { id: Number(commentId) },
             });
             if (!comment) {
-                throw new common_1.BadRequestException('Unable to find document with the given id.');
+                throw new common_1.BadRequestException('Unable to find comment with the given id.');
             }
             if (comment.userId === user.id) {
                 return { isPermitted: true };

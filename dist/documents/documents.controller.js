@@ -255,7 +255,7 @@ __decorate([
 ], DocumentsController.prototype, "isPermittedToDeleteDocument", null);
 __decorate([
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
-    (0, common_1.Post)('/isPermittedToDeleteComment/:documentId'),
+    (0, common_1.Post)('/isPermittedToDeleteComment/:commentId'),
     openapi.ApiResponse({ status: 201, type: Object }),
     __param(0, (0, common_1.Param)('commentId')),
     __param(1, (0, get_user_decorator_1.GetUser)()),
