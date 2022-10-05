@@ -132,6 +132,9 @@ export class FilesService {
     //     },
     //   },
     // });
+    const document = await this.prismaService.document.findUnique({
+      where: { id: Number(documentId) },
+    });
 
     //find user whose array of viewed documents will be updated
     const foundUser = await this.prismaService.user.findUnique({

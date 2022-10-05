@@ -209,6 +209,14 @@ let DocumentsService = class DocumentsService {
                         lastName: true,
                     },
                 },
+                course: {
+                    select: {
+                        name: true,
+                    },
+                },
+                faculty: {
+                    select: { name: true },
+                },
             },
         });
         if (!document) {

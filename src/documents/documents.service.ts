@@ -251,6 +251,14 @@ export class DocumentsService {
             lastName: true,
           },
         },
+        course: {
+          select: {
+            name: true,
+          },
+        },
+        faculty: {
+          select: { name: true },
+        },
       },
     });
     //no courses found
