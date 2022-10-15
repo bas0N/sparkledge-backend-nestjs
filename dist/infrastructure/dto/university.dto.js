@@ -26,4 +26,4 @@ __decorate([
     __metadata("design:type", String)
 ], UniversityDto.prototype, "name", void 0);
 exports.UniversityDto = UniversityDto;
-//# sourceMappingURL=University.dto.js.map
+//# sourceMappingURL=university.dto.js.map

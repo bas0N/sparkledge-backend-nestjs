@@ -5,9 +5,12 @@ import * as AWS from 'aws-sdk';
 import { allowedOrigins } from './config/allowedOrigins';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { HttpExceptionFilter } from './config/http-exception.filter';
+//import { RolesGuard } from './authentication/roles.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  //app.useGlobalGuards(new RolesGuard(new Reflector()));
+
   //to be changed
   app.enableCors({
     origin: function (origin, callback) {

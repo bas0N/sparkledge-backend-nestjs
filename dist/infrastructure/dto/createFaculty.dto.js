@@ -26,4 +26,4 @@ __decorate([
     __metadata("design:type", Number)
 ], CreateFacultyDto.prototype, "universityId", void 0);
 exports.CreateFacultyDto = CreateFacultyDto;
-//# sourceMappingURL=CreateFaculty.dto.js.map
+//# sourceMappingURL=createFaculty.dto.js.map

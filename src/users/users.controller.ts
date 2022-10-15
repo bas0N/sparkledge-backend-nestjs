@@ -25,6 +25,9 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthenticationService } from 'src/authentication/authentication.service';
+import { Roles } from 'src/authentication/roles.decorator';
+import { RolesGuard } from 'src/authentication/roles.guard';
+import { Reflector } from '@nestjs/core';
 //import { EmailVerificationGuard } from 'src/authentication/authentication.guard';
 @ApiTags('users')
 @Controller('users')
@@ -92,6 +95,10 @@ export class UsersController {
     console.log('user controller');
     return this.userService.getPublishedDocuments(user);
   }
+
+  // @UseGuards(AuthGuard('jwt'), new RolesGuard(new Reflector()))
+  //@Roles('ADMIN')
+  //@UseGuards(new RolesGuard(new Reflector()))
   @Get('getPublishedDocumentsByUserId/:userId')
   async getPublishedDocumentsByUserId(@Param('userId') userId) {
     return this.userService.getPublishedDocumentsByUserId(userId);
