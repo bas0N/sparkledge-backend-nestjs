@@ -104,6 +104,11 @@ export class UsersController {
     return this.userService.getPublishedDocumentsByUserId(userId);
   }
 
+  @Get('getNumOfPublishedDocuments/:userId')
+  async getNumOfPublishedDocuments(@Param('userId') userId) {
+    return this.userService.getNumOfPublishedDocuments(userId);
+  }
+
   //@UseGuards(AuthGuard('jwt'))
   //@UseGuards(EmailVerificationGuard)
   @ApiOkResponse({ description: 'User retrieved succesfully.' })

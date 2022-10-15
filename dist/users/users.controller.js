@@ -22,9 +22,6 @@ const passport_1 = require("@nestjs/passport");
 const get_user_decorator_1 = require("./get-user.decorator");
 const swagger_1 = require("@nestjs/swagger");
 const authentication_service_1 = require("../authentication/authentication.service");
-const roles_decorator_1 = require("../authentication/roles.decorator");
-const roles_guard_1 = require("../authentication/roles.guard");
-const core_1 = require("@nestjs/core");
 let UsersController = class UsersController {
     constructor(userService, authenticationService) {
         this.userService = userService;
@@ -54,6 +51,9 @@ let UsersController = class UsersController {
     }
     async getPublishedDocumentsByUserId(userId) {
         return this.userService.getPublishedDocumentsByUserId(userId);
+    }
+    async getNumOfPublishedDocuments(userId) {
+        return this.userService.getNumOfPublishedDocuments(userId);
     }
     async getUserById(userId) {
         return await this.userService.getUserById(userId);
@@ -134,8 +134,6 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getPublishedDocuments", null);
 __decorate([
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt'), new roles_guard_1.RolesGuard(new core_1.Reflector())),
-    (0, roles_decorator_1.Roles)('ADMIN'),
     (0, common_1.Get)('getPublishedDocumentsByUserId/:userId'),
     openapi.ApiResponse({ status: 200, type: [require("../documents/dto/Document.dto").DocumentDto] }),
     __param(0, (0, common_1.Param)('userId')),
@@ -143,6 +141,14 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getPublishedDocumentsByUserId", null);
+__decorate([
+    (0, common_1.Get)('getNumOfPublishedDocuments/:userId'),
+    openapi.ApiResponse({ status: 200, type: Object }),
+    __param(0, (0, common_1.Param)('userId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getNumOfPublishedDocuments", null);
 __decorate([
     (0, swagger_1.ApiOkResponse)({ description: 'User retrieved succesfully.' }),
     (0, swagger_1.ApiParam)({

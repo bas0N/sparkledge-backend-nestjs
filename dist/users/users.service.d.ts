@@ -6,6 +6,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/createUser.dto';
 import { DocumentDto } from 'src/documents/dto/Document.dto';
 import { EmailService } from 'src/email/email.service';
+import { NumberOfPublishedDocsDto } from './dto/returnTypes.dto';
 export declare class UsersService {
     private readonly prismaService;
     private jwtService;
@@ -25,6 +26,7 @@ export declare class UsersService {
     getJwtRefreshToken(payload: JwtPayload): Promise<string>;
     getViewedDocuments(user: User): Promise<DocumentDto[]>;
     getPublishedDocumentsByUserId(userId: string): Promise<DocumentDto[]>;
+    getNumOfPublishedDocuments(userId: string): Promise<NumberOfPublishedDocsDto>;
     getPublishedDocuments(user: User): Promise<DocumentDto[]>;
     setCurrentRefreshToken(refreshToken: string, userEmail: string): Promise<void>;
     getUserIfRefreshTokenMatches(refreshToken: string, email: string): Promise<User>;
