@@ -15,6 +15,7 @@ export class AccessTokenStrategy extends PassportStrategy(Strategy, 'jwt') {
     id: string;
     email: string;
     isVerified: string;
+    role: string;
   }): Promise<User | null> {
     return await this.userService.getUserByEmail(validationPayload.email);
   }

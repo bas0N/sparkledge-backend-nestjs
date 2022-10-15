@@ -30,4 +30,4 @@ __decorate([
     __metadata("design:type", Number)
 ], CreateProgrammeDto.prototype, "universityId", void 0);
 exports.CreateProgrammeDto = CreateProgrammeDto;
-//# sourceMappingURL=CreateProgramme.dto.js.map
+//# sourceMappingURL=createProgramme.dto.js.map

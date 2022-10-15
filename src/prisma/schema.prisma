@@ -143,31 +143,7 @@ enum Degree {
 }
 
 
-model Comment{
-  id Int @default(autoincrement()) @id
-  content String
-  author User @relation(fields:[userId],references:[id])
-  userId String
-  document Document @relation(fields:[documentId],references: [id])
-  documentId Int 
-  likesNumber Int @default(0)
-  createdAt DateTime @default(now())  
-}
-model Report{
-  id String @default(uuid()) @id
-  reportType ReportType
-  personReporting User @relation(fields:[userId],references:[id])
-  userId String
-  documentReported Document @relation(fields:[documentId],references:[id])
-  documentId Int
-  content String @default("no-content")
-  createdAt DateTime @default(now()) 
-}
-model Moderators{
-  id String @default(uuid()) @id
-  email String @unique
 
-}
 enum RegisteredBy {
   EMAIL
   GOOGLE

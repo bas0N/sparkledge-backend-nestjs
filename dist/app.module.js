@@ -37,7 +37,9 @@ AppModule = __decorate([
             jwt_1.JwtModule,
         ],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService],
+        providers: [
+            app_service_1.AppService,
+        ],
         exports: [passport_1.PassportModule, app_service_1.AppService],
     })
 ], AppModule);

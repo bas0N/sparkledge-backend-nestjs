@@ -52,4 +52,4 @@ __decorate([
     __metadata("design:type", String)
 ], CourseDto.prototype, "degree", void 0);
 exports.CourseDto = CourseDto;
-//# sourceMappingURL=Course.dto.js.map
+//# sourceMappingURL=course.dto.js.map

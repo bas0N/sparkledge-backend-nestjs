@@ -22,4 +22,4 @@ __decorate([
     __metadata("design:type", String)
 ], CreateUniversityDto.prototype, "name", void 0);
 exports.CreateUniversityDto = CreateUniversityDto;
-//# sourceMappingURL=CreateUniversity.dto.js.map
+//# sourceMappingURL=createUniversity.dto.js.map
