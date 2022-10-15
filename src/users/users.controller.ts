@@ -92,6 +92,10 @@ export class UsersController {
     console.log('user controller');
     return this.userService.getPublishedDocuments(user);
   }
+  @Get('getPublishedDocumentsByUserId/:userId')
+  async getPublishedDocumentsByUserId(@Param('userId') userId) {
+    return this.userService.getPublishedDocumentsByUserId(userId);
+  }
 
   //@UseGuards(AuthGuard('jwt'))
   //@UseGuards(EmailVerificationGuard)

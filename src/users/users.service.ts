@@ -198,11 +198,10 @@ export class UsersService {
     return documents;
   }
 
-  async getPublishedDocuments(user: User): Promise<DocumentDto[]> {
-    console.log(user);
+  async getPublishedDocumentsByUserId(userId: string): Promise<DocumentDto[]> {
     //finds user with the given id
     const userFound = await this.prismaService.user.findUnique({
-      where: { id: user.id },
+      where: { id: userId },
     });
     //throws error if the user has not been found
     if (!userFound) {
@@ -210,6 +209,21 @@ export class UsersService {
         'User with the given id has not been found in the db.',
       );
     }
+    const arrayOfDocuments = await this.prismaService.document.findMany({
+      where: { userId: userFound.id },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+    //returns the array of ids in the use object
+    return arrayOfDocuments.slice(0, 9);
+  }
+  async getPublishedDocuments(user: User): Promise<DocumentDto[]> {
+    console.log(user);
+    //finds user with the given id
+    const userFound = await this.prismaService.user.findUnique({
+      where: { id: user.id },
+    });
 
     const arrayOfDocuments = await this.prismaService.document.findMany({
       where: { userId: userFound.id },
@@ -217,6 +231,7 @@ export class UsersService {
         createdAt: 'desc',
       },
     });
+
     // //return an array of elements for the corresponding array of ids
     // const documents = await this.prismaService.document.findMany({
     //   where: {
