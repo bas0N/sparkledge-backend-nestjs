@@ -34,12 +34,30 @@ import { LikeStatusDto } from './dto/LikeStatus.dto';
 //import { EmailVerificationGuard } from 'src/authentication/authentication.guard';
 import { UpdateDocumentDto } from './dto/UpdateDocument.dto';
 import { AddReportDto } from './dto/AddReport.dto';
+import { IsPermitted } from './dto/IsPermitted.dto';
 var path = require('path');
 @ApiTags('documents')
 @Controller('documents')
 @UseInterceptors(FileInterceptor('file'))
 export class DocumentsController {
   constructor(private documentsService: DocumentsService) {}
+
+  @Get('most-popular')
+  @UseGuards(AuthGuard('jwt'))
+  //  @UseGuards(EmailVerificationGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ description: 'Documents retrieved.', type: DocumentDto })
+  async getMostPopular(): Promise<any[]> {
+    return await this.documentsService.getMostPopular();
+  }
+  @Get('most-liked')
+  @UseGuards(AuthGuard('jwt'))
+  //  @UseGuards(EmailVerificationGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ description: 'Documents retrieved.', type: DocumentDto })
+  async getMostLiked(): Promise<any[]> {
+    return await this.documentsService.getMostLiked();
+  }
 
   @Post()
   @UseGuards(AuthGuard('jwt'))
@@ -104,7 +122,7 @@ export class DocumentsController {
   @UseGuards(AuthGuard('jwt'))
   //@UseGuards(EmailVerificationGuard)
   @Delete('/:documentId')
-  async deleteDocument(@Param() id: string, @GetUser() user: User) {
+  async deleteDocument(@Param('documentId') id: string, @GetUser() user: User) {
     return await this.documentsService.deleteDocument(id, user);
   }
 
@@ -153,7 +171,7 @@ export class DocumentsController {
   }
   @UseGuards(AuthGuard('jwt'))
   @Delete('/comments/delete-comment/:documentId')
-  async deleteDomment(
+  async deleteComment(
     @Param('documentId') id,
     @GetUser() user: User,
   ): Promise<Comment> {
@@ -168,5 +186,22 @@ export class DocumentsController {
   @Post('/report/add-report')
   async addReport(@Body() addReportDto: AddReportDto, @GetUser() user: User) {
     return this.documentsService.addReport(addReportDto, user);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/isPermittedToDeleteDocument/:documentId')
+  async isPermittedToDeleteDocument(
+    @Param('documentId') documentId,
+    @GetUser() user: User,
+  ): Promise<IsPermitted> {
+    return this.documentsService.isPermittedToDeleteDocument(documentId, user);
+  }
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/isPermittedToDeleteComment/:commentId')
+  async isPermittedToDeleteComment(
+    @Param('commentId') commentId,
+    @GetUser() user: User,
+  ): Promise<IsPermitted> {
+    return this.documentsService.isPermittedToDeleteComment(commentId, user);
   }
 }

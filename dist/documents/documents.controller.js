@@ -31,6 +31,12 @@ let DocumentsController = class DocumentsController {
     constructor(documentsService) {
         this.documentsService = documentsService;
     }
+    async getMostPopular() {
+        return await this.documentsService.getMostPopular();
+    }
+    async getMostLiked() {
+        return await this.documentsService.getMostLiked();
+    }
     async addNewDocument(createDocumentDto, user, file) {
         if (path.extname(file.originalname) !== '.pdf') {
             throw new common_1.BadRequestException('File extension must be of type .pdf .');
@@ -64,13 +70,39 @@ let DocumentsController = class DocumentsController {
     async getComments(id) {
         return this.documentsService.getComments(id);
     }
-    async deleteDomment(id, user) {
+    async deleteComment(id, user) {
         return this.documentsService.deleteComment(user, id);
     }
     async addReport(addReportDto, user) {
         return this.documentsService.addReport(addReportDto, user);
     }
+    async isPermittedToDeleteDocument(documentId, user) {
+        return this.documentsService.isPermittedToDeleteDocument(documentId, user);
+    }
+    async isPermittedToDeleteComment(commentId, user) {
+        return this.documentsService.isPermittedToDeleteComment(commentId, user);
+    }
 };
+__decorate([
+    (0, common_1.Get)('most-popular'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiOkResponse)({ description: 'Documents retrieved.', type: Document_dto_1.DocumentDto }),
+    openapi.ApiResponse({ status: 200, type: [Object] }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], DocumentsController.prototype, "getMostPopular", null);
+__decorate([
+    (0, common_1.Get)('most-liked'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
+    (0, swagger_1.ApiBearerAuth)(),
+    (0, swagger_1.ApiOkResponse)({ description: 'Documents retrieved.', type: Document_dto_1.DocumentDto }),
+    openapi.ApiResponse({ status: 200, type: [Object] }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], DocumentsController.prototype, "getMostLiked", null);
 __decorate([
     (0, common_1.Post)(),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
@@ -133,8 +165,8 @@ __decorate([
     }),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     (0, common_1.Delete)('/:documentId'),
-    openapi.ApiResponse({ status: 200 }),
-    __param(0, (0, common_1.Param)()),
+    openapi.ApiResponse({ status: 200, type: Object }),
+    __param(0, (0, common_1.Param)('documentId')),
     __param(1, (0, get_user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
@@ -199,7 +231,7 @@ __decorate([
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
-], DocumentsController.prototype, "deleteDomment", null);
+], DocumentsController.prototype, "deleteComment", null);
 __decorate([
     (0, swagger_1.ApiCreatedResponse)({ description: 'Report Added.', type: AddReport_dto_1.AddReportDto }),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
@@ -211,6 +243,26 @@ __decorate([
     __metadata("design:paramtypes", [AddReport_dto_1.AddReportDto, Object]),
     __metadata("design:returntype", Promise)
 ], DocumentsController.prototype, "addReport", null);
+__decorate([
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
+    (0, common_1.Post)('/isPermittedToDeleteDocument/:documentId'),
+    openapi.ApiResponse({ status: 201, type: Object }),
+    __param(0, (0, common_1.Param)('documentId')),
+    __param(1, (0, get_user_decorator_1.GetUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], DocumentsController.prototype, "isPermittedToDeleteDocument", null);
+__decorate([
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
+    (0, common_1.Post)('/isPermittedToDeleteComment/:commentId'),
+    openapi.ApiResponse({ status: 201, type: Object }),
+    __param(0, (0, common_1.Param)('commentId')),
+    __param(1, (0, get_user_decorator_1.GetUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], DocumentsController.prototype, "isPermittedToDeleteComment", null);
 DocumentsController = __decorate([
     (0, swagger_1.ApiTags)('documents'),
     (0, common_1.Controller)('documents'),

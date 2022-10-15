@@ -103,13 +103,8 @@ let FilesService = class FilesService {
     }
     async getFileKeyAsUrl(documentId, res, user) {
         const s3 = new aws_sdk_1.S3();
-        const document = await this.prismaService.document.update({
+        const document = await this.prismaService.document.findUnique({
             where: { id: Number(documentId) },
-            data: {
-                viewsNumber: {
-                    increment: 1,
-                },
-            },
         });
         const foundUser = await this.prismaService.user.findUnique({
             where: {

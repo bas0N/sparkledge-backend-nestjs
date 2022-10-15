@@ -166,14 +166,26 @@ let UsersService = class UsersService {
         });
         return documents;
     }
+    async getPublishedDocumentsByUserId(userId) {
+        const userFound = await this.prismaService.user.findUnique({
+            where: { id: userId },
+        });
+        if (!userFound) {
+            throw new common_1.BadRequestException('User with the given id has not been found in the db.');
+        }
+        const arrayOfDocuments = await this.prismaService.document.findMany({
+            where: { userId: userFound.id },
+            orderBy: {
+                createdAt: 'desc',
+            },
+        });
+        return arrayOfDocuments.slice(0, 9);
+    }
     async getPublishedDocuments(user) {
         console.log(user);
         const userFound = await this.prismaService.user.findUnique({
             where: { id: user.id },
         });
-        if (!userFound) {
-            throw new common_1.BadRequestException('User with the given id has not been found in the db.');
-        }
         const arrayOfDocuments = await this.prismaService.document.findMany({
             where: { userId: userFound.id },
             orderBy: {

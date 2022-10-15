@@ -14,10 +14,83 @@ const common_1 = require("@nestjs/common");
 const prisma_service_1 = require("../prisma/prisma.service");
 const files_service_1 = require("../files/files.service");
 const slackBot_1 = require("../slack/slackBot");
+const aws_sdk_1 = require("aws-sdk");
 let DocumentsService = class DocumentsService {
     constructor(prismaService, filesService) {
         this.prismaService = prismaService;
         this.filesService = filesService;
+    }
+    async getMostPopular() {
+        try {
+            const documents = this.prismaService.document.findMany({
+                orderBy: { viewsNumber: 'desc' },
+                take: 10,
+                include: {
+                    user: {
+                        select: {
+                            firstName: true,
+                            lastName: true,
+                        },
+                    },
+                },
+            });
+            if (!documents) {
+                throw new common_1.InternalServerErrorException('No documents found.');
+            }
+            const documentsModified = (await documents).map((document) => {
+                return {
+                    id: document.id,
+                    title: document.title,
+                    createdAt: document.createdAt,
+                    viewsNumber: document.viewsNumber,
+                    likesNumber: document.likesNumber,
+                    user: {
+                        firstName: document.user.firstName,
+                        lastName: document.user.lastName,
+                    },
+                };
+            });
+            return documentsModified;
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+    async getMostLiked() {
+        try {
+            const documents = this.prismaService.document.findMany({
+                orderBy: { likesNumber: 'desc' },
+                take: 10,
+                include: {
+                    user: {
+                        select: {
+                            firstName: true,
+                            lastName: true,
+                        },
+                    },
+                },
+            });
+            if (!documents) {
+                throw new common_1.InternalServerErrorException('No documents found.');
+            }
+            const documentsModified = (await documents).map((document) => {
+                return {
+                    id: document.id,
+                    title: document.title,
+                    createdAt: document.createdAt,
+                    viewsNumber: document.viewsNumber,
+                    likesNumber: document.viewsNumber,
+                    user: {
+                        firstName: document.user.firstName,
+                        lastName: document.user.lastName,
+                    },
+                };
+            });
+            return documentsModified;
+        }
+        catch (err) {
+            console.log(err);
+        }
     }
     async addReport(addReportData, user) {
         const { documentId, reportType, content } = addReportData;
@@ -136,6 +209,14 @@ let DocumentsService = class DocumentsService {
                         lastName: true,
                     },
                 },
+                course: {
+                    select: {
+                        name: true,
+                    },
+                },
+                faculty: {
+                    select: { name: true },
+                },
             },
         });
         if (!document) {
@@ -195,7 +276,10 @@ let DocumentsService = class DocumentsService {
             const comment = await this.prismaService.comment.findUnique({
                 where: { id: Number(id) },
             });
-            if ((comment.userId = user.id)) {
+            const isModerator = await this.prismaService.moderators.findUnique({
+                where: { email: user.email },
+            });
+            if (comment.userId === user.id || isModerator) {
                 const commentDeleted = await this.prismaService.comment.delete({
                     where: { id: Number(id) },
                 });
@@ -209,12 +293,45 @@ let DocumentsService = class DocumentsService {
     }
     async deleteDocument(id, user) {
         try {
-            await this.prismaService.document.delete({
+            const document = await this.prismaService.document.findUnique({
                 where: { id: Number(id) },
             });
+            if (!document) {
+                throw new common_1.BadRequestException('Document with the given id does not exist.');
+            }
+            const isModerator = await this.prismaService.moderators.findUnique({
+                where: { email: user.email },
+            });
+            if (document.userId === user.id || isModerator) {
+                const s3 = new aws_sdk_1.S3();
+                const file = await this.prismaService.file.findUnique({
+                    where: { id: Number(document.fileId) },
+                });
+                var params = {
+                    Bucket: process.env.AWS_PUBLIC_BUCKET_NAME,
+                    Key: file.key,
+                };
+                s3.deleteObject(params, function (err, data) {
+                    if (err) {
+                        console.log(err, err.stack);
+                    }
+                    else {
+                        console.log('object deleted succesfully');
+                    }
+                });
+                await this.prismaService.comment.deleteMany({
+                    where: { documentId: document.id },
+                });
+                return await this.prismaService.document.delete({
+                    where: { id: Number(id) },
+                });
+            }
+            else {
+                throw new common_1.UnauthorizedException('You are not permited to delete this document.');
+            }
         }
         catch (err) {
-            throw new common_1.NotFoundException(`Document with id ${id} not found.`);
+            throw new common_1.NotFoundException(err);
         }
     }
     async toggleLike(user, documentId) {
@@ -279,6 +396,53 @@ let DocumentsService = class DocumentsService {
                 message: `Document of id: ${documentId} is not liked by the user of id: ${user.id}.`,
                 status: false,
             };
+        }
+    }
+    async isPermittedToDeleteDocument(documentId, user) {
+        try {
+            const isModerator = await this.prismaService.moderators.findUnique({
+                where: { email: user.email },
+            });
+            if (isModerator) {
+                return { isPermitted: true };
+            }
+            const document = await this.prismaService.document.findUnique({
+                where: { id: Number(documentId) },
+            });
+            console.log('document: ', JSON.stringify(document));
+            if (!document) {
+                throw new common_1.BadRequestException('Unable to find document with the given id.');
+            }
+            if (document.userId === user.id) {
+                return { isPermitted: true };
+            }
+            return { isPermitted: false };
+        }
+        catch (err) {
+            throw new common_1.InternalServerErrorException(err);
+        }
+    }
+    async isPermittedToDeleteComment(commentId, user) {
+        try {
+            const isModerator = await this.prismaService.moderators.findUnique({
+                where: { email: user.email },
+            });
+            if (isModerator) {
+                return { isPermitted: true };
+            }
+            const comment = await this.prismaService.comment.findUnique({
+                where: { id: Number(commentId) },
+            });
+            if (!comment) {
+                throw new common_1.BadRequestException('Unable to find comment with the given id.');
+            }
+            if (comment.userId === user.id) {
+                return { isPermitted: true };
+            }
+            return { isPermitted: false };
+        }
+        catch (err) {
+            throw new common_1.InternalServerErrorException(err);
         }
     }
 };

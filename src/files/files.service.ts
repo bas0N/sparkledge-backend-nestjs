@@ -124,13 +124,16 @@ export class FilesService {
   async getFileKeyAsUrl(documentId: string, @Res() res, user: User) {
     const s3 = new S3();
     //increments the views count in the document object
-    const document = await this.prismaService.document.update({
+    // const document = await this.prismaService.document.update({
+    //   where: { id: Number(documentId) },
+    //   data: {
+    //     viewsNumber: {
+    //       increment: 1,
+    //     },
+    //   },
+    // });
+    const document = await this.prismaService.document.findUnique({
       where: { id: Number(documentId) },
-      data: {
-        viewsNumber: {
-          increment: 1,
-        },
-      },
     });
 
     //find user whose array of viewed documents will be updated

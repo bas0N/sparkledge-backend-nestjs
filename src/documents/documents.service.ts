@@ -5,6 +5,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+
 import { PrismaService } from 'src/prisma/prisma.service';
 //import { Document } from './document.model';
 import { CreateDocumentDto } from './dto/CreateDocument.dto';
@@ -19,12 +20,86 @@ import { Comment } from '.prisma/client';
 import { AddReportDto } from './dto/AddReport.dto';
 import { sendMessage } from 'src/slack/slackBot';
 import { AddCommentType } from './dto/AddCommentType';
+import { S3 } from 'aws-sdk';
+import { IsPermitted } from './dto/IsPermitted.dto';
 @Injectable()
 export class DocumentsService {
   constructor(
     private readonly prismaService: PrismaService,
     private filesService: FilesService,
   ) {}
+
+  async getMostPopular() {
+    try {
+      const documents = this.prismaService.document.findMany({
+        orderBy: { viewsNumber: 'desc' },
+        take: 10,
+        include: {
+          user: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+      });
+      if (!documents) {
+        throw new InternalServerErrorException('No documents found.');
+      }
+
+      const documentsModified = (await documents).map((document) => {
+        return {
+          id: document.id,
+          title: document.title,
+          createdAt: document.createdAt,
+          viewsNumber: document.viewsNumber,
+          likesNumber: document.likesNumber,
+          user: {
+            firstName: document.user.firstName,
+            lastName: document.user.lastName,
+          },
+        };
+      });
+      return documentsModified;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+  async getMostLiked() {
+    try {
+      const documents = this.prismaService.document.findMany({
+        orderBy: { likesNumber: 'desc' },
+        take: 10,
+        include: {
+          user: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+      });
+      if (!documents) {
+        throw new InternalServerErrorException('No documents found.');
+      }
+      const documentsModified = (await documents).map((document) => {
+        return {
+          id: document.id,
+          title: document.title,
+          createdAt: document.createdAt,
+          viewsNumber: document.viewsNumber,
+          likesNumber: document.viewsNumber,
+          user: {
+            firstName: document.user.firstName,
+            lastName: document.user.lastName,
+          },
+        };
+      });
+      return documentsModified;
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   async addReport(addReportData: AddReportDto, user: User) {
     const { documentId, reportType, content } = addReportData;
@@ -176,6 +251,14 @@ export class DocumentsService {
             lastName: true,
           },
         },
+        course: {
+          select: {
+            name: true,
+          },
+        },
+        faculty: {
+          select: { name: true },
+        },
       },
     });
     //no courses found
@@ -243,7 +326,11 @@ export class DocumentsService {
       const comment = await this.prismaService.comment.findUnique({
         where: { id: Number(id) },
       });
-      if ((comment.userId = user.id)) {
+      //check if the use is a moderator
+      const isModerator = await this.prismaService.moderators.findUnique({
+        where: { email: user.email },
+      });
+      if (comment.userId === user.id || isModerator) {
         const commentDeleted = await this.prismaService.comment.delete({
           where: { id: Number(id) },
         });
@@ -259,11 +346,54 @@ export class DocumentsService {
 
   async deleteDocument(id: string, user: User) {
     try {
-      await this.prismaService.document.delete({
+      const document = await this.prismaService.document.findUnique({
         where: { id: Number(id) },
       });
+      if (!document) {
+        throw new BadRequestException(
+          'Document with the given id does not exist.',
+        );
+      }
+      //check if the use is a moderator
+      const isModerator = await this.prismaService.moderators.findUnique({
+        where: { email: user.email },
+      });
+
+      //check if user owns the document or if simply moderator wants to delete it
+      if (document.userId === user.id || isModerator) {
+        // console.log('document: ',document);
+        const s3 = new S3();
+        //file is given a .pdf extension after the initial validation in documents controller
+
+        const file = await this.prismaService.file.findUnique({
+          where: { id: Number(document.fileId) },
+        });
+        var params = {
+          Bucket: process.env.AWS_PUBLIC_BUCKET_NAME,
+          Key: file.key,
+        };
+
+        s3.deleteObject(params, function (err, data) {
+          if (err) {
+            console.log(err, err.stack);
+          } else {
+            console.log('object deleted succesfully');
+          }
+        });
+        await this.prismaService.comment.deleteMany({
+          where: { documentId: document.id },
+        });
+        return await this.prismaService.document.delete({
+          where: { id: Number(id) },
+        });
+      } //else, throw an error
+      else {
+        throw new UnauthorizedException(
+          'You are not permited to delete this document.',
+        );
+      }
     } catch (err) {
-      throw new NotFoundException(`Document with id ${id} not found.`);
+      throw new NotFoundException(err);
     }
   }
 
@@ -339,6 +469,62 @@ export class DocumentsService {
         message: `Document of id: ${documentId} is not liked by the user of id: ${user.id}.`,
         status: false,
       };
+    }
+  }
+
+  async isPermittedToDeleteDocument(
+    documentId: string,
+    user: User,
+  ): Promise<IsPermitted> {
+    try {
+      const isModerator = await this.prismaService.moderators.findUnique({
+        where: { email: user.email },
+      });
+      if (isModerator) {
+        return { isPermitted: true };
+      }
+      const document = await this.prismaService.document.findUnique({
+        where: { id: Number(documentId) },
+      });
+      console.log('document: ', JSON.stringify(document));
+      if (!document) {
+        throw new BadRequestException(
+          'Unable to find document with the given id.',
+        );
+      }
+      if (document.userId === user.id) {
+        return { isPermitted: true };
+      }
+      return { isPermitted: false };
+    } catch (err) {
+      throw new InternalServerErrorException(err);
+    }
+  }
+  async isPermittedToDeleteComment(
+    commentId: string,
+    user: User,
+  ): Promise<IsPermitted> {
+    try {
+      const isModerator = await this.prismaService.moderators.findUnique({
+        where: { email: user.email },
+      });
+      if (isModerator) {
+        return { isPermitted: true };
+      }
+      const comment = await this.prismaService.comment.findUnique({
+        where: { id: Number(commentId) },
+      });
+      if (!comment) {
+        throw new BadRequestException(
+          'Unable to find comment with the given id.',
+        );
+      }
+      if (comment.userId === user.id) {
+        return { isPermitted: true };
+      }
+      return { isPermitted: false };
+    } catch (err) {
+      throw new InternalServerErrorException(err);
     }
   }
 }
