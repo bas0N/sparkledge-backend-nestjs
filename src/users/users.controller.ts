@@ -84,6 +84,15 @@ export class UsersController {
     return this.userService.getViewedDocuments(user);
   }
 
+  @Get('publishedDocuments')
+  @UseGuards(AuthGuard('jwt'))
+  //@UseGuards(EmailVerificationGuard)
+  //@ApiBearerAuth()
+  async getPublishedDocuments(@GetUser() user: User) {
+    console.log('user controller');
+    return this.userService.getPublishedDocuments(user);
+  }
+
   //@UseGuards(AuthGuard('jwt'))
   //@UseGuards(EmailVerificationGuard)
   @ApiOkResponse({ description: 'User retrieved succesfully.' })

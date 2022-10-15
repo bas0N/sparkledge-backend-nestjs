@@ -98,6 +98,8 @@ export class AuthenticationService {
 
       const user = await this.userService.getUserByEmail(ticketPayload.email);
 
+      console.log('user before else:');
+      console.log(user);
       if (!user) {
         const registeredUser = await this.prismaService.user.create({
           data: {
@@ -121,6 +123,8 @@ export class AuthenticationService {
           email: registeredUser.email,
           isVerified: registeredUser.isVerified,
         };
+        console.log('payload when user does not exists');
+        console.log(payload);
 
         const accessToken: string = await this.userService.getJwtAccessToken(
           payload,
@@ -137,11 +141,15 @@ export class AuthenticationService {
         );
         return { accessToken: accessToken, refreshToken: refreshToken };
       } else {
+        console.log('user in else');
+        console.log(user);
         const payload: JwtPayload = {
           id: user.id,
           email: user.email,
           isVerified: true,
         };
+        console.log('payload when user exists');
+        console.log(payload);
         const accessToken: string = await this.userService.getJwtAccessToken(
           payload,
         );
@@ -163,6 +171,7 @@ export class AuthenticationService {
     }
     const user = await this.userService.getUserByEmail(req.user.email);
     const googleUser = req.user;
+    console.log(req);
     if (!user) {
       const registeredUser = await this.prismaService.user.create({
         data: {
