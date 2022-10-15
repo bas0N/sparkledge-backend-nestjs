@@ -1,121 +1,147 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "rhel-openssl-1.0.x"]
-
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL2")
+  url      = env("DATABASE_URL3")
 }
 
-model User{
-    id String @default(uuid()) @id
-    email String @unique
-    firstName String
-    lastName String
-    password String
-    isVerified Boolean @default(false)
-    temporaryToken String?
-    refreshToken String?
-    documents Document[]
-    comments Comment[]
-    reports Report[]
-    viewedDocuments String[]
-    registeredBy RegisteredBy @default(EMAIL)
-
+model User {
+  id              String       @id @default(uuid())
+  email           String       @unique
+  firstName       String
+  lastName        String
+  password        String
+  temporaryToken  String?
+  refreshToken    String?
+  viewedDocuments String[]
+  isVerified      Boolean      @default(false)
+  registeredBy    RegisteredBy @default(EMAIL)
+  comments        Comment[]
+  documents       Document[]
+  reports         Report[]
+  role            Role @default(USER)
 }
 
-model University{
-  id Int @default(autoincrement()) @id
-  name String
-  //tables
-  faculties Faculty[]
+model Moderators {
+  id String @unique @id @default(uuid())
+  email String @unique
+}
+model University {
+  name       String
+  id         Int         @id @default(autoincrement())
+  courses    Course[]
+  documents  Document[]
+  faculties  Faculty[]
   programmes Programme[]
-  courses Course[]
-  documents Document[]
-}
-model Faculty{
-  id Int @default(autoincrement()) @id
-  name String
-  university University @relation(fields:[universityId],references:[id])
-  universityId Int
-  //tables
-  programmes Programme[]
-  courses Course[]
-  documents Document[]
-}
-model Programme{
-  id Int @default(autoincrement()) @id
-  name String
-  faculty Faculty @relation(fields:[facultyId],references:[id])
-  facultyId Int
-  university University @relation(fields:[universityId],references:[id])
-  universityId Int
-  //tables
-  courses Course[]
-  documents Document[]
-}
-model Course{
-  id Int @default(autoincrement()) @id
-  name String
-  semester Int
-  courseType CourseType 
-  degree Degree 
-  programme Programme @relation(fields:[programmeId],references:[id])
-  programmeId Int
-  faculty Faculty @relation(fields:[facultyId],references:[id])
-  facultyId Int
-  university University @relation(fields:[universityId],references:[id])
-  universityId Int
-  //Tables
-  documents Document[]
-
 }
 
-model Document{
-  id Int @default(autoincrement()) @id
-  title String
-  description String 
-  course Course @relation(fields:[courseId],references:[id])
-  courseId Int
-  programme Programme @relation(fields:[programmeId],references:[id])
-  programmeId Int
-  faculty Faculty @relation(fields:[facultyId],references:[id])
-  facultyId Int
-  university University @relation(fields:[universityId],references:[id])
+model Faculty {
+  name         String
+  id           Int         @id @default(autoincrement())
   universityId Int
-  user User @relation(fields:[userId],references:[id])
-  userId String
-  file File @relation(fields:[fileId],references: [id])
-  fileId Int
-  viewsNumber Int @default(0)
-  likesNumber Int @default(0)
-  likesList String[]
-  comments Comment[]
-  reports Report[]
-  createdAt DateTime @default(now()) 
-
-}
-model File{
-    id Int @default(autoincrement()) @id
-    key String @unique
-    documents Document[]
+  university   University  @relation(fields: [universityId], references: [id])
+  courses      Course[]
+  documents    Document[]
+  programmes   Programme[]
 }
 
- enum CourseType {
+model Programme {
+  name         String
+  id           Int        @id @default(autoincrement())
+  facultyId    Int
+  universityId Int
+  faculty      Faculty    @relation(fields: [facultyId], references: [id])
+  university   University @relation(fields: [universityId], references: [id])
+  courses      Course[]
+  documents    Document[]
+}
+
+model Course {
+  name         String
+  semester     Int
+  id           Int        @id @default(autoincrement())
+  programmeId  Int
+  facultyId    Int
+  universityId Int
+  courseType   CourseType
+  degree       Degree
+  faculty      Faculty    @relation(fields: [facultyId], references: [id])
+  programme    Programme  @relation(fields: [programmeId], references: [id])
+  university   University @relation(fields: [universityId], references: [id])
+  documents    Document[]
+}
+
+model Document {
+  courseId     Int
+  id           Int        @id @default(autoincrement())
+  programmeId  Int
+  facultyId    Int
+  universityId Int
+  title        String
+  userId       String
+  description  String
+  fileId       Int
+  viewsNumber  Int        @default(0)
+  likesList    String[]
+  likesNumber  Int        @default(0)
+  createdAt    DateTime   @default(now())
+  course       Course     @relation(fields: [courseId], references: [id])
+  faculty      Faculty    @relation(fields: [facultyId], references: [id])
+  file         File       @relation(fields: [fileId], references: [id])
+  programme    Programme  @relation(fields: [programmeId], references: [id])
+  university   University @relation(fields: [universityId], references: [id])
+  user         User       @relation(fields: [userId], references: [id])
+  comments     Comment[]
+  reports      Report[]
+}
+
+model File {
+  id        Int        @id @default(autoincrement())
+  key       String     @unique
+  documents Document[]
+}
+
+model Comment {
+  id          Int      @id @default(autoincrement())
+  content     String
+  userId      String
+  documentId  Int
+  likesNumber Int      @default(0)
+  createdAt   DateTime @default(now())
+  document    Document @relation(fields: [documentId], references: [id])
+  author      User     @relation(fields: [userId], references: [id])
+}
+
+model Report {
+  id               String     @id @default(uuid())
+  reportType       ReportType
+  userId           String
+  documentId       Int
+  content          String     @default("no-content")
+  createdAt        DateTime   @default(now())
+  documentReported Document   @relation(fields: [documentId], references: [id])
+  personReporting  User       @relation(fields: [userId], references: [id])
+}
+enum Role {
+  ADMIN
+  MODERATOR
+  USER
+}
+
+enum CourseType {
   FACULTATIVE
   OBLIGATORY
 }
 
- enum Degree {
+enum Degree {
   BACHELOR
   MASTER
   PHD
 }
+
 
 model Comment{
   id Int @default(autoincrement()) @id
