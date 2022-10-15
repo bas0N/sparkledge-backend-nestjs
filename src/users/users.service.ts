@@ -17,6 +17,7 @@ import { CreateUserDto } from './dto/createUser.dto';
 import { DocumentDto } from 'src/documents/dto/Document.dto';
 import { EmailService } from 'src/email/email.service';
 import handlebars from 'handlebars';
+import { NumberOfPublishedDocsDto } from './dto/returnTypes.dto';
 const fs = require('fs').promises;
 
 @Injectable()
@@ -217,6 +218,25 @@ export class UsersService {
     });
     //returns the array of ids in the use object
     return arrayOfDocuments.slice(0, 9);
+  }
+  async getNumOfPublishedDocuments(
+    userId: string,
+  ): Promise<NumberOfPublishedDocsDto> {
+    //finds user with the given id
+    const userFound = await this.prismaService.user.findUnique({
+      where: { id: userId },
+    });
+    //throws error if the user has not been found
+    if (!userFound) {
+      throw new BadRequestException(
+        'User with the given id has not been found in the db.',
+      );
+    }
+    const arrayOfDocuments = await this.prismaService.document.findMany({
+      where: { userId: userFound.id },
+      select: { id: true },
+    });
+    return { numOfDocumentsPublished: arrayOfDocuments.length };
   }
   async getPublishedDocuments(user: User): Promise<DocumentDto[]> {
     console.log(user);

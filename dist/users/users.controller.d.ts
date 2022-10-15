@@ -19,6 +19,7 @@ export declare class UsersController {
     getViewedDocuments(user: User): Promise<import("../documents/dto/Document.dto").DocumentDto[]>;
     getPublishedDocuments(user: User): Promise<import("../documents/dto/Document.dto").DocumentDto[]>;
     getPublishedDocumentsByUserId(userId: any): Promise<import("../documents/dto/Document.dto").DocumentDto[]>;
+    getNumOfPublishedDocuments(userId: any): Promise<import("./dto/returnTypes.dto").NumberOfPublishedDocsDto>;
     getUserById(userId: string): Promise<User>;
     sendForgotPasswordLink(email: string): Promise<any>;
     resetPassword(email: string, token: string, newPassword: string): Promise<User>;
