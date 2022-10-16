@@ -6,7 +6,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dto/createUser.dto';
 import { DocumentDto } from 'src/documents/dto/Document.dto';
 import { EmailService } from 'src/email/email.service';
-import { NumberOfPublishedDocsDto } from './dto/returnTypes.dto';
+import { NumberOfPublishedDocsDto, UserWithoutDetails } from './dto/returnTypes.dto';
 export declare class UsersService {
     private readonly prismaService;
     private jwtService;
@@ -21,6 +21,7 @@ export declare class UsersService {
     }>;
     getUserById(userId: string): Promise<User>;
     getUserByEmail(email: string): Promise<User>;
+    getUserByIdWithoutDetails(userId: string): Promise<UserWithoutDetails>;
     logout(userEmail: string): Promise<void>;
     getJwtAccessToken(payload: JwtPayload): Promise<string>;
     getJwtRefreshToken(payload: JwtPayload): Promise<string>;

@@ -110,14 +110,39 @@ let UsersService = class UsersService {
         }
     }
     async getUserById(userId) {
-        return await this.prismaService.user.findUnique({
+        const user = await this.prismaService.user.findUnique({
             where: { id: userId },
         });
+        if (!user) {
+            throw new common_1.InternalServerErrorException('Given user does not exist.');
+        }
+        return user;
     }
     async getUserByEmail(email) {
         return await this.prismaService.user.findUnique({
             where: { email },
         });
+    }
+    async getUserByIdWithoutDetails(userId) {
+        try {
+            const user = await this.prismaService.user.findUnique({
+                where: { id: userId },
+            });
+            if (!user) {
+                throw new common_1.BadRequestException('User with the given id does not exist');
+            }
+            const userWithoutDetails = {
+                id: user.id,
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                role: client_1.Role[user.role],
+            };
+            return userWithoutDetails;
+        }
+        catch (err) {
+            throw new common_1.BadRequestException('User with the given id does not exist');
+        }
     }
     async logout(userEmail) {
         await this.prismaService.user.updateMany({

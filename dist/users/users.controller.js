@@ -55,8 +55,11 @@ let UsersController = class UsersController {
     async getNumOfPublishedDocuments(userId) {
         return this.userService.getNumOfPublishedDocuments(userId);
     }
-    async getUserById(userId) {
-        return await this.userService.getUserById(userId);
+    async getUserById(user) {
+        return await this.userService.getUserById(user.id);
+    }
+    async getUserByIdWithoutDetails(userId) {
+        return await this.userService.getUserByIdWithoutDetails(userId);
     }
     async sendForgotPasswordLink(email) {
         return await this.userService.sendForgotPasswordLink(email);
@@ -150,6 +153,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getNumOfPublishedDocuments", null);
 __decorate([
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     (0, swagger_1.ApiOkResponse)({ description: 'User retrieved succesfully.' }),
     (0, swagger_1.ApiParam)({
         name: 'userId',
@@ -157,11 +161,19 @@ __decorate([
     }),
     (0, common_1.Get)('/:userId'),
     openapi.ApiResponse({ status: 200, type: Object }),
-    __param(0, (0, common_1.Param)('userId')),
+    __param(0, (0, get_user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getUserById", null);
+__decorate([
+    (0, common_1.Get)('/getUserByIdWithoutDetails/:userId'),
+    openapi.ApiResponse({ status: 200, type: Object }),
+    __param(0, (0, common_1.Param)('userId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getUserByIdWithoutDetails", null);
 __decorate([
     (0, common_1.Post)('sendForgotPasswordLink'),
     openapi.ApiResponse({ status: 201, type: Object }),

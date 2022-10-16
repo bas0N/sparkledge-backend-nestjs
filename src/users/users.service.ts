@@ -12,12 +12,15 @@ import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './jwt-payload.interface';
 import { User } from '.prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma } from '@prisma/client';
+import { Prisma, Role } from '@prisma/client';
 import { CreateUserDto } from './dto/createUser.dto';
 import { DocumentDto } from 'src/documents/dto/Document.dto';
 import { EmailService } from 'src/email/email.service';
 import handlebars from 'handlebars';
-import { NumberOfPublishedDocsDto } from './dto/returnTypes.dto';
+import {
+  NumberOfPublishedDocsDto,
+  UserWithoutDetails,
+} from './dto/returnTypes.dto';
 const fs = require('fs').promises;
 
 @Injectable()
@@ -134,13 +137,10 @@ export class UsersService {
     const user = await this.prismaService.user.findUnique({
       where: { id: userId },
     });
-    if (user.id === userId) {
-      return user;
-    } else {
-      throw new BadRequestException(
-        'You are not allowed to retrieve details of this user.',
-      );
+    if (!user) {
+      throw new InternalServerErrorException('Given user does not exist.');
     }
+    return user;
   }
   async getUserByEmail(email: string): Promise<User> {
     return await this.prismaService.user.findUnique({
@@ -148,6 +148,26 @@ export class UsersService {
     });
   }
 
+  async getUserByIdWithoutDetails(userId: string): Promise<UserWithoutDetails> {
+    try {
+      const user = await this.prismaService.user.findUnique({
+        where: { id: userId },
+      });
+      if (!user) {
+        throw new BadRequestException('User with the given id does not exist');
+      }
+      const userWithoutDetails: UserWithoutDetails = {
+        id: user.id,
+        email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        role: Role[user.role],
+      };
+      return userWithoutDetails;
+    } catch (err) {
+      throw new BadRequestException('User with the given id does not exist');
+    }
+  }
   async logout(userEmail: string) {
     await this.prismaService.user.updateMany({
       where: { email: userEmail, refreshToken: { not: null } },
