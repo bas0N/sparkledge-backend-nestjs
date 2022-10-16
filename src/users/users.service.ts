@@ -131,9 +131,16 @@ export class UsersService {
     }
   }
   async getUserById(userId: string): Promise<User> {
-    return await this.prismaService.user.findUnique({
+    const user = await this.prismaService.user.findUnique({
       where: { id: userId },
     });
+    if (user.id === userId) {
+      return user;
+    } else {
+      throw new BadRequestException(
+        'You are not allowed to retrieve details of this user.',
+      );
+    }
   }
   async getUserByEmail(email: string): Promise<User> {
     return await this.prismaService.user.findUnique({
