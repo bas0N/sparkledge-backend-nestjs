@@ -25,6 +25,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthenticationService } from 'src/authentication/authentication.service';
+import { UserWithoutDetails } from './dto/returnTypes.dto';
 // import { Roles } from 'src/authentication/roles.decorator';
 // import { RolesGuard } from 'src/authentication/roles.guard';
 // import { Reflector } from '@nestjs/core';
@@ -109,16 +110,23 @@ export class UsersController {
     return this.userService.getNumOfPublishedDocuments(userId);
   }
 
-  //@UseGuards(AuthGuard('jwt'))
-  //@UseGuards(EmailVerificationGuard)
+  //You need to be the user that you want to get data of
+  @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ description: 'User retrieved succesfully.' })
   @ApiParam({
     name: 'userId',
     description: 'Id of the user that is to be retrieved.',
   })
   @Get('/:userId')
-  async getUserById(@Param('userId') userId: string): Promise<User> {
-    return await this.userService.getUserById(userId);
+  async getUserById(@GetUser() user: User): Promise<User> {
+    return await this.userService.getUserById(user.id);
+  }
+
+  @Get('/getUserByIdWithoutDetails/:userId')
+  async getUserByIdWithoutDetails(
+    @Param('userId') userId,
+  ): Promise<UserWithoutDetails> {
+    return await this.userService.getUserByIdWithoutDetails(userId);
   }
 
   @Post('sendForgotPasswordLink')

@@ -3,6 +3,7 @@ import { SigninUserDto } from './dto/signinUser.dto';
 import { UsersService } from './users.service';
 import { User } from '.prisma/client';
 import { AuthenticationService } from 'src/authentication/authentication.service';
+import { UserWithoutDetails } from './dto/returnTypes.dto';
 export declare class UsersController {
     private userService;
     private authenticationService;
@@ -20,7 +21,8 @@ export declare class UsersController {
     getPublishedDocuments(user: User): Promise<import("../documents/dto/Document.dto").DocumentDto[]>;
     getPublishedDocumentsByUserId(userId: any): Promise<import("../documents/dto/Document.dto").DocumentDto[]>;
     getNumOfPublishedDocuments(userId: any): Promise<import("./dto/returnTypes.dto").NumberOfPublishedDocsDto>;
-    getUserById(userId: string): Promise<User>;
+    getUserById(user: User): Promise<User>;
+    getUserByIdWithoutDetails(userId: any): Promise<UserWithoutDetails>;
     sendForgotPasswordLink(email: string): Promise<any>;
     resetPassword(email: string, token: string, newPassword: string): Promise<User>;
 }
