@@ -128,6 +128,12 @@ export class UsersController {
   ): Promise<UserWithoutDetails> {
     return await this.userService.getUserByIdWithoutDetails(userId);
   }
+  @Get('/getUserByEmailWithoutDetails/:userEmail')
+  async getUserByEmailWithoutDetails(
+    @Param('userEmail') userEmail,
+  ): Promise<UserWithoutDetails> {
+    return await this.userService.getUserByEmailWithoutDetails(userEmail);
+  }
 
   @Post('sendForgotPasswordLink')
   async sendForgotPasswordLink(@Body('email') email: string) {

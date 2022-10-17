@@ -144,6 +144,27 @@ let UsersService = class UsersService {
             throw new common_1.BadRequestException('User with the given id does not exist');
         }
     }
+    async getUserByEmailWithoutDetails(userEmail) {
+        try {
+            const user = await this.prismaService.user.findUnique({
+                where: { email: userEmail },
+            });
+            if (!user) {
+                throw new common_1.BadRequestException('User with the given id does not exist');
+            }
+            const userWithoutDetails = {
+                id: user.id,
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                role: client_1.Role[user.role],
+            };
+            return userWithoutDetails;
+        }
+        catch (err) {
+            throw new common_1.BadRequestException('User with the given id does not exist');
+        }
+    }
     async logout(userEmail) {
         await this.prismaService.user.updateMany({
             where: { email: userEmail, refreshToken: { not: null } },
