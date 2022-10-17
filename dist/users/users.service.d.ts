@@ -22,6 +22,7 @@ export declare class UsersService {
     getUserById(userId: string): Promise<User>;
     getUserByEmail(email: string): Promise<User>;
     getUserByIdWithoutDetails(userId: string): Promise<UserWithoutDetails>;
+    getUserByEmailWithoutDetails(userEmail: string): Promise<UserWithoutDetails>;
     logout(userEmail: string): Promise<void>;
     getJwtAccessToken(payload: JwtPayload): Promise<string>;
     getJwtRefreshToken(payload: JwtPayload): Promise<string>;

@@ -140,6 +140,7 @@ export class UsersService {
     if (!user) {
       throw new InternalServerErrorException('Given user does not exist.');
     }
+    delete user.password;
     return user;
   }
   async getUserByEmail(email: string): Promise<User> {
@@ -168,7 +169,9 @@ export class UsersService {
       throw new BadRequestException('User with the given id does not exist');
     }
   }
-  async getUserByEmailWithoutDetails(userEmail: string): Promise<UserWithoutDetails> {
+  async getUserByEmailWithoutDetails(
+    userEmail: string,
+  ): Promise<UserWithoutDetails> {
     try {
       const user = await this.prismaService.user.findUnique({
         where: { email: userEmail },

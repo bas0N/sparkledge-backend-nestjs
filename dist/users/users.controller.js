@@ -61,6 +61,9 @@ let UsersController = class UsersController {
     async getUserByIdWithoutDetails(userId) {
         return await this.userService.getUserByIdWithoutDetails(userId);
     }
+    async getUserByEmailWithoutDetails(userEmail) {
+        return await this.userService.getUserByEmailWithoutDetails(userEmail);
+    }
     async sendForgotPasswordLink(email) {
         return await this.userService.sendForgotPasswordLink(email);
     }
@@ -174,6 +177,14 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "getUserByIdWithoutDetails", null);
+__decorate([
+    (0, common_1.Get)('/getUserByEmailWithoutDetails/:userEmail'),
+    openapi.ApiResponse({ status: 200, type: Object }),
+    __param(0, (0, common_1.Param)('userEmail')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getUserByEmailWithoutDetails", null);
 __decorate([
     (0, common_1.Post)('sendForgotPasswordLink'),
     openapi.ApiResponse({ status: 201, type: Object }),

@@ -23,6 +23,7 @@ export declare class UsersController {
     getNumOfPublishedDocuments(userId: any): Promise<import("./dto/returnTypes.dto").NumberOfPublishedDocsDto>;
     getUserById(user: User): Promise<User>;
     getUserByIdWithoutDetails(userId: any): Promise<UserWithoutDetails>;
+    getUserByEmailWithoutDetails(userEmail: any): Promise<UserWithoutDetails>;
     sendForgotPasswordLink(email: string): Promise<any>;
     resetPassword(email: string, token: string, newPassword: string): Promise<User>;
 }
