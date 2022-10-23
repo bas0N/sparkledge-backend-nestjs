@@ -166,6 +166,7 @@ export class UsersService {
         facebookUrl: user.facebookUrl,
         instagramUrl: user.instagramUrl,
         linkedinUrl: user.linkedinUrl,
+        pinterestUrl: user.pinterestUrl,
         description: user.description,
       };
       return userWithoutDetails;
@@ -192,6 +193,7 @@ export class UsersService {
         facebookUrl: user.facebookUrl,
         instagramUrl: user.instagramUrl,
         linkedinUrl: user.linkedinUrl,
+        pinterestUrl: user.pinterestUrl,
         description: user.description,
       };
       return userWithoutDetails;
