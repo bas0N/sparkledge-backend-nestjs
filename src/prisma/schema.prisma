@@ -23,6 +23,10 @@ model User {
   documents       Document[]
   reports         Report[]
   role            Role @default(USER)
+  facebookUrl String @default("")
+  instagramUrl String @default("")
+  linkedinUrl String @default("")
+  description String @default("")
 }
 
 model Moderators {

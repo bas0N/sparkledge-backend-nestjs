@@ -26,6 +26,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthenticationService } from 'src/authentication/authentication.service';
 import { UserWithoutDetails } from './dto/returnTypes.dto';
+import { ChangeRoleDto } from './dto/ChangeRole.dto';
 // import { Roles } from 'src/authentication/roles.decorator';
 // import { RolesGuard } from 'src/authentication/roles.guard';
 // import { Reflector } from '@nestjs/core';
@@ -37,6 +38,9 @@ export class UsersController {
     private userService: UsersService,
     private authenticationService: AuthenticationService,
   ) {}
+  @Post('changeUserRole')
+  async changeUserRole(@Body() { role, userId }: ChangeRoleDto) {}
+
   @Post('/signup')
   @ApiBody({ type: [CreateUserDto] })
   @ApiCreatedResponse({ description: 'User Registration' })

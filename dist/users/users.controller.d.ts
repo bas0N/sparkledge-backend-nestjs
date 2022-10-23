@@ -4,10 +4,12 @@ import { UsersService } from './users.service';
 import { User } from '.prisma/client';
 import { AuthenticationService } from 'src/authentication/authentication.service';
 import { UserWithoutDetails } from './dto/returnTypes.dto';
+import { ChangeRoleDto } from './dto/ChangeRole.dto';
 export declare class UsersController {
     private userService;
     private authenticationService;
     constructor(userService: UsersService, authenticationService: AuthenticationService);
+    changeUserRole({ role, userId }: ChangeRoleDto): Promise<void>;
     addNewUser(createUserDto: CreateUserDto): Promise<User>;
     signinUser(signinUserDto: SigninUserDto): Promise<{
         accessToken: String;

@@ -116,6 +116,7 @@ let UsersService = class UsersService {
         if (!user) {
             throw new common_1.InternalServerErrorException('Given user does not exist.');
         }
+        delete user.password;
         return user;
     }
     async getUserByEmail(email) {
@@ -137,6 +138,10 @@ let UsersService = class UsersService {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 role: client_1.Role[user.role],
+                facebookUrl: user.facebookUrl,
+                instagramUrl: user.instagramUrl,
+                linkedinUrl: user.linkedinUrl,
+                description: user.description,
             };
             return userWithoutDetails;
         }
@@ -158,6 +163,10 @@ let UsersService = class UsersService {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 role: client_1.Role[user.role],
+                facebookUrl: user.facebookUrl,
+                instagramUrl: user.instagramUrl,
+                linkedinUrl: user.linkedinUrl,
+                description: user.description,
             };
             return userWithoutDetails;
         }

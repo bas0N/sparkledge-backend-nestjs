@@ -163,6 +163,10 @@ export class UsersService {
         firstName: user.firstName,
         lastName: user.lastName,
         role: Role[user.role],
+        facebookUrl: user.facebookUrl,
+        instagramUrl: user.instagramUrl,
+        linkedinUrl: user.linkedinUrl,
+        description: user.description,
       };
       return userWithoutDetails;
     } catch (err) {
@@ -185,6 +189,10 @@ export class UsersService {
         firstName: user.firstName,
         lastName: user.lastName,
         role: Role[user.role],
+        facebookUrl: user.facebookUrl,
+        instagramUrl: user.instagramUrl,
+        linkedinUrl: user.linkedinUrl,
+        description: user.description,
       };
       return userWithoutDetails;
     } catch (err) {

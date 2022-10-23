@@ -22,11 +22,13 @@ const passport_1 = require("@nestjs/passport");
 const get_user_decorator_1 = require("./get-user.decorator");
 const swagger_1 = require("@nestjs/swagger");
 const authentication_service_1 = require("../authentication/authentication.service");
+const ChangeRole_dto_1 = require("./dto/ChangeRole.dto");
 let UsersController = class UsersController {
     constructor(userService, authenticationService) {
         this.userService = userService;
         this.authenticationService = authenticationService;
     }
+    async changeUserRole({ role, userId }) { }
     async addNewUser(createUserDto) {
         const user = this.userService.addNewUser(createUserDto);
         this.authenticationService.sendVerificationLink(createUserDto.email);
@@ -71,6 +73,14 @@ let UsersController = class UsersController {
         return await this.userService.resetPassword(email, token, newPassword);
     }
 };
+__decorate([
+    (0, common_1.Post)('changeUserRole'),
+    openapi.ApiResponse({ status: 201 }),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [ChangeRole_dto_1.ChangeRoleDto]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "changeUserRole", null);
 __decorate([
     (0, common_1.Post)('/signup'),
     (0, swagger_1.ApiBody)({ type: [createUser_dto_1.CreateUserDto] }),
