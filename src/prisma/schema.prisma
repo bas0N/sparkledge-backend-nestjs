@@ -26,6 +26,7 @@ model User {
   facebookUrl String @default("")
   instagramUrl String @default("")
   linkedinUrl String @default("")
+  pinterestUrl String @default("")
   description String @default("")
 }
 
