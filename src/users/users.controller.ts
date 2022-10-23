@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from './dto/createUser.dto';
@@ -27,6 +28,7 @@ import {
 import { AuthenticationService } from 'src/authentication/authentication.service';
 import { UserWithoutDetails } from './dto/returnTypes.dto';
 import { ChangeRoleDto } from './dto/ChangeRole.dto';
+import { UpdateUserDataDto } from './dto/UpdateUserData.dto';
 // import { Roles } from 'src/authentication/roles.decorator';
 // import { RolesGuard } from 'src/authentication/roles.guard';
 // import { Reflector } from '@nestjs/core';
@@ -41,6 +43,15 @@ export class UsersController {
   @Post('changeUserRole')
   async changeUserRole(@Body() { role, userId }: ChangeRoleDto) {}
 
+  @UseGuards(AuthGuard('jwt'))
+  @Put('/updateUserData')
+  @ApiBody({ type: [UpdateUserDataDto] })
+  async updateUserData(
+    @Body() updateUserDataDto: UpdateUserDataDto,
+    @GetUser() user: User,
+  ) {
+    return this.userService.updateUserData(updateUserDataDto, user);
+  }
   @Post('/signup')
   @ApiBody({ type: [CreateUserDto] })
   @ApiCreatedResponse({ description: 'User Registration' })

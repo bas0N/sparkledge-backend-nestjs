@@ -11,5 +11,6 @@ export declare type UserWithoutDetails = {
     facebookUrl: string;
     instagramUrl: string;
     linkedinUrl: string;
+    pinterestUrl: string;
     description: string;
 };
