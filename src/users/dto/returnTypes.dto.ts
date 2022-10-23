@@ -9,4 +9,9 @@ export type UserWithoutDetails = {
   firstName: string;
   lastName: string;
   role: Role;
+  facebookUrl: string;
+  instagramUrl: string;
+  linkedinUrl: string;
+  pinterestUrl: string;
+  description: string;
 };

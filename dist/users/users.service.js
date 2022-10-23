@@ -116,12 +116,59 @@ let UsersService = class UsersService {
         if (!user) {
             throw new common_1.InternalServerErrorException('Given user does not exist.');
         }
+        delete user.password;
         return user;
     }
     async getUserByEmail(email) {
         return await this.prismaService.user.findUnique({
             where: { email },
         });
+    }
+    async updateUserData(updateUserDataDto, user) {
+        try {
+            const isModerator = await this.prismaService.moderators.findUnique({
+                where: { email: user.email },
+            });
+            console.log(user);
+            console.log(isModerator);
+            if (updateUserDataDto.userId === user.id || isModerator) {
+                console.log(updateUserDataDto);
+                console.log('fb url', updateUserDataDto.facebookUrl);
+                const updatedUser = await this.prismaService.user.update({
+                    where: {
+                        id: updateUserDataDto.userId,
+                    },
+                    data: {
+                        facebookUrl: updateUserDataDto.facebookUrl,
+                        pinterestUrl: updateUserDataDto.pinterestUrl
+                            ? updateUserDataDto.pinterestUrl
+                            : user.pinterestUrl,
+                        instagramUrl: updateUserDataDto.instagramUrl
+                            ? updateUserDataDto.instagramUrl
+                            : user.instagramUrl,
+                        description: updateUserDataDto.description
+                            ? updateUserDataDto.description
+                            : user.description,
+                        linkedinUrl: updateUserDataDto.linkedinUrl
+                            ? updateUserDataDto.linkedinUrl
+                            : user.linkedinUrl,
+                    },
+                });
+                return {
+                    facebookUrl: updatedUser.facebookUrl,
+                    instagramUrl: updatedUser.instagramUrl,
+                    linkedInUrl: updatedUser.linkedinUrl,
+                    pinterestUrl: updatedUser.pinterestUrl,
+                    description: updatedUser.description,
+                };
+            }
+            else {
+                throw new common_1.BadRequestException("You don't have enough permissions to perform this operation");
+            }
+        }
+        catch (err) {
+            throw new common_1.InternalServerErrorException(err);
+        }
     }
     async getUserByIdWithoutDetails(userId) {
         try {
@@ -137,6 +184,11 @@ let UsersService = class UsersService {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 role: client_1.Role[user.role],
+                facebookUrl: user.facebookUrl,
+                instagramUrl: user.instagramUrl,
+                linkedinUrl: user.linkedinUrl,
+                pinterestUrl: user.pinterestUrl,
+                description: user.description,
             };
             return userWithoutDetails;
         }
@@ -158,6 +210,11 @@ let UsersService = class UsersService {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 role: client_1.Role[user.role],
+                facebookUrl: user.facebookUrl,
+                instagramUrl: user.instagramUrl,
+                linkedinUrl: user.linkedinUrl,
+                pinterestUrl: user.pinterestUrl,
+                description: user.description,
             };
             return userWithoutDetails;
         }

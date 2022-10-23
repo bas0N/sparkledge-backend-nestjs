@@ -21,6 +21,7 @@ import {
   NumberOfPublishedDocsDto,
   UserWithoutDetails,
 } from './dto/returnTypes.dto';
+import { UpdateUserDataDto } from './dto/UpdateUserData.dto';
 const fs = require('fs').promises;
 
 @Injectable()
@@ -148,6 +149,53 @@ export class UsersService {
       where: { email },
     });
   }
+  async updateUserData(updateUserDataDto: UpdateUserDataDto, user: User) {
+    try {
+      //check if the use is a moderator
+      const isModerator = await this.prismaService.moderators.findUnique({
+        where: { email: user.email },
+      });
+      console.log(user);
+      console.log(isModerator);
+      if (updateUserDataDto.userId === user.id || isModerator) {
+        console.log(updateUserDataDto);
+        console.log('fb url', updateUserDataDto.facebookUrl);
+        const updatedUser = await this.prismaService.user.update({
+          where: {
+            id: updateUserDataDto.userId,
+          },
+          data: {
+            facebookUrl: updateUserDataDto.facebookUrl,
+            pinterestUrl: updateUserDataDto.pinterestUrl
+              ? updateUserDataDto.pinterestUrl
+              : user.pinterestUrl,
+            instagramUrl: updateUserDataDto.instagramUrl
+              ? updateUserDataDto.instagramUrl
+              : user.instagramUrl,
+            description: updateUserDataDto.description
+              ? updateUserDataDto.description
+              : user.description,
+            linkedinUrl: updateUserDataDto.linkedinUrl
+              ? updateUserDataDto.linkedinUrl
+              : user.linkedinUrl,
+          },
+        });
+        return {
+          facebookUrl: updatedUser.facebookUrl,
+          instagramUrl: updatedUser.instagramUrl,
+          linkedInUrl: updatedUser.linkedinUrl,
+          pinterestUrl: updatedUser.pinterestUrl,
+          description: updatedUser.description,
+        };
+      } else {
+        throw new BadRequestException(
+          "You don't have enough permissions to perform this operation",
+        );
+      }
+    } catch (err) {
+      throw new InternalServerErrorException(err);
+    }
+  }
 
   async getUserByIdWithoutDetails(userId: string): Promise<UserWithoutDetails> {
     try {
@@ -163,6 +211,11 @@ export class UsersService {
         firstName: user.firstName,
         lastName: user.lastName,
         role: Role[user.role],
+        facebookUrl: user.facebookUrl,
+        instagramUrl: user.instagramUrl,
+        linkedinUrl: user.linkedinUrl,
+        pinterestUrl: user.pinterestUrl,
+        description: user.description,
       };
       return userWithoutDetails;
     } catch (err) {
@@ -185,6 +238,11 @@ export class UsersService {
         firstName: user.firstName,
         lastName: user.lastName,
         role: Role[user.role],
+        facebookUrl: user.facebookUrl,
+        instagramUrl: user.instagramUrl,
+        linkedinUrl: user.linkedinUrl,
+        pinterestUrl: user.pinterestUrl,
+        description: user.description,
       };
       return userWithoutDetails;
     } catch (err) {

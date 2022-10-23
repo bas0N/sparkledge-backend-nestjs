@@ -7,6 +7,7 @@ import { CreateUserDto } from './dto/createUser.dto';
 import { DocumentDto } from 'src/documents/dto/Document.dto';
 import { EmailService } from 'src/email/email.service';
 import { NumberOfPublishedDocsDto, UserWithoutDetails } from './dto/returnTypes.dto';
+import { UpdateUserDataDto } from './dto/UpdateUserData.dto';
 export declare class UsersService {
     private readonly prismaService;
     private jwtService;
@@ -21,6 +22,13 @@ export declare class UsersService {
     }>;
     getUserById(userId: string): Promise<User>;
     getUserByEmail(email: string): Promise<User>;
+    updateUserData(updateUserDataDto: UpdateUserDataDto, user: User): Promise<{
+        facebookUrl: string;
+        instagramUrl: string;
+        linkedInUrl: string;
+        pinterestUrl: string;
+        description: string;
+    }>;
     getUserByIdWithoutDetails(userId: string): Promise<UserWithoutDetails>;
     getUserByEmailWithoutDetails(userEmail: string): Promise<UserWithoutDetails>;
     logout(userEmail: string): Promise<void>;

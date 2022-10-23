@@ -22,10 +22,16 @@ const passport_1 = require("@nestjs/passport");
 const get_user_decorator_1 = require("./get-user.decorator");
 const swagger_1 = require("@nestjs/swagger");
 const authentication_service_1 = require("../authentication/authentication.service");
+const ChangeRole_dto_1 = require("./dto/ChangeRole.dto");
+const UpdateUserData_dto_1 = require("./dto/UpdateUserData.dto");
 let UsersController = class UsersController {
     constructor(userService, authenticationService) {
         this.userService = userService;
         this.authenticationService = authenticationService;
+    }
+    async changeUserRole({ role, userId }) { }
+    async updateUserData(updateUserDataDto, user) {
+        return this.userService.updateUserData(updateUserDataDto, user);
     }
     async addNewUser(createUserDto) {
         const user = this.userService.addNewUser(createUserDto);
@@ -71,6 +77,25 @@ let UsersController = class UsersController {
         return await this.userService.resetPassword(email, token, newPassword);
     }
 };
+__decorate([
+    (0, common_1.Post)('changeUserRole'),
+    openapi.ApiResponse({ status: 201 }),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [ChangeRole_dto_1.ChangeRoleDto]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "changeUserRole", null);
+__decorate([
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
+    (0, common_1.Put)('/updateUserData'),
+    (0, swagger_1.ApiBody)({ type: [UpdateUserData_dto_1.UpdateUserDataDto] }),
+    openapi.ApiResponse({ status: 200 }),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, get_user_decorator_1.GetUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [UpdateUserData_dto_1.UpdateUserDataDto, Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "updateUserData", null);
 __decorate([
     (0, common_1.Post)('/signup'),
     (0, swagger_1.ApiBody)({ type: [createUser_dto_1.CreateUserDto] }),
