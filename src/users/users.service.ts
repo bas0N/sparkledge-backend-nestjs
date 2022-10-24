@@ -216,6 +216,7 @@ export class UsersService {
         linkedinUrl: user.linkedinUrl,
         pinterestUrl: user.pinterestUrl,
         description: user.description,
+        joinedAt: user.joinedAt,
       };
       return userWithoutDetails;
     } catch (err) {
@@ -243,6 +244,7 @@ export class UsersService {
         linkedinUrl: user.linkedinUrl,
         pinterestUrl: user.pinterestUrl,
         description: user.description,
+        joinedAt: user.joinedAt,
       };
       return userWithoutDetails;
     } catch (err) {

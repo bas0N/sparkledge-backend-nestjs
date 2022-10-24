@@ -14,4 +14,5 @@ export type UserWithoutDetails = {
   linkedinUrl: string;
   pinterestUrl: string;
   description: string;
+  joinedAt: Date;
 };
