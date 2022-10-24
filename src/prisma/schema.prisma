@@ -28,6 +28,7 @@ model User {
   linkedinUrl String @default("")
   pinterestUrl String @default("")
   description String @default("")
+  joinedAt    DateTime   @default(now())
 }
 
 model Moderators {
