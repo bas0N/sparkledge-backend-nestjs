@@ -189,6 +189,7 @@ let UsersService = class UsersService {
                 linkedinUrl: user.linkedinUrl,
                 pinterestUrl: user.pinterestUrl,
                 description: user.description,
+                joinedAt: user.joinedAt,
             };
             return userWithoutDetails;
         }
@@ -215,6 +216,7 @@ let UsersService = class UsersService {
                 linkedinUrl: user.linkedinUrl,
                 pinterestUrl: user.pinterestUrl,
                 description: user.description,
+                joinedAt: user.joinedAt,
             };
             return userWithoutDetails;
         }
