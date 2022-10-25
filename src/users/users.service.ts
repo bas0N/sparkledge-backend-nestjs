@@ -218,6 +218,7 @@ export class UsersService {
         description: user.description,
         joinedAt: user.joinedAt,
       };
+      console.log('retrieved user at', new Date());
       return userWithoutDetails;
     } catch (err) {
       throw new BadRequestException('User with the given id does not exist');
