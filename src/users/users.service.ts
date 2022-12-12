@@ -22,6 +22,7 @@ import {
   UserWithoutDetails,
 } from './dto/returnTypes.dto';
 import { UpdateUserDataDto } from './dto/UpdateUserData.dto';
+import { ChangeUserNameSurnameDto } from './dto/ChangeUserNameSurnameDto';
 const fs = require('fs').promises;
 
 @Injectable()
@@ -50,6 +51,26 @@ export class UsersService {
     } else {
       throw new BadRequestException('Invalid token or email.');
     }
+  }
+  async changeUserNameSurname(
+    { firstName, lastName }: ChangeUserNameSurnameDto,
+    user: User,
+  ) {
+    if (user.registeredBy !== 'EMAIL') {
+      throw new BadRequestException(
+        'Cannot change password for google account',
+      );
+    }
+    const updatedUser = await this.prismaService.user.update({
+      where: {
+        id: user.id,
+      },
+      data: { firstName, lastName },
+    });
+    if (!updatedUser) {
+      throw new InternalServerErrorException('Error while updating the user');
+    }
+    return updatedUser;
   }
   async sendForgotPasswordLink(email: string) {
     const user: User = await this.getUserByEmail(email);
@@ -224,6 +245,7 @@ export class UsersService {
       throw new BadRequestException('User with the given id does not exist');
     }
   }
+
   async getUserByEmailWithoutDetails(
     userEmail: string,
   ): Promise<UserWithoutDetails> {

@@ -8,12 +8,14 @@ import { DocumentDto } from 'src/documents/dto/Document.dto';
 import { EmailService } from 'src/email/email.service';
 import { NumberOfPublishedDocsDto, UserWithoutDetails } from './dto/returnTypes.dto';
 import { UpdateUserDataDto } from './dto/UpdateUserData.dto';
+import { ChangeUserNameSurnameDto } from './dto/ChangeUserNameSurnameDto';
 export declare class UsersService {
     private readonly prismaService;
     private jwtService;
     private readonly emailService;
     constructor(prismaService: PrismaService, jwtService: JwtService, emailService: EmailService);
     resetPassword(email: string, token: string, newPassword: string): Promise<User>;
+    changeUserNameSurname({ firstName, lastName }: ChangeUserNameSurnameDto, user: User): Promise<User>;
     sendForgotPasswordLink(email: string): Promise<any>;
     addNewUser({ email, password, firstName, lastName, }: CreateUserDto): Promise<User>;
     signInUser(signinUserDto: SigninUserDto): Promise<{
