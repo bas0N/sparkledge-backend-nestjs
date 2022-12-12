@@ -24,6 +24,9 @@ export declare class UsersController {
     signinUser(signinUserDto: SigninUserDto): Promise<{
         accessToken: String;
     }>;
+    changeDefaultSearch(): Promise<{
+        message: string;
+    }>;
     logout(user: User): Promise<void>;
     refreshToken(user: User): Promise<{
         accessToken: string;

@@ -52,6 +52,10 @@ export class UsersService {
       throw new BadRequestException('Invalid token or email.');
     }
   }
+
+  async changeDefaultSearch() {
+    return { message: 'search params changes succesfully' };
+  }
   async changeUserNameSurname(
     { firstName, lastName }: ChangeUserNameSurnameDto,
     user: User,

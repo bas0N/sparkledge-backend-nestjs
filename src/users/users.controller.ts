@@ -88,6 +88,12 @@ export class UsersController {
     return this.userService.signInUser(signinUserDto);
   }
 
+  @Post('changeDefaultSearch')
+  @UseGuards(AuthGuard('jwt'))
+  async changeDefaultSearch() {
+    return this.userService.changeDefaultSearch();
+  }
+
   @Post('logout')
   @UseGuards(AuthGuard('jwt'))
   @ApiOkResponse({ description: 'User Login' })
