@@ -24,6 +24,7 @@ const swagger_1 = require("@nestjs/swagger");
 const authentication_service_1 = require("../authentication/authentication.service");
 const ChangeRole_dto_1 = require("./dto/ChangeRole.dto");
 const UpdateUserData_dto_1 = require("./dto/UpdateUserData.dto");
+const ChangeUserNameSurnameDto_1 = require("./dto/ChangeUserNameSurnameDto");
 let UsersController = class UsersController {
     constructor(userService, authenticationService) {
         this.userService = userService;
@@ -37,6 +38,10 @@ let UsersController = class UsersController {
         const user = this.userService.addNewUser(createUserDto);
         this.authenticationService.sendVerificationLink(createUserDto.email);
         return user;
+    }
+    async changeUserNameSurname(changeUserNameSurnameDto, user) {
+        console.log(user);
+        return this.userService.changeUserNameSurname(changeUserNameSurnameDto, user);
     }
     async signinUser(signinUserDto) {
         return this.userService.signInUser(signinUserDto);
@@ -108,6 +113,16 @@ __decorate([
     __metadata("design:paramtypes", [createUser_dto_1.CreateUserDto]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "addNewUser", null);
+__decorate([
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
+    (0, common_1.Post)('/changeNameSurname'),
+    openapi.ApiResponse({ status: 201, type: Object }),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, get_user_decorator_1.GetUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [ChangeUserNameSurnameDto_1.ChangeUserNameSurnameDto, Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "changeUserNameSurname", null);
 __decorate([
     (0, common_1.Post)('/signin'),
     (0, swagger_1.ApiBody)({ type: [signinUser_dto_1.SigninUserDto] }),

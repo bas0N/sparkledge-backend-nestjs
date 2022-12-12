@@ -29,6 +29,7 @@ import { AuthenticationService } from 'src/authentication/authentication.service
 import { UserWithoutDetails } from './dto/returnTypes.dto';
 import { ChangeRoleDto } from './dto/ChangeRole.dto';
 import { UpdateUserDataDto } from './dto/UpdateUserData.dto';
+import { ChangeUserNameSurnameDto } from './dto/ChangeUserNameSurnameDto';
 // import { Roles } from 'src/authentication/roles.decorator';
 // import { RolesGuard } from 'src/authentication/roles.guard';
 // import { Reflector } from '@nestjs/core';
@@ -62,7 +63,18 @@ export class UsersController {
     this.authenticationService.sendVerificationLink(createUserDto.email);
     return user;
   }
-
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/changeNameSurname')
+  async changeUserNameSurname(
+    @Body() changeUserNameSurnameDto: ChangeUserNameSurnameDto,
+    @GetUser() user: User,
+  ) {
+    console.log(user);
+    return this.userService.changeUserNameSurname(
+      changeUserNameSurnameDto,
+      user,
+    );
+  }
   @Post('/signin')
   @ApiBody({ type: [SigninUserDto] })
   @ApiOkResponse({ description: 'User logged in.' })

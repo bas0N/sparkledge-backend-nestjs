@@ -6,6 +6,7 @@ import { AuthenticationService } from 'src/authentication/authentication.service
 import { UserWithoutDetails } from './dto/returnTypes.dto';
 import { ChangeRoleDto } from './dto/ChangeRole.dto';
 import { UpdateUserDataDto } from './dto/UpdateUserData.dto';
+import { ChangeUserNameSurnameDto } from './dto/ChangeUserNameSurnameDto';
 export declare class UsersController {
     private userService;
     private authenticationService;
@@ -19,6 +20,7 @@ export declare class UsersController {
         description: string;
     }>;
     addNewUser(createUserDto: CreateUserDto): Promise<User>;
+    changeUserNameSurname(changeUserNameSurnameDto: ChangeUserNameSurnameDto, user: User): Promise<User>;
     signinUser(signinUserDto: SigninUserDto): Promise<{
         accessToken: String;
     }>;

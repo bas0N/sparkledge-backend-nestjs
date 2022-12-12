@@ -42,6 +42,21 @@ let UsersService = class UsersService {
             throw new common_1.BadRequestException('Invalid token or email.');
         }
     }
+    async changeUserNameSurname({ firstName, lastName }, user) {
+        if (user.registeredBy !== 'EMAIL') {
+            throw new common_1.BadRequestException('Cannot change password for google account');
+        }
+        const updatedUser = await this.prismaService.user.update({
+            where: {
+                id: user.id,
+            },
+            data: { firstName, lastName },
+        });
+        if (!updatedUser) {
+            throw new common_1.InternalServerErrorException('Error while updating the user');
+        }
+        return updatedUser;
+    }
     async sendForgotPasswordLink(email) {
         const user = await this.getUserByEmail(email);
         if (!user) {
@@ -191,6 +206,7 @@ let UsersService = class UsersService {
                 description: user.description,
                 joinedAt: user.joinedAt,
             };
+            console.log('retrieved user at', new Date());
             return userWithoutDetails;
         }
         catch (err) {
