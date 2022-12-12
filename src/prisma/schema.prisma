@@ -8,6 +8,7 @@ datasource db {
   url      = env("DATABASE_URL2")
 }
 
+
 model User {
   id              String       @id @default(uuid())
   email           String       @unique
@@ -29,6 +30,7 @@ model User {
   pinterestUrl String @default("")
   description String @default("")
   joinedAt    DateTime   @default(now())
+  defaultSearch  String @default("")
 }
 
 model Moderators {
@@ -147,7 +149,17 @@ enum Degree {
   MASTER
   PHD
 }
+enum SortValue {
+  asc
+  desc
+}
 
+enum SortPropety {
+  createdAt
+  title
+  viewsNumber
+  likesNumber
+}
 
 
 enum RegisteredBy {
@@ -163,4 +175,6 @@ enum ReportType {
   SEXUALCONTENT
   OTHER
 }
+
+
 

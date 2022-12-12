@@ -15,6 +15,9 @@ export declare class UsersService {
     private readonly emailService;
     constructor(prismaService: PrismaService, jwtService: JwtService, emailService: EmailService);
     resetPassword(email: string, token: string, newPassword: string): Promise<User>;
+    changeDefaultSearch(): Promise<{
+        message: string;
+    }>;
     changeUserNameSurname({ firstName, lastName }: ChangeUserNameSurnameDto, user: User): Promise<User>;
     sendForgotPasswordLink(email: string): Promise<any>;
     addNewUser({ email, password, firstName, lastName, }: CreateUserDto): Promise<User>;

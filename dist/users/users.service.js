@@ -42,6 +42,9 @@ let UsersService = class UsersService {
             throw new common_1.BadRequestException('Invalid token or email.');
         }
     }
+    async changeDefaultSearch() {
+        return { message: 'search params changes succesfully' };
+    }
     async changeUserNameSurname({ firstName, lastName }, user) {
         if (user.registeredBy !== 'EMAIL') {
             throw new common_1.BadRequestException('Cannot change password for google account');

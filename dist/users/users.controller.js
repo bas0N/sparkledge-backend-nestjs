@@ -46,6 +46,9 @@ let UsersController = class UsersController {
     async signinUser(signinUserDto) {
         return this.userService.signInUser(signinUserDto);
     }
+    async changeDefaultSearch() {
+        return this.userService.changeDefaultSearch();
+    }
     async logout(user) {
         return this.userService.logout(user.email);
     }
@@ -137,6 +140,14 @@ __decorate([
     __metadata("design:paramtypes", [signinUser_dto_1.SigninUserDto]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "signinUser", null);
+__decorate([
+    (0, common_1.Post)('changeDefaultSearch'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
+    openapi.ApiResponse({ status: 201 }),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "changeDefaultSearch", null);
 __decorate([
     (0, common_1.Post)('logout'),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
