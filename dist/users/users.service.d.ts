@@ -15,6 +15,7 @@ export declare class UsersService {
     private jwtService;
     private readonly emailService;
     constructor(prismaService: PrismaService, jwtService: JwtService, emailService: EmailService);
+    getMe(user: User): Promise<User>;
     resetPassword(email: string, token: string, newPassword: string): Promise<User>;
     changeDefaultSearch(changeDefaultSearchData: ChangeDefaultSearchDto, user: User): Promise<User>;
     changeUserNameSurname({ firstName, lastName }: ChangeUserNameSurnameDto, user: User): Promise<User>;

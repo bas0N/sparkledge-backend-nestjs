@@ -33,6 +33,13 @@ export class UsersService {
     private jwtService: JwtService,
     private readonly emailService: EmailService,
   ) {}
+  async getMe(user: User) {
+    const userCopy = user;
+    console.log(JSON.parse(user.defaultSearch));
+    userCopy.defaultSearch = JSON.parse(user.defaultSearch);
+    delete userCopy.password;
+    return userCopy;
+  }
   async resetPassword(email: string, token: string, newPassword: string) {
     const user = await this.getUserByEmail(email);
     const secret = user.password;

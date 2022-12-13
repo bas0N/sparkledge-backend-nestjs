@@ -25,6 +25,13 @@ let UsersService = class UsersService {
         this.jwtService = jwtService;
         this.emailService = emailService;
     }
+    async getMe(user) {
+        const userCopy = user;
+        console.log(JSON.parse(user.defaultSearch));
+        userCopy.defaultSearch = JSON.parse(user.defaultSearch);
+        delete userCopy.password;
+        return userCopy;
+    }
     async resetPassword(email, token, newPassword) {
         const user = await this.getUserByEmail(email);
         const secret = user.password;

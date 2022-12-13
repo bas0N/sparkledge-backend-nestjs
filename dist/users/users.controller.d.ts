@@ -12,6 +12,7 @@ export declare class UsersController {
     private userService;
     private authenticationService;
     constructor(userService: UsersService, authenticationService: AuthenticationService);
+    getMe(user: User): Promise<User>;
     changeUserRole({ role, userId }: ChangeRoleDto): Promise<void>;
     updateUserData(updateUserDataDto: UpdateUserDataDto, user: User): Promise<{
         facebookUrl: string;

@@ -42,9 +42,13 @@ export class UsersController {
     private userService: UsersService,
     private authenticationService: AuthenticationService,
   ) {}
+  @Get('/getMe')
+  @UseGuards(AuthGuard('jwt'))
+  async getMe(@GetUser() user: User) {
+    return await this.userService.getMe(user);
+  }
   @Post('changeUserRole')
   async changeUserRole(@Body() { role, userId }: ChangeRoleDto) {}
-
   @UseGuards(AuthGuard('jwt'))
   @Put('/updateUserData')
   @ApiBody({ type: [UpdateUserDataDto] })

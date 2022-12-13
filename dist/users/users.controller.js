@@ -31,6 +31,9 @@ let UsersController = class UsersController {
         this.userService = userService;
         this.authenticationService = authenticationService;
     }
+    async getMe(user) {
+        return await this.userService.getMe(user);
+    }
     async changeUserRole({ role, userId }) { }
     async updateUserData(updateUserDataDto, user) {
         return this.userService.updateUserData(updateUserDataDto, user);
@@ -86,6 +89,15 @@ let UsersController = class UsersController {
         return await this.userService.resetPassword(email, token, newPassword);
     }
 };
+__decorate([
+    (0, common_1.Get)('/getMe'),
+    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
+    openapi.ApiResponse({ status: 200, type: Object }),
+    __param(0, (0, get_user_decorator_1.GetUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "getMe", null);
 __decorate([
     (0, common_1.Post)('changeUserRole'),
     openapi.ApiResponse({ status: 201 }),
