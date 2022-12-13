@@ -25,6 +25,13 @@ let UsersService = class UsersService {
         this.jwtService = jwtService;
         this.emailService = emailService;
     }
+    async getMe(user) {
+        const userCopy = user;
+        console.log(JSON.parse(user.defaultSearch));
+        userCopy.defaultSearch = JSON.parse(user.defaultSearch);
+        delete userCopy.password;
+        return userCopy;
+    }
     async resetPassword(email, token, newPassword) {
         const user = await this.getUserByEmail(email);
         const secret = user.password;
@@ -42,8 +49,17 @@ let UsersService = class UsersService {
             throw new common_1.BadRequestException('Invalid token or email.');
         }
     }
-    async changeDefaultSearch() {
-        return { message: 'search params changes succesfully' };
+    async changeDefaultSearch(changeDefaultSearchData, user) {
+        const updatedUser = await this.prismaService.user.update({
+            where: { id: user.id },
+            data: { defaultSearch: JSON.stringify(changeDefaultSearchData) },
+        });
+        if (!updatedUser) {
+            throw new common_1.InternalServerErrorException('Error while updating the user');
+        }
+        console.log(JSON.parse(updatedUser.defaultSearch));
+        updatedUser.defaultSearch = JSON.parse(updatedUser.defaultSearch);
+        return updatedUser;
     }
     async changeUserNameSurname({ firstName, lastName }, user) {
         if (user.registeredBy !== 'EMAIL') {
