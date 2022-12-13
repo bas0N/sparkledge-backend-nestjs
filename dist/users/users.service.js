@@ -42,8 +42,17 @@ let UsersService = class UsersService {
             throw new common_1.BadRequestException('Invalid token or email.');
         }
     }
-    async changeDefaultSearch() {
-        return { message: 'search params changes succesfully' };
+    async changeDefaultSearch(changeDefaultSearchData, user) {
+        const updatedUser = await this.prismaService.user.update({
+            where: { id: user.id },
+            data: { defaultSearch: JSON.stringify(changeDefaultSearchData) },
+        });
+        if (!updatedUser) {
+            throw new common_1.InternalServerErrorException('Error while updating the user');
+        }
+        console.log(JSON.parse(updatedUser.defaultSearch));
+        updatedUser.defaultSearch = JSON.parse(updatedUser.defaultSearch);
+        return updatedUser;
     }
     async changeUserNameSurname({ firstName, lastName }, user) {
         if (user.registeredBy !== 'EMAIL') {

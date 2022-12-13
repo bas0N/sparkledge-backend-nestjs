@@ -23,6 +23,7 @@ import {
 } from './dto/returnTypes.dto';
 import { UpdateUserDataDto } from './dto/UpdateUserData.dto';
 import { ChangeUserNameSurnameDto } from './dto/ChangeUserNameSurnameDto';
+import { ChangeDefaultSearchDto } from './dto/ChangeDefaultSearch.dto';
 const fs = require('fs').promises;
 
 @Injectable()
@@ -53,8 +54,20 @@ export class UsersService {
     }
   }
 
-  async changeDefaultSearch() {
-    return { message: 'search params changes succesfully' };
+  async changeDefaultSearch(
+    changeDefaultSearchData: ChangeDefaultSearchDto,
+    user: User,
+  ) {
+    const updatedUser = await this.prismaService.user.update({
+      where: { id: user.id },
+      data: { defaultSearch: JSON.stringify(changeDefaultSearchData) },
+    });
+    if (!updatedUser) {
+      throw new InternalServerErrorException('Error while updating the user');
+    }
+    console.log(JSON.parse(updatedUser.defaultSearch));
+    updatedUser.defaultSearch = JSON.parse(updatedUser.defaultSearch);
+    return updatedUser;
   }
   async changeUserNameSurname(
     { firstName, lastName }: ChangeUserNameSurnameDto,

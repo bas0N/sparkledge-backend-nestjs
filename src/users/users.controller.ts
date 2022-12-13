@@ -30,6 +30,7 @@ import { UserWithoutDetails } from './dto/returnTypes.dto';
 import { ChangeRoleDto } from './dto/ChangeRole.dto';
 import { UpdateUserDataDto } from './dto/UpdateUserData.dto';
 import { ChangeUserNameSurnameDto } from './dto/ChangeUserNameSurnameDto';
+import { ChangeDefaultSearchDto } from './dto/ChangeDefaultSearch.dto';
 // import { Roles } from 'src/authentication/roles.decorator';
 // import { RolesGuard } from 'src/authentication/roles.guard';
 // import { Reflector } from '@nestjs/core';
@@ -90,8 +91,11 @@ export class UsersController {
 
   @Post('changeDefaultSearch')
   @UseGuards(AuthGuard('jwt'))
-  async changeDefaultSearch() {
-    return this.userService.changeDefaultSearch();
+  async changeDefaultSearch(
+    @Body() changeDefaultSearchData: ChangeDefaultSearchDto,
+    @GetUser() user: User,
+  ) {
+    return this.userService.changeDefaultSearch(changeDefaultSearchData, user);
   }
 
   @Post('logout')

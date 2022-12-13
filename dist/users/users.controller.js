@@ -25,6 +25,7 @@ const authentication_service_1 = require("../authentication/authentication.servi
 const ChangeRole_dto_1 = require("./dto/ChangeRole.dto");
 const UpdateUserData_dto_1 = require("./dto/UpdateUserData.dto");
 const ChangeUserNameSurnameDto_1 = require("./dto/ChangeUserNameSurnameDto");
+const ChangeDefaultSearch_dto_1 = require("./dto/ChangeDefaultSearch.dto");
 let UsersController = class UsersController {
     constructor(userService, authenticationService) {
         this.userService = userService;
@@ -46,8 +47,8 @@ let UsersController = class UsersController {
     async signinUser(signinUserDto) {
         return this.userService.signInUser(signinUserDto);
     }
-    async changeDefaultSearch() {
-        return this.userService.changeDefaultSearch();
+    async changeDefaultSearch(changeDefaultSearchData, user) {
+        return this.userService.changeDefaultSearch(changeDefaultSearchData, user);
     }
     async logout(user) {
         return this.userService.logout(user.email);
@@ -143,9 +144,11 @@ __decorate([
 __decorate([
     (0, common_1.Post)('changeDefaultSearch'),
     (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
-    openapi.ApiResponse({ status: 201 }),
+    openapi.ApiResponse({ status: 201, type: Object }),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, get_user_decorator_1.GetUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [ChangeDefaultSearch_dto_1.ChangeDefaultSearchDto, Object]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "changeDefaultSearch", null);
 __decorate([

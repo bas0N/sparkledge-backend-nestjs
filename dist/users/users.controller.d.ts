@@ -7,6 +7,7 @@ import { UserWithoutDetails } from './dto/returnTypes.dto';
 import { ChangeRoleDto } from './dto/ChangeRole.dto';
 import { UpdateUserDataDto } from './dto/UpdateUserData.dto';
 import { ChangeUserNameSurnameDto } from './dto/ChangeUserNameSurnameDto';
+import { ChangeDefaultSearchDto } from './dto/ChangeDefaultSearch.dto';
 export declare class UsersController {
     private userService;
     private authenticationService;
@@ -24,9 +25,7 @@ export declare class UsersController {
     signinUser(signinUserDto: SigninUserDto): Promise<{
         accessToken: String;
     }>;
-    changeDefaultSearch(): Promise<{
-        message: string;
-    }>;
+    changeDefaultSearch(changeDefaultSearchData: ChangeDefaultSearchDto, user: User): Promise<User>;
     logout(user: User): Promise<void>;
     refreshToken(user: User): Promise<{
         accessToken: string;
